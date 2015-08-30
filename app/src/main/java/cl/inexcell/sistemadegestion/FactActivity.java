@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -56,6 +58,7 @@ import cl.inexcell.sistemadegestion.objetos.ParametrosFormulario;
 
 
 public class FactActivity extends Activity implements View.OnClickListener {
+    public static Activity p;
     Context mContext;
     LinearLayout fatcLayout;
     TextView nombreTecnico;
@@ -94,6 +97,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
 
         /** ASIGNACIONES */
         mContext = this;
+        p = this;
 
         Phone = getIntent().getExtras().getString("PHONE");
 
@@ -583,7 +587,35 @@ public class FactActivity extends Activity implements View.OnClickListener {
             ids_botones.add(boton.getId());
 
         }
+
+        fatcLayout.addView(putCasaCerradaBTN());
         return true;
+    }
+
+    private View putCasaCerradaBTN(){
+        Button v = new Button(this);
+        v.setText("Casa Cerrada");
+
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        param.setMargins(0,10,0,10);
+        param.gravity = Gravity.RIGHT;
+        v.setLayoutParams(param);
+        v.setPadding(16,0,16,0);
+        v.setBackgroundResource(R.drawable.custom_button_blue);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openCasaCerrada();
+            }
+        });
+        v.setTextColor(Color.WHITE);
+
+        return v;
+    }
+
+    private void openCasaCerrada(){
+        Intent i = new Intent(this, CasaCerrada.class);
+        startActivity(i);
     }
 
 
