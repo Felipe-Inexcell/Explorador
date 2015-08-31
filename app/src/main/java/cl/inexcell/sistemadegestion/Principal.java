@@ -1,12 +1,6 @@
 package cl.inexcell.sistemadegestion;
 
 
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Locale;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -15,12 +9,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.NetworkInfo.State;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.speech.tts.TextToSpeech;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
@@ -29,10 +21,12 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.apache.http.HttpException;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.conn.HttpHostConnectException;
-import org.xml.sax.SAXException;
+
+import java.net.SocketTimeoutException;
+import java.text.ParseException;
+import java.util.ArrayList;
 
 public class Principal extends Activity {
     public static Activity p;
@@ -95,7 +89,7 @@ public class Principal extends Activity {
         State senal3g = conMan.getNetworkInfo(0).getState();
         State wifi = conMan.getNetworkInfo(1).getState();
 
-        if (senal3g == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTED) {
+        if (senal3g == State.CONNECTED || wifi == State.CONNECTED) {
             Intent i = new Intent(this, Notificar_Averias.class);
             startActivityForResult(i, 0);
 
@@ -109,7 +103,7 @@ public class Principal extends Activity {
 
         State senal3g = conMan.getNetworkInfo(0).getState();
         State wifi = conMan.getNetworkInfo(1).getState();
-        if (senal3g == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTED) {
+        if (senal3g == State.CONNECTED || wifi == State.CONNECTED) {
             if (phone.getText().length() == 0 || phone.getText() == null) {
                 Toast.makeText(getApplicationContext(), "Ingrese télefono del cliente", Toast.LENGTH_SHORT).show();
                 return;
@@ -130,7 +124,7 @@ public class Principal extends Activity {
         State senal3g = conMan.getNetworkInfo(0).getState();
         State wifi = conMan.getNetworkInfo(1).getState();
 
-        if (senal3g == NetworkInfo.State.CONNECTED || wifi == NetworkInfo.State.CONNECTED) {
+        if (senal3g == State.CONNECTED || wifi == State.CONNECTED) {
             Intent i = new Intent(this, Plantas_Externas.class);
             startActivityForResult(i, 0);
 
@@ -181,8 +175,8 @@ public class Principal extends Activity {
                 String consulta;
                 if (phone.getText().toString().equals("2")) {
                     Log.i(TAG, "Consulta Dummy");
-                    Log.i(TAG, error1());
-                    consulta = error1();
+                    Log.i(TAG, URLs.RESOURCE);
+                    consulta = URLs.RESOURCE;
                 } else
                     consulta = SoapRequestMovistar.getResource(IMEI, IMSI, phone.getText().toString());
 

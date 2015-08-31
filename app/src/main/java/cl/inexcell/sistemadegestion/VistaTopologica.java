@@ -1,7 +1,5 @@
 package cl.inexcell.sistemadegestion;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,7 +10,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.NetworkInfo.State;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,10 +30,18 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
+
 public class VistaTopologica extends Activity {
     private String TAG = "TOPOLOGICA";
     public static Activity topo;
-
+    private Context mContext;
     private boolean isTV = false;
 
     int idButton = R.layout.layoutbuttontopologica;
@@ -59,7 +64,12 @@ public class VistaTopologica extends Activity {
     private EditText valor;
     private String tipo;
 
+    private int idCajaButton;
+    private int idCajaContent;
+
     private int tipoProcedimiento;
+
+    private Button btnCertifica, btnFact;
 
 
     @Override
@@ -69,6 +79,7 @@ public class VistaTopologica extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_topologica);
         topo = this;
+        mContext = this;
         Phone = getIntent().getStringExtra("PHONE");
         conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         output = getIntent().getStringExtra("RESULT");
@@ -80,8 +91,39 @@ public class VistaTopologica extends Activity {
         Log.i(TAG, Phone);
 
         init();
+
+        getStateButtons();
+
         Ordenar_informacion tarea1 = new Ordenar_informacion();
         tarea1.execute();
+    }
+
+    private void getStateButtons(){
+        try{
+            ArrayList<String> states = XMLParser.getStateButtonsTopologica(output);
+
+            if(states.get(0).equals("false")){
+                btnCertifica.setVisibility(View.GONE);
+            }
+            if(states.get(1).equals("false")){
+                btnFact.setVisibility(View.GONE);
+
+            }
+
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error al leer la respuesta del servidor.", Toast.LENGTH_SHORT).show();
+        } catch (SAXException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error al leer la respuesta del servidor.", Toast.LENGTH_SHORT).show();
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error al leer la respuesta del servidor.", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error al leer la respuesta del servidor.", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void shutdown(View v) {
@@ -93,7 +135,7 @@ public class VistaTopologica extends Activity {
     public void consultar(View v) {
         State state3g = conMan.getNetworkInfo(0).getState();
         State stateWifi = conMan.getNetworkInfo(1).getState();
-        if (state3g == NetworkInfo.State.CONNECTED || stateWifi == NetworkInfo.State.CONNECTED) {
+        if (state3g == State.CONNECTED || stateWifi == State.CONNECTED) {
             Intent certificar = new Intent(this, Certificar.class);
             certificar.putExtra("PHONE", Phone);
             startActivity(certificar);
@@ -113,6 +155,8 @@ public class VistaTopologica extends Activity {
     }
 
     public void init() {
+        btnCertifica = (Button)this.findViewById(R.id.buttonCertifica);
+        btnFact = (Button)this.findViewById(R.id.buttonFATC);
         try {
             // TODO: condicion procedimiento 1
             //tipoProcedimiento = 1;
@@ -240,7 +284,7 @@ public class VistaTopologica extends Activity {
                             TextView izq = (TextView) linearLayout.findViewById(R.id.textView1);
                             izq.setTextColor(getResources().getColor(R.color.black));
                             valor = b.getString("VALUE");
-                            /*if (valor.equals("SERVICIO TELEVISION")) {
+                            if (valor.equals("SERVICIO TELEVISION")) {
                                 if (!isButton && (tipoProcedimiento == 1 || tipoProcedimiento == 2)) {
                                     ImageButton ed = (ImageButton) linearLayout.findViewById(R.id.imageButton1);
                                     ed.setVisibility(View.VISIBLE);
@@ -373,7 +417,7 @@ public class VistaTopologica extends Activity {
                                     });
                                     isButton = true;
                                 }
-                            }*/
+                            }
                             //--------------
 
 
@@ -440,7 +484,7 @@ public class VistaTopologica extends Activity {
                             else
                                 der.setText(informacion[1]);
                             if (valor.equals("SERVICIO TELEVISION") && !isTV && (tipoProcedimiento == 1 || tipoProcedimiento == 2)) {
-                                //contlay.addView(putButtonAddTV());
+                                contlay.addView(putButtonAddTV());
                                 contlay.addView(putButtonReactivateTV());
                             }
 
@@ -454,7 +498,7 @@ public class VistaTopologica extends Activity {
                                 if (k == (lineas.length - 1))
                                     decos_reg.add(decos_linea);
                             }
-                            if(swit.equals("DIRECCION")){
+                            if (swit.equals("DIRECCION")) {
                                 String p = informacion[0] + ";" + informacion[1];
                                 if (decos_linea.compareTo("") == 0) {
                                     decos_linea += p;
@@ -475,6 +519,9 @@ public class VistaTopologica extends Activity {
                 } else {
                     if (b.getString("VALUE").equals("SERVICIO TELEVISION") && !isTV) {
                         contlay.addView(putButtonAddTV());
+                    } else if (swit.equals("CAJA")) {
+                        idCajaButton = boton.getId();
+                        idCajaContent = str2int(newIdCont);
                     } else
                         continue;
                 }
@@ -504,7 +551,10 @@ public class VistaTopologica extends Activity {
 
                         if (contlay.getVisibility() == View.GONE) {
                             contlay.setVisibility(View.VISIBLE);
-
+                            if (arg0.getId() == idCajaButton) {
+                                DCTButtonTask t = new DCTButtonTask();
+                                t.execute();
+                            }
 
                             for (int i = 0; i < bs.size(); i++) {
                                 ls.get(i).setVisibility(View.GONE);
@@ -641,8 +691,11 @@ public class VistaTopologica extends Activity {
                     /** SI ES CABECERA **/
                     if (i == 0) {
                         tipo = "";
-                        valor = cols[j].split("/")[1]; //TOMAMOS EL VALOR DE LA CABECERA
-
+                        String[] asd = cols[j].split("/");
+                        if (asd.length > 1) {
+                            valor = cols[j].split("/")[1]; //TOMAMOS EL VALOR DE LA CABECERA
+                        } else
+                            valor = "--";
                         /** SETTEAMOS LOS COLORES */
                         texto.setBackgroundColor(Color.BLUE);
                         texto.setTextColor(Color.WHITE);
@@ -900,5 +953,134 @@ public class VistaTopologica extends Activity {
         return agregar;
     }
 
+    private class DCTButtonTask extends AsyncTask<String, String, String> {
+        ProgressDialog dialog;
 
+        boolean stateOK = false;
+
+        private DCTButtonTask() {
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog = new ProgressDialog(mContext);
+            dialog.setCancelable(false);
+            dialog.setMessage("Buscando información...");
+            dialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String query = URLs.DCTRESOURCE;
+
+                ArrayList<String> retorno = XMLParser.getReturnCode(query);
+                int code = Integer.valueOf(retorno.get(0));
+
+                if (code == 0) {
+                    stateOK = true;
+                    return query;
+                } else
+                    return retorno.get(1);
+
+            } catch (Exception e) {
+                Log.e("DCTACTIONBUTTON", e.getMessage());
+                return "Error.";
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (stateOK) {
+                try {
+
+                    ArrayList<Bundle> dct = XMLParser.getResourcesNew(s);
+                    Log.d("DCTACTIONBUTTON", "LARGO " + dct.size());
+                    dibujar_dct(dct.get(0));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(mContext, "Error en la información obtenida. Por favor reintente.", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(mContext, s, Toast.LENGTH_LONG).show();
+            }
+
+            if (dialog.isShowing()) dialog.dismiss();
+        }
+    }
+
+    private void dibujar_dct(Bundle b) {
+        View contView = LContenido.findViewById(idCajaContent);
+        ((LinearLayout)contView).removeAllViews();
+        View v = LayoutInflater.from(mContext).inflate(R.layout.dct_view, null, false);
+        LinearLayout contlay = (LinearLayout) v.findViewById(R.id.dct_content);
+        Button dct = (Button) v.findViewById(R.id.dct_button);
+        dct.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent para = new Intent(mContext, DCT.class);
+                startActivity(para);
+            }
+        });
+
+        ArrayList<String> datos = b.getStringArrayList("IDENTIFICATION");
+
+        if (datos != null) {
+            for (String d : datos) {
+                final String[] lineas = d.split(";");
+                for (int k = 0; k < lineas.length; k++) {
+                    String[] informacion = lineas[k].split("&");
+                    LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(mContext).inflate(linea, null, false);
+
+                    TextView izq = (TextView) linearLayout.findViewById(R.id.textView1);
+                    izq.setTextColor(getResources().getColor(R.color.black));
+
+
+                    TextView der = (TextView) linearLayout.findViewById(R.id.textView2);
+                    der.setTextColor(getResources().getColor(R.color.celeste));
+
+                    izq.setText(" " + informacion[0] + ":  ");
+                    if (informacion.length == 1)
+                        der.setText("---");
+                    else
+                        der.setText(informacion[1]);
+
+                    contlay.addView(linearLayout);
+                }
+            }
+        }
+
+        int n = 0;
+        datos = b.getStringArrayList("SUBELEMENT");
+        if (datos != null) {
+            pares = new ArrayList<>();
+
+            for (int i = 0; i < datos.size(); i++) {
+                String[] d = datos.get(i).split(";");
+                String p = "";
+                n = d.length;
+                if (i == 0) {
+                    for (int j = 0; j < n; j++) {
+                        if (j == 0) {
+                            p += d[j];
+                        } else
+                            p += ";" + d[j];
+                    }
+
+                } else {
+                    for (int j = 0; j < n; j++) {
+                        if (j == 0) {
+                            p += d[j];
+                        } else
+                            p += ";" + d[j];
+                    }
+                }
+                pares.add(p);
+            }
+            contlay.addView(dibujarTabla(1, datos.size(), n, "#FFFFFF"));
+        }
+        ((LinearLayout) contView).addView(v);
+
+    }
 }

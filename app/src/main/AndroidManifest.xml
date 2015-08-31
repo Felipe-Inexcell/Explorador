@@ -97,7 +97,14 @@
         </activity>
         <activity
             android:name=".CasaCerrada"
-            android:label="@string/title_activity_casa_cerrada" >
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".DCT"
+            android:screenOrientation="portrait" >
+        </activity><activity
+            android:name=".DetalleElectrico"
+        android:screenOrientation="portrait" >
         </activity>
     </application>
 

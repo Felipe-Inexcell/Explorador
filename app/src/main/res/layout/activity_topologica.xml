@@ -109,7 +109,7 @@
                 android:layout_alignParentBottom="true" />
 
             <Button
-                android:id="@+id/btnTopo_instalacion1"
+                android:id="@+id/buttonFATC"
                 android:layout_width="wrap_content"
                 android:layout_height="54dp"
                 android:background="@drawable/custom_button_blue"
@@ -125,7 +125,7 @@
                 android:layout_marginLeft="5dp" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/buttonCertifica"
                 android:layout_width="wrap_content"
                 android:layout_height="54dp"
                 android:background="@drawable/custom_button_blue"

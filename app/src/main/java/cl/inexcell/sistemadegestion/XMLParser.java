@@ -1,15 +1,7 @@
 package cl.inexcell.sistemadegestion;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Vector;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
+import android.os.Bundle;
+import android.util.Log;
 
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Document;
@@ -19,22 +11,47 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import android.os.Bundle;
-import android.util.Log;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
 
-import com.google.android.gms.maps.model.LatLng;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 
-import cl.inexcell.sistemadegestion.objetos.Deco;
-import cl.inexcell.sistemadegestion.objetos.ElementFormulario;
-import cl.inexcell.sistemadegestion.objetos.Formulario;
-import cl.inexcell.sistemadegestion.objetos.MapMarker;
-import cl.inexcell.sistemadegestion.objetos.ParametrosFormulario;
+import cl.inexcell.sistemadegestion.objetos.*;
+import cl.inexcell.sistemadegestion.objetos.DCT;
 
 public class XMLParser {
+
+
+
 	
 	/*
 	 * Parser Return Code
 	 */
+
+    public static ArrayList<String> getStateButtonsTopologica(String xml) throws ParserConfigurationException,
+            SAXException, IOException, XPathExpressionException
+    {
+        ArrayList<String> models = new ArrayList<String>();
+
+        String xmlRecords = xml;
+
+        DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        InputSource is = new InputSource();
+        is.setCharacterStream(new StringReader(xmlRecords));
+
+        Document doc = db.parse(is);
+        Element botonCertifica = (Element) doc.getElementsByTagName("BotonCertifica").item(0);
+        Element botonFact = (Element) doc.getElementsByTagName("BotonFact").item(0);
+
+        models.add(getCharacterDataFromElement(botonCertifica));
+        models.add(getCharacterDataFromElement(botonFact));
+
+        return models;
+    }
 	
 	public static ArrayList<String> getReturnCode(String xml) throws ParserConfigurationException, 
 	SAXException, IOException, XPathExpressionException
@@ -395,7 +412,7 @@ public class XMLParser {
 
             if(identifications != null && identifications.getLength() > 0 && !elementId.equals("-1")){
                 ArrayList<ArrayList<String>> idents;
-                arreglo = new ArrayList<String>();
+                arreglo = new ArrayList<>();
                 for(int k = 0; k < identifications.getLength(); k++) {
                     NodeList parameters = identifications.item(k).getChildNodes();
 
@@ -416,7 +433,7 @@ public class XMLParser {
 
 
             if(subelement != null && subelement.getLength() > 0) {
-                arreglo = new ArrayList<String>();
+                arreglo = new ArrayList<>();
 
                 for (int k = 0; k < subelement.getLength(); k++) {
 
@@ -658,6 +675,86 @@ public class XMLParser {
         datos.add(getCharacterDataFromElement((Element) doc.getElementsByTagName("IMSI").item(0)));
 
         return datos;
+    }
+
+    public static DCT getDCTinfo(String xml) throws ParserConfigurationException,
+            SAXException, IOException, XPathExpressionException
+    {
+
+        ArrayList<String> datos = new ArrayList<>();
+
+        DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        InputSource is = new InputSource();
+        is.setCharacterStream(new StringReader(xml));
+
+        Document doc = db.parse(is);
+
+        NodeList pCajas = doc.getElementsByTagName("ParametersCajas");
+        NodeList pFonos = doc.getElementsByTagName("ParametersFonos");
+
+        DCT dct = new DCT();
+
+        ArrayList<DCTParamCaja> cajas = new ArrayList<>();
+        for(int i = 0; i< pCajas.getLength(); i++){
+            Element parametro = (Element) pCajas.item(i);
+
+            DCTParamCaja paramCaja = new DCTParamCaja(
+              getValue(parametro, "id"),
+              getValue(parametro, "Proveedor"),
+              getValue(parametro, "dslam"),
+              getValue(parametro, "Velocidad")
+            );
+
+            cajas.add(paramCaja);
+        }
+
+        ArrayList<DCTParamFono> fonos = new ArrayList<>();
+        for(int i = 0; i < pFonos.getLength(); i++){
+            Element parametro = (Element)pFonos.item(i);
+
+            DCTParamFono paramFono = new DCTParamFono(
+                    getValue(parametro, "Par"),
+                    getValue(parametro, "Area"),
+                    getValue(parametro, "Fono"),
+                    getValue(parametro, "Tipo"),
+                    getValue(parametro, "Perfil")
+            );
+
+            NodeList pFonosCabecera = parametro.getElementsByTagName("ParametersFonosCabecera");
+            ArrayList<DCTParamFonoCabecera> cabeceras = new ArrayList<>();
+            for(int j = 0; j<pFonosCabecera.getLength(); j++){
+                Element subparametro = (Element)pFonosCabecera.item(j);
+
+                DCTParamFonoCabecera paramFonoCabecera = new DCTParamFonoCabecera(
+                        getValue(subparametro, "Vendor"),
+                        getValue(subparametro, "DSLAM"),
+                        getValue(subparametro, "Model")
+                );
+
+                NodeList pElectricos = subparametro.getElementsByTagName("ParametersElectricos");
+                ArrayList<String> electricos = new ArrayList<>();
+                for(int k = 0; k<pElectricos.getLength(); k++){
+                    Element elemento = (Element)pElectricos.item(k);
+
+                    electricos.add(getValue(elemento, "Attribute")+";"+getValue(elemento, "Value"));
+                }
+                paramFonoCabecera.setParametrosElectricos(electricos);
+                cabeceras.add(paramFonoCabecera);
+            }
+
+            paramFono.setParametrosFonosCabecera(cabeceras);
+            fonos.add(paramFono);
+        }
+
+        dct.setParametrosCajas(cajas);
+        dct.setParametrosFonos(fonos);
+
+        return dct;
+    }
+
+
+    private static String getValue(Element e, String TagName){
+        return getCharacterDataFromElement((Element)e.getElementsByTagName(TagName).item(0));
     }
 
 
