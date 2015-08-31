@@ -10,7 +10,7 @@ public class DCTParamCaja {
     String velocidad;
 
     public DCTParamCaja(String id, String proveedor, String dslam, String velocidad) {
-        this.id = Integer.parseInt(id);
+        setId(id);
         this.proveedor = proveedor;
         this.dslam = dslam;
         this.velocidad = velocidad;
@@ -21,7 +21,10 @@ public class DCTParamCaja {
     }
 
     public void setId(String id) {
-        this.id = Integer.parseInt(id);
+        if (id.equals(""))
+            this.id = -1;
+        else
+            this.id = Integer.parseInt(id);
     }
 
     public String getProveedor() {

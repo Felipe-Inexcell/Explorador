@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -25,6 +26,7 @@ import cl.inexcell.sistemadegestion.objetos.DCTParamFonoCabecera;
 public class DCT extends Activity {
     public static Activity actividad;
     Context mContext;
+    String Phone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class DCT extends Activity {
         setContentView(R.layout.activity_dct);
         actividad = this;
         mContext = this;
+        Phone = getIntent().getStringExtra("PHONE");
 
         ObtenerDCT task = new ObtenerDCT();
         task.execute();
@@ -60,17 +63,28 @@ public class DCT extends Activity {
         protected void onPreExecute() {
             dialog = new ProgressDialog(mContext);
             dialog.setCancelable(false);
-            dialog.setMessage("Buscando información...");
+            dialog.setMessage("Buscando información...\n" +
+                    "Este proceso podría tardar unos segundos.");
             dialog.show();
         }
 
         @Override
         protected String doInBackground(String... params) {
             try {
-                ArrayList<String> retorno = XMLParser.getReturnCode(URLs.PARAELECTRI);
+                String query;
+                if (Phone.equals("2")) {
+                    query = URLs.PARAELECTRI;
+                } else {
+                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                    String IMEI = telephonyManager.getDeviceId();
+                    String IMSI = telephonyManager.getSimSerialNumber();
+                    query = SoapRequestMovistar.getParaElectri(IMEI, IMSI, Phone);
+                }
+
+                ArrayList<String> retorno = XMLParser.getReturnCode(query);
                 if (retorno.get(0).compareTo("0") == 0) {
                     stateOk = true;
-                    return URLs.PARAELECTRI;
+                    return query;
                 } else {
                     return retorno.get(1);
                 }

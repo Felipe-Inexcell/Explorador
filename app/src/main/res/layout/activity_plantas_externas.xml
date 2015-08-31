@@ -11,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/fondo1"
-        android:orientation="horizontal"
-        android:layout_marginBottom="5dp">
+        android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/linearLayoutlogo"
@@ -71,15 +70,16 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/linearLayout1"
         android:layout_above="@+id/footer"
-        class="com.google.android.gms.maps.SupportMapFragment"/>
+        class="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp" />
 
     <RelativeLayout
         android:id="@+id/footer"
         android:layout_width="fill_parent"
         android:layout_height="64dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/fondo1"
-        android:layout_marginTop="5dp">
+        android:background="@drawable/fondo1">
 
         <ImageButton
             android:id="@+id/buttonback"

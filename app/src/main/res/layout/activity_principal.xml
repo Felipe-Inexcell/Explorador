@@ -95,16 +95,32 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/Version"
-                android:id="@+id/textView"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_alignTop="@+id/imageButtonFAQ"
-                android:gravity="center_vertical" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_toRightOf="@+id/imageButtonFAQ"
+                android:layout_toLeftOf="@+id/imageButtonShutdown"
+                android:layout_toStartOf="@+id/imageButtonShutdown">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Version"
+                    android:id="@+id/textView"
+                    android:gravity="center"
+                    android:textSize="12sp"
+                    android:textStyle="italic" />
+
+                <ImageView
+                    android:contentDescription="@string/SubLogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imageView2"
+                    android:src="@drawable/logovpt" />
+
+            </LinearLayout>
+
         </RelativeLayout>
         
         
@@ -129,7 +145,7 @@
 		        android:layout_alignParentLeft="true"
 		        android:layout_alignParentRight="true"
 		        android:layout_alignParentTop="true"
-		        android:layout_marginBottom="3dp"
+		        android:layout_marginBottom="5dp"
 		        android:layout_marginLeft="10dp"
 		        android:layout_marginRight="10dp"
                 android:background="#288EC6"
@@ -198,12 +214,12 @@
 		        android:layout_marginBottom="10dp"
 		        android:layout_marginLeft="10dp"
 		        android:layout_marginRight="10dp"
-		        android:layout_marginTop="3dp"
+		        android:layout_marginTop="5dp"
 		        android:orientation="horizontal"
 		         >
 
 		        <FrameLayout
-		            android:layout_width="wrap_content"
+		            android:layout_width="0dp"
 		            android:layout_height="wrap_content"
 		            android:layout_marginRight="5dp"
 		            android:layout_weight="1">
@@ -215,7 +231,8 @@
                         android:background="@drawable/tabla"
                         android:contentDescription="@string/plantas_externas"
                         android:onClick="show_plantas_externas"
-                        android:src="@drawable/planta_externa_click" />
+                        android:src="@drawable/planta_externa_click"
+                        android:scaleType="fitXY" />
                     
                      <TextView
                          android:id="@+id/textView4"
@@ -231,7 +248,7 @@
                 </FrameLayout>
 
                 <FrameLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content" 
                     android:layout_marginLeft="5dp"
                     android:layout_weight="1">
@@ -243,7 +260,8 @@
                         android:background="@drawable/tabla"
                         android:contentDescription="@string/notificar_averia"
                         android:onClick="show_notificar_averias"
-                        android:src="@drawable/notificar_click" />
+                        android:src="@drawable/notificar_click"
+                        android:scaleType="fitXY" />
                     
                     <TextView
                         android:id="@+id/textView5"

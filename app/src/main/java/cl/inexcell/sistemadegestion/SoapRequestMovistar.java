@@ -507,6 +507,7 @@ public class SoapRequestMovistar {
         httpPost.addHeader(SOAP_ACTION, URL);
 
         httpPost.setEntity(se);
+
         HttpResponse httpResponse = httpClient.execute(httpPost);
         HttpEntity resEntity = httpResponse.getEntity();
         response = EntityUtils.toString(resEntity);
@@ -514,7 +515,7 @@ public class SoapRequestMovistar {
     }
 
     //TODO: Get Puntos
-    public static String getMapMarkers(String IMEI, String IMSI, String Comuna, String Region) throws Exception {
+    public static String getMapMarkers(String IMEI, String IMSI, String Comuna, String Region) throws IOException {
 
         final String SOAP_ACTION = "urn:Demo#NeighborNode";
         String response = null;
@@ -567,6 +568,18 @@ public class SoapRequestMovistar {
         httpPost.addHeader(SOAP_ACTION, URL);
 
         httpPost.setEntity(se);
+
+        HttpParams httpParameters = new BasicHttpParams();
+// Set the timeout in milliseconds until a connection is established.
+// The default value is zero, that means the timeout is not used.
+        int timeoutConnection = 10000;
+        HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+// Set the default socket timeout (SO_TIMEOUT)
+// in milliseconds which is the timeout for waiting for data.
+        int timeoutSocket = 25000;
+        HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+
+        httpPost.setParams(httpParameters);
         HttpResponse httpResponse = httpClient.execute(httpPost);
         HttpEntity resEntity = httpResponse.getEntity();
         response = EntityUtils.toString(resEntity);
@@ -747,6 +760,181 @@ public class SoapRequestMovistar {
                         "</RequestGuardarFotosFact>" +
                         "</urn:GuardarFotosFact>" +
                         "</soapenv:Body>" +
+                        "</soapenv:Envelope>";
+
+        xml = bodyOut;
+        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+        se.setContentType("text/xml");
+        httpPost.addHeader(SOAP_ACTION, URL);
+
+        httpPost.setEntity(se);
+
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+        HttpEntity resEntity = httpResponse.getEntity();
+        response = EntityUtils.toString(resEntity);
+        return response;
+
+    }
+
+    public static String getDCTOnDemand(String IMEI, String IMSI, String PHONE) throws IOException {
+
+        final String SOAP_ACTION = "urn:Demo#DCTOnDemand";
+        String response = null;
+        String xml = null;
+        DateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date fecha = new Date();
+        HttpClient httpClient = getNewHttpClient();
+        HttpPost httpPost = new HttpPost(URL);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.encodingStyle = SoapSerializationEnvelope.ENC;
+        envelope.dotNet = false;
+        envelope.implicitTypes = true;
+
+        String bodyOut =
+                "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Demo\">" +
+                           "<soapenv:Header/>" +
+                           "<soapenv:Body>" +
+                              "<urn:DCTOnDemand soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                                 "<RequestDCTOnDemand xsi:type=\"urn:RequestDCTOnDemand\">" +
+                                    "<Operation xsi:type=\"urn:OperationType\">" +
+                                       "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
+                                       "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
+                                       "<!--Optional:-->" +
+                                       "<DateTime xsi:type=\"xsd:string\">"+formatter.format(fecha)+"</DateTime>" +
+                                       "<!--Optional:-->" +
+                                       "<IdUser xsi:type=\"xsd:string\">"+IMEI+"</IdUser>" +
+                                       "<IMEI xsi:type=\"xsd:string\">"+IMEI+"</IMEI>" +
+                                       "<IMSI xsi:type=\"xsd:string\">"+IMSI+"</IMSI>" +
+                                    "</Operation>" +
+                                    "<Service xsi:type=\"urn:ServiceDCTOnDemandIn\">" +
+                                       "<DCTOnDemand xsi:type=\"urn:DCTOnDemandIn\">" +
+                                          "<Input xsi:type=\"urn:DCTOnDemandInData\">" +
+                                             "<Phone xsi:type=\"xsd:string\">"+PHONE+"</Phone>" +
+                                          "</Input>" +
+                                       "</DCTOnDemand>" +
+                                    "</Service>" +
+                                 "</RequestDCTOnDemand>" +
+                              "</urn:DCTOnDemand>" +
+                           "</soapenv:Body>" +
+                        "</soapenv:Envelope>";
+
+        xml = bodyOut;
+        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+        se.setContentType("text/xml");
+        httpPost.addHeader(SOAP_ACTION, URL);
+
+        httpPost.setEntity(se);
+
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+        HttpEntity resEntity = httpResponse.getEntity();
+        response = EntityUtils.toString(resEntity);
+        return response;
+
+    }
+
+    public static String getParaElectri(String IMEI, String IMSI, String PHONE) throws IOException {
+
+        final String SOAP_ACTION = "urn:Demo#ParaElectri";
+        String response = null;
+        String xml = null;
+        DateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date fecha = new Date();
+        HttpClient httpClient = getNewHttpClient();
+        HttpPost httpPost = new HttpPost(URL);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.encodingStyle = SoapSerializationEnvelope.ENC;
+        envelope.dotNet = false;
+        envelope.implicitTypes = true;
+
+        String bodyOut =
+                "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Demo\">" +
+                           "<soapenv:Header/>" +
+                           "<soapenv:Body>" +
+                              "<urn:ParaElectri soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                                 "<RequestParaElectri xsi:type=\"urn:RequestParaElectri\">" +
+                                    "<Operation xsi:type=\"urn:OperationType\">" +
+                                       "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
+                                       "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
+                                       "<!--Optional:-->" +
+                                       "<DateTime xsi:type=\"xsd:string\">"+formatter.format(fecha)+"</DateTime>" +
+                                       "<!--Optional:-->" +
+                                       "<IdUser xsi:type=\"xsd:string\">"+IMEI+"</IdUser>" +
+                                       "<IMEI xsi:type=\"xsd:string\">"+IMEI+"</IMEI>" +
+                                       "<IMSI xsi:type=\"xsd:string\">"+IMSI+"</IMSI>" +
+                                    "</Operation>" +
+                                    "<Service xsi:type=\"urn:ServiceParaElectriIn\">" +
+                                       "<ParaElectri xsi:type=\"urn:ParaElectriIn\">" +
+                                          "<Input xsi:type=\"urn:ParaElectriInData\">" +
+                                             "<Phone xsi:type=\"xsd:string\">"+PHONE+"</Phone>" +
+                                          "</Input>" +
+                                       "</ParaElectri>" +
+                                    "</Service>" +
+                                 "</RequestParaElectri>" +
+                              "</urn:ParaElectri>" +
+                           "</soapenv:Body>" +
+                        "</soapenv:Envelope>";
+
+        xml = bodyOut;
+        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+        se.setContentType("text/xml");
+        httpPost.addHeader(SOAP_ACTION, URL);
+
+        httpPost.setEntity(se);
+
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+        HttpEntity resEntity = httpResponse.getEntity();
+        response = EntityUtils.toString(resEntity);
+        return response;
+
+    }
+
+
+    public static String sendClosedHouse(String IMEI, String IMSI, String DESC, String IMG, String LAT, String LNG) throws IOException {
+
+        final String SOAP_ACTION = "urn:Demo#CasaCerrada";
+        String response = null;
+        String xml = null;
+        DateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date fecha = new Date();
+        HttpClient httpClient = getNewHttpClient();
+        HttpPost httpPost = new HttpPost(URL);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.encodingStyle = SoapSerializationEnvelope.ENC;
+        envelope.dotNet = false;
+        envelope.implicitTypes = true;
+
+        String bodyOut =
+                "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Demo\">" +
+                           "<soapenv:Header/>" +
+                           "<soapenv:Body>" +
+                              "<urn:CasaCerrada soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                                 "<RequestCasaCerrada xsi:type=\"urn:RequestCasaCerrada\">" +
+                                    "<Operation xsi:type=\"urn:OperationType\">" +
+                                       "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
+                                       "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
+                                       "<!--Optional:-->" +
+                                       "<DateTime xsi:type=\"xsd:string\">?</DateTime>" +
+                                       "<!--Optional:-->" +
+                                       "<IdUser xsi:type=\"xsd:string\">"+IMEI+"</IdUser>" +
+                                       "<IMEI xsi:type=\"xsd:string\">"+IMEI+"</IMEI>" +
+                                       "<IMSI xsi:type=\"xsd:string\">"+IMSI+"</IMSI>" +
+                                    "</Operation>" +
+                                    "<Service xsi:type=\"urn:ServiceCasaCerradaIn\">" +
+                                       "<CasaCerrada xsi:type=\"urn:CasaCerradaIn\">" +
+                                          "<Input xsi:type=\"urn:CasaCerradaInData\">" +
+                                             "<description xsi:type=\"xsd:string\">"+DESC+"</description>" +
+                                             "<Foto xsi:type=\"xsd:string\">"+IMG+"</Foto>" +
+                                             "<GPSLat xsi:type=\"xsd:string\">"+LAT+"</GPSLat>" +
+                                             "<GPSLng xsi:type=\"xsd:string\">"+LNG+"</GPSLng>" +
+                                          "</Input>" +
+                                       "</CasaCerrada>" +
+                                    "</Service>" +
+                                 "</RequestCasaCerrada>" +
+                              "</urn:CasaCerrada>" +
+                           "</soapenv:Body>" +
                         "</soapenv:Envelope>";
 
         xml = bodyOut;

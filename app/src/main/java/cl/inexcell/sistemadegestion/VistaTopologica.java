@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
+import cl.inexcell.sistemadegestion.objetos.Boton;
+
 public class VistaTopologica extends Activity {
     private String TAG = "TOPOLOGICA";
     public static Activity topo;
@@ -98,14 +100,14 @@ public class VistaTopologica extends Activity {
         tarea1.execute();
     }
 
-    private void getStateButtons(){
-        try{
+    private void getStateButtons() {
+        try {
             ArrayList<String> states = XMLParser.getStateButtonsTopologica(output);
 
-            if(states.get(0).equals("false")){
+            if (states.get(0).equals("false")) {
                 btnCertifica.setVisibility(View.GONE);
             }
-            if(states.get(1).equals("false")){
+            if (states.get(1).equals("false")) {
                 btnFact.setVisibility(View.GONE);
 
             }
@@ -155,8 +157,8 @@ public class VistaTopologica extends Activity {
     }
 
     public void init() {
-        btnCertifica = (Button)this.findViewById(R.id.buttonCertifica);
-        btnFact = (Button)this.findViewById(R.id.buttonFATC);
+        btnCertifica = (Button) this.findViewById(R.id.buttonCertifica);
+        btnFact = (Button) this.findViewById(R.id.buttonFATC);
         try {
             // TODO: condicion procedimiento 1
             //tipoProcedimiento = 1;
@@ -210,90 +212,102 @@ public class VistaTopologica extends Activity {
             ids_botones = new ArrayList<>();
             ids_contenidos = new ArrayList<>();
             nodesIn = new ArrayList<>();
+            if(result == null){
+                Toast.makeText(mContext, "Error al leer el XML", Toast.LENGTH_SHORT).show();
+                ((Activity)mContext).finish();
+            }else {
+                for (Bundle b : result) {
 
-            for (Bundle b : result) {
-                String idB = b.getString("ID");
-                String swit = b.getString("TYPE");
-                Drawable left = null;
-                if (swit.equals("DIRECCION")) {
-                    Log.e(TAG, "DIRECCION");
-                    left = getResources().getDrawable(R.drawable.cc_direct1);
-                }
-                if (swit.equals("PRODUCTOS")) {
-                    Log.e(TAG, "PRODUCTOS");
-                    left = getResources().getDrawable(R.drawable.vt_prod2);
-                }
-                if (swit.equals("PLANTA INTERNA")) {
-                    Log.e(TAG, "PLANTA INTERNA");
-                    left = getResources().getDrawable(R.drawable.vt_planta1);
-                }
-                if (swit.equals("PLANTA EXTERNA")) {
-                    Log.e(TAG, "PLANTA EXTERNA");
-                    left = getResources().getDrawable(R.drawable.vt_pe1);
-                }
-                if (swit.equals("MASIVAS")) {
-                    Log.e(TAG, "MASIVAS");
-                    left = getResources().getDrawable(R.drawable.vt_masiva);
-                }
-                if (b.getString("VALUE").equals("SERVICIO TELEFONIA")) {
-                    Log.e(TAG, "SERVICIO TELEFONIA");
-                    left = getResources().getDrawable(R.drawable.vt_stb1);
-                }
-                if (b.getString("VALUE").equals("SERVICIO BANDA ANCHA")) {
-                    Log.e(TAG, "SERVICIO BANDA ANCHA");
-                    left = getResources().getDrawable(R.drawable.vt_baf1);
-                }
-                if (b.getString("VALUE").equals("SERVICIO TELEVISION")) {
-                    Log.e(TAG, "SERVICIO TELEVISION");
 
-                    left = getResources().getDrawable(R.drawable.vt_dth2);
-                }
-                if (swit.equals("CAJA")) {
-                    Log.e(TAG, "CAJA");
-                    left = getResources().getDrawable(R.drawable.vt_caja1);
-                }
+                    String swit = b.getString("TYPE");
+                    Drawable left = null;
+                    if (swit.equals("DIRECCION")) {
+                        Log.e(TAG, "DIRECCION");
+                        left = getResources().getDrawable(R.drawable.cc_direct1);
+                    }
+                    if (swit.equals("PRODUCTOS")) {
+                        Log.e(TAG, "PRODUCTOS");
+                        left = getResources().getDrawable(R.drawable.vt_prod2);
+                    }
+                    if (swit.equals("PLANTA INTERNA")) {
+                        Log.e(TAG, "PLANTA INTERNA");
+                        left = getResources().getDrawable(R.drawable.vt_planta1);
+                    }
+                    if (swit.equals("PLANTA EXTERNA")) {
+                        Log.e(TAG, "PLANTA EXTERNA");
+                        left = getResources().getDrawable(R.drawable.vt_pe1);
+                    }
+                    if (swit.equals("MASIVAS")) {
+                        Log.e(TAG, "MASIVAS");
+                        left = getResources().getDrawable(R.drawable.vt_masiva);
+                    }
+                    if (b.getString("VALUE").equals("SERVICIO TELEFONIA")) {
+                        Log.e(TAG, "SERVICIO TELEFONIA");
+                        left = getResources().getDrawable(R.drawable.vt_stb1);
+                    }
+                    if (b.getString("VALUE").equals("SERVICIO BANDA ANCHA")) {
+                        Log.e(TAG, "SERVICIO BANDA ANCHA");
+                        left = getResources().getDrawable(R.drawable.vt_baf1);
+                    }
+                    if (b.getString("VALUE").equals("SERVICIO TELEVISION")) {
+                        Log.e(TAG, "SERVICIO TELEVISION");
 
-                String newId = "Boton" + b.getString("TYPE") + b.getString("VALUE");
-                String newIdCont = "Contenido" + b.getString("TYPE") + b.getString("VALUE");
-                Log.d(TAG, newId);
+                        left = getResources().getDrawable(R.drawable.vt_dth2);
+                    }
+                    if (swit.equals("CAJA")) {
+                        Log.e(TAG, "CAJA");
+                        left = getResources().getDrawable(R.drawable.vt_caja1);
+                    }
 
-                LinearLayout linearLayout;
-                LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-                LayoutInflater inflater2 = LayoutInflater.from(getApplicationContext());
-                final LinearLayout contlay = (LinearLayout) inflater2.inflate(contentlayout, null, false);
+                    String newId = "Boton" + b.getString("TYPE") + b.getString("VALUE");
+                    String newIdCont = "Contenido" + b.getString("TYPE") + b.getString("VALUE");
+                    Log.d(TAG, newId);
 
-                /** CREAMOS BOTON Y LO AñADIMOS **/
-                LinearLayout linearLayoutBoton = (LinearLayout) inflater.inflate(idButton, null, false);
-                Button boton = (Button) linearLayoutBoton.findViewById(R.id.button1);
-                boton.setText(b.getString("VALUE"));
-                int ic_buttom1 = R.drawable.ic_bottom1;
-                //boton.setCompoundDrawablesWithIntrinsicBounds(left,0, ic_buttom1, 0);
-                boton.setId(str2int(newId));
+                    LinearLayout linearLayout;
+                    LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+                    LayoutInflater inflater2 = LayoutInflater.from(getApplicationContext());
+                    final LinearLayout contlay = (LinearLayout) inflater2.inflate(contentlayout, null, false);
 
-                ArrayList<String> datos = b.getStringArrayList("IDENTIFICATION");
-                String valor = "";
-                if (datos != null) {
-                    for (String d : datos) {
-                        String decos_linea = "";
-                        Boolean isButton = false;
-                        final String[] lineas = d.split(";");
-                        for (int k = 0; k < lineas.length; k++) {
-                            String[] informacion = lineas[k].split("&");
-                            linearLayout = (LinearLayout) inflater.inflate(linea, null, false);
+                    /** CREAMOS BOTON Y LO AñADIMOS **/
+                    LinearLayout linearLayoutBoton = (LinearLayout) inflater.inflate(idButton, null, false);
+                    Button boton = (Button) linearLayoutBoton.findViewById(R.id.button1);
+                    boton.setText(b.getString("VALUE"));
+                    int ic_buttom1 = R.drawable.ic_bottom1;
+                    //boton.setCompoundDrawablesWithIntrinsicBounds(left,0, ic_buttom1, 0);
+                    boton.setId(str2int(newId));
 
-                            TextView izq = (TextView) linearLayout.findViewById(R.id.textView1);
-                            izq.setTextColor(getResources().getColor(R.color.black));
-                            valor = b.getString("VALUE");
-                            if (valor.equals("SERVICIO TELEVISION")) {
-                                if (!isButton && (tipoProcedimiento == 1 || tipoProcedimiento == 2)) {
-                                    ImageButton ed = (ImageButton) linearLayout.findViewById(R.id.imageButton1);
-                                    ed.setVisibility(View.VISIBLE);
-                                    ed.setOnClickListener(new OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
+                    final ArrayList<String> botones = b.getStringArrayList("BOTONES");
 
-                                            final CharSequence[] options, actions;
-                                            if (tipoProcedimiento == 2) {
+                    ArrayList<String> datos = b.getStringArrayList("IDENTIFICATION");
+                    String valor = "";
+                    if (datos != null) {
+                        for (String d : datos) {
+                            String decos_linea = "";
+                            Boolean isButton = false;
+                            final String[] lineas = d.split(";");
+                            for (int k = 0; k < lineas.length; k++) {
+                                String[] informacion = lineas[k].split("&");
+                                linearLayout = (LinearLayout) inflater.inflate(linea, null, false);
+
+                                TextView izq = (TextView) linearLayout.findViewById(R.id.textView1);
+                                izq.setTextColor(getResources().getColor(R.color.black));
+                                valor = b.getString("VALUE");
+                                if (valor.equals("SERVICIO TELEVISION")) {
+                                    Boton button = getButton(botones, "Lapiz");
+
+                                    if (!isButton && button != null && button.isEnabled()) {
+                                        ImageButton ed = (ImageButton) linearLayout.findViewById(R.id.imageButton1);
+                                        ed.setVisibility(View.VISIBLE);
+                                        ed.setOnClickListener(new OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+
+                                                final CharSequence[] options, actions;
+
+                                                options = new CharSequence[]{"REEMPLAZAR DECO"};
+                                                actions = new CharSequence[]{"ACTION103"};
+
+                                            /*if (tipoProcedimiento == 2) {
                                                 options = new CharSequence[]{"REEMPLAZAR DECO"};
                                                 //actions = new CharSequence[]{"ACTION101","ACTION102","ACTION103"};
                                                 actions = new CharSequence[]{"ACTION103"};
@@ -309,310 +323,325 @@ public class VistaTopologica extends Activity {
                                                 actions = new CharSequence[]{"ACTION103"};
                                             } else {
                                                 return;
-                                            }
+                                            }*/
 
-                                            AlertDialog.Builder dialog = new AlertDialog.Builder(VistaTopologica.topo);
-                                            dialog.setTitle("Selecione una opción:");
-                                            dialog.setItems(options, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, final int which) {
-                                                    final String serieantiguaDECO = lineas[1].split("&")[1];
-                                                    final String serieantiguaTARJETA = lineas[2].split("&")[1];
+                                                AlertDialog.Builder dialog = new AlertDialog.Builder(VistaTopologica.topo);
+                                                dialog.setTitle("Selecione una opción:");
+                                                dialog.setItems(options, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, final int which) {
+                                                        final String serieantiguaDECO = lineas[1].split("&")[1];
+                                                        final String serieantiguaTARJETA = lineas[2].split("&")[1];
 
-                                                    if (actions[which].equals("ACTION101")) {
-                                                        Log.w(TAG, "ACTION101--TYPE=" + serieantiguaDECO + ";" + serieantiguaTARJETA);
-                                                        ActionButtonTask ab = new ActionButtonTask(Phone, serieantiguaDECO + ";" + serieantiguaTARJETA, actions[which].toString());
-                                                        ab.execute();
-                                                    }
+                                                        if (actions[which].equals("ACTION101")) {
+                                                            Log.w(TAG, "ACTION101--TYPE=" + serieantiguaDECO + ";" + serieantiguaTARJETA);
+                                                            ActionButtonTask ab = new ActionButtonTask(Phone, serieantiguaDECO + ";" + serieantiguaTARJETA, actions[which].toString());
+                                                            ab.execute();
+                                                        }
 
-                                                    if (actions[which].equals("ACTION102")) {
-                                                        Log.w(TAG, "ACTION102--TYPE=" + serieantiguaDECO + ";" + serieantiguaTARJETA);
-                                                        ActionButtonTask ab = new ActionButtonTask(Phone, serieantiguaDECO + ";" + serieantiguaTARJETA, actions[which].toString());
-                                                        ab.execute();
-                                                    }
+                                                        if (actions[which].equals("ACTION102")) {
+                                                            Log.w(TAG, "ACTION102--TYPE=" + serieantiguaDECO + ";" + serieantiguaTARJETA);
+                                                            ActionButtonTask ab = new ActionButtonTask(Phone, serieantiguaDECO + ";" + serieantiguaTARJETA, actions[which].toString());
+                                                            ab.execute();
+                                                        }
 
-                                                    if (actions[which].equals("ACTION103")) {
-                                                        final Dialog dial = new Dialog(VistaTopologica.topo);
-                                                        dial.setContentView(R.layout.new_deco_view);
-                                                        final EditText serieDeco = (EditText) dial.findViewById(R.id.editText);
-                                                        final EditText serieTarjeta = (EditText) dial.findViewById(R.id.editText2);
-                                                        ImageButton ok = (ImageButton) dial.findViewById(R.id.bOK);
-                                                        ImageButton nok = (ImageButton) dial.findViewById(R.id.bNOK);
-                                                        dial.setTitle("Ingrese datos nuevo DECO:");
-                                                        ok.setOnClickListener(new OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View v) {
-                                                                if (serieDeco.getText().toString().length() == 10
-                                                                        && serieTarjeta.getText().toString().length() == 10) {
-                                                                    tipo = serieDeco.getText().toString()
-                                                                            + ";" + serieTarjeta.getText().toString()
-                                                                            + "-" + serieantiguaDECO
+                                                        if (actions[which].equals("ACTION103")) {
+                                                            final Dialog dial = new Dialog(VistaTopologica.topo);
+                                                            dial.setContentView(R.layout.new_deco_view);
+                                                            final EditText serieDeco = (EditText) dial.findViewById(R.id.editText);
+                                                            final EditText serieTarjeta = (EditText) dial.findViewById(R.id.editText2);
+                                                            ImageButton ok = (ImageButton) dial.findViewById(R.id.bOK);
+                                                            ImageButton nok = (ImageButton) dial.findViewById(R.id.bNOK);
+                                                            dial.setTitle("Ingrese datos nuevo DECO:");
+                                                            ok.setOnClickListener(new OnClickListener() {
+                                                                @Override
+                                                                public void onClick(View v) {
+                                                                    if (serieDeco.getText().toString().length() == 10
+                                                                            && serieTarjeta.getText().toString().length() == 10) {
+                                                                        tipo = serieDeco.getText().toString()
+                                                                                + ";" + serieTarjeta.getText().toString()
+                                                                                + "-" + serieantiguaDECO
+                                                                                + ";" + serieantiguaTARJETA;
+                                                                        Log.w(TAG, "ACTION103--TYPE=" + tipo);
+                                                                        ActionButtonTask ab = new ActionButtonTask(Phone, tipo, actions[which].toString());
+                                                                        ab.execute();
+                                                                        dial.dismiss();
+                                                                    } else {
+                                                                        Toast.makeText(VistaTopologica.topo, "Debe ingresar ambos números de serie de 10 digitos.", Toast.LENGTH_LONG).show();
+                                                                    }
+                                                                }
+                                                            });
+                                                            nok.setOnClickListener(new OnClickListener() {
+                                                                @Override
+                                                                public void onClick(View v) {
+                                                                    dial.dismiss();
+                                                                }
+                                                            });
+
+                                                            dial.show();
+                                                        }
+
+                                                        if (actions[which].equals("ACTION402")) {
+                                                            //final String serieantiguaDECO = lineas[1].split("&")[1];
+                                                            //final String serieantiguaTARJETA = lineas[2].split("&")[1];
+                                                            final Dialog dial = new Dialog(VistaTopologica.topo);
+                                                            dial.setContentView(R.layout.new_deco_view);
+                                                            final EditText serieDeco = (EditText) dial.findViewById(R.id.editText);
+                                                            final EditText serieTarjeta = (EditText) dial.findViewById(R.id.editText2);
+                                                            serieDeco.setText(serieantiguaDECO);
+                                                            serieTarjeta.setText(serieantiguaTARJETA);
+                                                            serieDeco.setEnabled(false);
+                                                            serieTarjeta.setEnabled(false);
+                                                            ImageButton ok = (ImageButton) dial.findViewById(R.id.bOK);
+                                                            ImageButton nok = (ImageButton) dial.findViewById(R.id.bNOK);
+                                                            dial.setTitle("Eliminar DECO:");
+                                                            ok.setOnClickListener(new OnClickListener() {
+                                                                @Override
+                                                                public void onClick(View v) {
+                                                                    tipo = serieantiguaDECO
                                                                             + ";" + serieantiguaTARJETA;
-                                                                    Log.w(TAG, "ACTION103--TYPE=" + tipo);
-                                                                    ActionButtonTask ab = new ActionButtonTask(Phone, tipo, actions[which].toString());
+                                                                    Log.w(TAG, "ACTION402--TYPE=" + tipo);
+                                                                    ActionButtonTask ab = new ActionButtonTask(Phone, tipo, "ACTION402");
                                                                     ab.execute();
                                                                     dial.dismiss();
-                                                                } else {
-                                                                    Toast.makeText(VistaTopologica.topo, "Debe ingresar ambos números de serie de 10 digitos.", Toast.LENGTH_LONG).show();
                                                                 }
-                                                            }
-                                                        });
-                                                        nok.setOnClickListener(new OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View v) {
-                                                                dial.dismiss();
-                                                            }
-                                                        });
+                                                            });
+                                                            nok.setOnClickListener(new OnClickListener() {
+                                                                @Override
+                                                                public void onClick(View v) {
+                                                                    dial.dismiss();
+                                                                }
+                                                            });
 
-                                                        dial.show();
+                                                            dial.show();
+                                                        }
                                                     }
+                                                });
+                                                dialog.setCancelable(false);
+                                                dialog.setNeutralButton("Cerrar", new DialogInterface.OnClickListener() {
 
-                                                    if (actions[which].equals("ACTION402")) {
-                                                        //final String serieantiguaDECO = lineas[1].split("&")[1];
-                                                        //final String serieantiguaTARJETA = lineas[2].split("&")[1];
-                                                        final Dialog dial = new Dialog(VistaTopologica.topo);
-                                                        dial.setContentView(R.layout.new_deco_view);
-                                                        final EditText serieDeco = (EditText) dial.findViewById(R.id.editText);
-                                                        final EditText serieTarjeta = (EditText) dial.findViewById(R.id.editText2);
-                                                        serieDeco.setText(serieantiguaDECO);
-                                                        serieTarjeta.setText(serieantiguaTARJETA);
-                                                        serieDeco.setEnabled(false);
-                                                        serieTarjeta.setEnabled(false);
-                                                        ImageButton ok = (ImageButton) dial.findViewById(R.id.bOK);
-                                                        ImageButton nok = (ImageButton) dial.findViewById(R.id.bNOK);
-                                                        dial.setTitle("Eliminar DECO:");
-                                                        ok.setOnClickListener(new OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View v) {
-                                                                tipo = serieantiguaDECO
-                                                                        + ";" + serieantiguaTARJETA;
-                                                                Log.w(TAG, "ACTION402--TYPE=" + tipo);
-                                                                ActionButtonTask ab = new ActionButtonTask(Phone, tipo, "ACTION402");
-                                                                ab.execute();
-                                                                dial.dismiss();
-                                                            }
-                                                        });
-                                                        nok.setOnClickListener(new OnClickListener() {
-                                                            @Override
-                                                            public void onClick(View v) {
-                                                                dial.dismiss();
-                                                            }
-                                                        });
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
 
-                                                        dial.show();
+
                                                     }
-                                                }
-                                            });
-                                            dialog.setCancelable(false);
-                                            dialog.setNeutralButton("Cerrar", new DialogInterface.OnClickListener() {
-
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-
-
-                                                }
-                                            });
-                                            dialog.show();
-                                        }
-                                    });
-                                    isButton = true;
+                                                });
+                                                dialog.show();
+                                            }
+                                        });
+                                        isButton = true;
+                                    }
                                 }
-                            }
-                            //--------------
+                                //--------------
 
 
-                            //------
+                                //------
 
 
-                            if (valor.equals("SERVICIO BANDA ANCHA")) {
-                                if (!isButton && tipoProcedimiento != 0) {
-                                    ImageButton ed = (ImageButton) linearLayout.findViewById(R.id.imageButton1);
-                                    ed.setVisibility(View.VISIBLE);
-                                    ed.setOnClickListener(new OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            final CharSequence[] options, actions;
-                                            options = new CharSequence[]{"RESET PTO DSLAM", "CONSULTAR ESTADO"};
-                                            actions = new CharSequence[]{"ACTION201", "ACTION202"};
+                                if (valor.equals("SERVICIO BANDA ANCHA")) {
+                                    Boton button = getButton(botones, "resetDslam");
 
-                                            AlertDialog.Builder dialog = new AlertDialog.Builder(VistaTopologica.topo);
-                                            dialog.setTitle("Selecione una opción:");
-                                            dialog.setItems(options, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, final int which) {
-                                                    if (actions[which].equals("ACTION201")) {
-                                                        //Log.w(TAG,"ACTION104--TYPE="+serieantiguaDECO+";"+serieantiguaTARJETA);
-                                                        ActionButtonTask ab = new ActionButtonTask(Phone, "", actions[which].toString());
-                                                        ab.execute();
+                                    if (!isButton && button != null && button.isEnabled()) {
+                                        ImageButton ed = (ImageButton) linearLayout.findViewById(R.id.imageButton1);
+                                        ed.setVisibility(View.VISIBLE);
+                                        ed.setOnClickListener(new OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                final CharSequence[] options, actions;
+                                                options = new CharSequence[]{"RESET PTO DSLAM", "CONSULTAR ESTADO"};
+                                                actions = new CharSequence[]{"ACTION201", "ACTION202"};
+
+                                                AlertDialog.Builder dialog = new AlertDialog.Builder(VistaTopologica.topo);
+                                                dialog.setTitle("Selecione una opción:");
+                                                dialog.setItems(options, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, final int which) {
+                                                        if (actions[which].equals("ACTION201")) {
+                                                            //Log.w(TAG,"ACTION104--TYPE="+serieantiguaDECO+";"+serieantiguaTARJETA);
+                                                            ActionButtonTask ab = new ActionButtonTask(Phone, "", actions[which].toString());
+                                                            ab.execute();
+                                                        }
+                                                        if (actions[which].equals("ACTION202")) {
+                                                            //Log.w(TAG,"ACTION104--TYPE="+serieantiguaDECO+";"+serieantiguaTARJETA);
+                                                            ActionButtonTask ab = new ActionButtonTask(Phone, "", actions[which].toString());
+                                                            ab.execute();
+                                                        }
                                                     }
-                                                    if (actions[which].equals("ACTION202")) {
-                                                        //Log.w(TAG,"ACTION104--TYPE="+serieantiguaDECO+";"+serieantiguaTARJETA);
-                                                        ActionButtonTask ab = new ActionButtonTask(Phone, "", actions[which].toString());
-                                                        ab.execute();
+                                                });
+                                                dialog.setCancelable(false);
+                                                dialog.setNeutralButton("Cerrar", new DialogInterface.OnClickListener() {
+
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+
                                                     }
-                                                }
-                                            });
-                                            dialog.setCancelable(false);
-                                            dialog.setNeutralButton("Cerrar", new DialogInterface.OnClickListener() {
-
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-
-
-                                                }
-                                            });
-                                            dialog.show();
-                                        }
-                                    });
-                                    isButton = true;
+                                                });
+                                                dialog.show();
+                                            }
+                                        });
+                                        isButton = true;
+                                    }
                                 }
-                            }
 
 
-                            TextView der = (TextView) linearLayout.findViewById(R.id.textView2);
-                            der.setTextColor(getResources().getColor(R.color.celeste));
-                            if (k == 0 && b.getString("VALUE").equals("SERVICIO TELEVISION")) {
-                                der.setBackgroundColor(Color.BLUE);
-                                izq.setBackgroundColor(Color.BLUE);
-                                der.setTextColor(Color.WHITE);
-                                izq.setTextColor(Color.WHITE);
-                            }
-
-                            izq.setText(" " + informacion[0] + ":  ");
-                            if (informacion.length == 1)
-                                der.setText("---");
-                            else
-                                der.setText(informacion[1]);
-                            if (valor.equals("SERVICIO TELEVISION") && !isTV && (tipoProcedimiento == 1 || tipoProcedimiento == 2)) {
-                                contlay.addView(putButtonAddTV());
-                                contlay.addView(putButtonReactivateTV());
-                            }
-
-                            if (valor.equals("SERVICIO TELEVISION")) {
-                                String p = informacion[0] + ";" + informacion[1];
-                                if (decos_linea.compareTo("") == 0) {
-                                    decos_linea += p;
-                                } else {
-                                    decos_linea += "&" + p;
+                                TextView der = (TextView) linearLayout.findViewById(R.id.textView2);
+                                der.setTextColor(getResources().getColor(R.color.celeste));
+                                if (k == 0 && b.getString("VALUE").equals("SERVICIO TELEVISION")) {
+                                    der.setBackgroundColor(Color.BLUE);
+                                    izq.setBackgroundColor(Color.BLUE);
+                                    der.setTextColor(Color.WHITE);
+                                    izq.setTextColor(Color.WHITE);
                                 }
-                                if (k == (lineas.length - 1))
-                                    decos_reg.add(decos_linea);
-                            }
-                            if (swit.equals("DIRECCION")) {
-                                String p = informacion[0] + ";" + informacion[1];
-                                if (decos_linea.compareTo("") == 0) {
-                                    decos_linea += p;
-                                } else {
-                                    decos_linea += "&" + p;
+
+                                izq.setText(" " + informacion[0] + ":  ");
+                                if (informacion.length == 1)
+                                    der.setText("---");
+                                else
+                                    der.setText(informacion[1]);
+                                if (valor.equals("SERVICIO TELEVISION") && !isTV) {
+                                    Boton buttonAdd = getButton(botones, "AgegarDeco");
+                                    Boton buttonReac = getButton(botones, "ReactivarDeco");
+
+                                    if (buttonAdd != null && buttonAdd.isEnabled())
+                                        contlay.addView(putButtonAddTV(buttonAdd.getName()));
+                                    if (buttonReac != null && buttonReac.isEnabled())
+                                        contlay.addView(putButtonReactivateTV(buttonReac.getName()));
                                 }
-                                if (k == (lineas.length - 1))
-                                    datos_cliente_reg.add(decos_linea);
+
+                                if (valor.equals("SERVICIO TELEVISION")) {
+                                    String p = informacion[0] + ";" + informacion[1];
+                                    if (decos_linea.compareTo("") == 0) {
+                                        decos_linea += p;
+                                    } else {
+                                        decos_linea += "&" + p;
+                                    }
+                                    if (k == (lineas.length - 1))
+                                        decos_reg.add(decos_linea);
+                                }
+                                if (swit.equals("DIRECCION")) {
+                                    String p = informacion[0] + ";" + informacion[1];
+                                    if (decos_linea.compareTo("") == 0) {
+                                        decos_linea += p;
+                                    } else {
+                                        decos_linea += "&" + p;
+                                    }
+                                    if (k == (lineas.length - 1))
+                                        datos_cliente_reg.add(decos_linea);
+                                }
+
+
+                                contlay.addView(linearLayout);
                             }
 
 
-                            contlay.addView(linearLayout);
                         }
 
+                    } else {
+                        if (b.getString("VALUE").equals("SERVICIO TELEVISION") && !isTV) {
+                            Boton buttonAdd = getButton(botones, "AgegarDeco");
+                            Boton buttonReac = getButton(botones, "ReactivarDeco");
 
+                            if (buttonAdd != null && buttonAdd.isEnabled())
+                                contlay.addView(putButtonAddTV(buttonAdd.getName()));
+                            if (buttonReac != null && buttonReac.isEnabled())
+                                contlay.addView(putButtonReactivateTV(buttonReac.getName()));
+                        } else if (swit.equals("CAJA")) {
+                            idCajaButton = boton.getId();
+                            idCajaContent = str2int(newIdCont);
+                        } else
+                            continue;
                     }
 
-                } else {
-                    if (b.getString("VALUE").equals("SERVICIO TELEVISION") && !isTV) {
-                        contlay.addView(putButtonAddTV());
-                    } else if (swit.equals("CAJA")) {
-                        idCajaButton = boton.getId();
-                        idCajaContent = str2int(newIdCont);
-                    } else
-                        continue;
+
+                    contlay.setVisibility(View.GONE);
+                    boton.setOnClickListener(new OnClickListener() {
+
+                        @Override
+                        public void onClick(View arg0) {
+                            Log.d(TAG, arg0.getId() + "");
+                            Log.d(TAG, "contenido correpondiente: " + ids_contenidos.get(ids_botones.indexOf(arg0.getId())));
+                            ArrayList<Button> bs = new ArrayList<>();
+                            ArrayList<View> ls = new ArrayList<>();
+
+                            int posicion = ids_botones.indexOf(arg0.getId());
+                            for (int i = 0; i < ids_botones.size(); i++) {
+                                if (i != posicion) {
+                                    Button b = (Button) LContenido.findViewById(ids_botones.get(i));
+                                    View v = LContenido.findViewById(ids_contenidos.get(i));
+                                    bs.add(b);
+                                    ls.add(v);
+
+                                }
+
+                            }
+
+                            if (contlay.getVisibility() == View.GONE) {
+                                contlay.setVisibility(View.VISIBLE);
+                                if (arg0.getId() == idCajaButton) {
+
+                                    DCTButtonTask t = new DCTButtonTask();
+                                    t.execute();
+
+                                }
+
+                                for (int i = 0; i < bs.size(); i++) {
+                                    ls.get(i).setVisibility(View.GONE);
+                                }
+                            } else {
+                                contlay.setVisibility(View.GONE);
+                            }
+                        }
+
+                    });
+
+                    int n = 0;
+                    datos = b.getStringArrayList("SUBELEMENT");
+                    if (datos != null) {
+                        pares = new ArrayList<>();
+
+                        for (int i = 0; i < datos.size(); i++) {
+                            String[] d = datos.get(i).split(";");
+                            String p = "";
+                            n = d.length;
+                            if (i == 0) {
+                                for (int j = 0; j < n; j++) {
+                                    if (j == 0) {
+                                        p += d[j];
+                                    } else
+                                        p += ";" + d[j];
+                                }
+
+                            } else {
+                                for (int j = 0; j < n; j++) {
+                                    if (j == 0) {
+                                        p += d[j];
+                                    } else
+                                        p += ";" + d[j];
+                                }
+                            }
+                            pares.add(p);
+                        }
+                        contlay.addView(dibujarTabla(1, datos.size(), n, "#FFFFFF"));
+                    }
+
+
+                    //boton.setCompoundDrawablesWithIntrinsicBounds(left,0, ic_buttom1, 0);
+
+                    boton.setCompoundDrawablesWithIntrinsicBounds(left, null, getResources().getDrawable(ic_buttom1), null);
+                    LContenido.addView(linearLayoutBoton);
+
+                    contlay.setId(str2int(newIdCont));
+                    LContenido.addView(contlay);
+
+                    ids_contenidos.add(str2int(newIdCont));
+                    ids_botones.add(boton.getId());
+
                 }
 
-
-                contlay.setVisibility(View.GONE);
-                boton.setOnClickListener(new OnClickListener() {
-
-                    @Override
-                    public void onClick(View arg0) {
-                        Log.d(TAG, arg0.getId() + "");
-                        Log.d(TAG, "contenido correpondiente: " + ids_contenidos.get(ids_botones.indexOf(arg0.getId())));
-                        ArrayList<Button> bs = new ArrayList<>();
-                        ArrayList<View> ls = new ArrayList<>();
-
-                        int posicion = ids_botones.indexOf(arg0.getId());
-                        for (int i = 0; i < ids_botones.size(); i++) {
-                            if (i != posicion) {
-                                Button b = (Button) LContenido.findViewById(ids_botones.get(i));
-                                View v = LContenido.findViewById(ids_contenidos.get(i));
-                                bs.add(b);
-                                ls.add(v);
-
-                            }
-
-                        }
-
-                        if (contlay.getVisibility() == View.GONE) {
-                            contlay.setVisibility(View.VISIBLE);
-                            if (arg0.getId() == idCajaButton) {
-                                DCTButtonTask t = new DCTButtonTask();
-                                t.execute();
-                            }
-
-                            for (int i = 0; i < bs.size(); i++) {
-                                ls.get(i).setVisibility(View.GONE);
-                            }
-                        } else {
-                            contlay.setVisibility(View.GONE);
-                        }
-                    }
-
-                });
-
-                int n = 0;
-                datos = b.getStringArrayList("SUBELEMENT");
-                if (datos != null) {
-                    pares = new ArrayList<>();
-
-                    for (int i = 0; i < datos.size(); i++) {
-                        String[] d = datos.get(i).split(";");
-                        String p = "";
-                        n = d.length;
-                        if (i == 0) {
-                            for (int j = 0; j < n; j++) {
-                                if (j == 0) {
-                                    p += d[j];
-                                } else
-                                    p += ";" + d[j];
-                            }
-
-                        } else {
-                            for (int j = 0; j < n; j++) {
-                                if (j == 0) {
-                                    p += d[j];
-                                } else
-                                    p += ";" + d[j];
-                            }
-                        }
-                        pares.add(p);
-                    }
-                    contlay.addView(dibujarTabla(1, datos.size(), n, "#FFFFFF"));
-                }
-
-
-                //boton.setCompoundDrawablesWithIntrinsicBounds(left,0, ic_buttom1, 0);
-
-                boton.setCompoundDrawablesWithIntrinsicBounds(left, null, getResources().getDrawable(ic_buttom1), null);
-                LContenido.addView(linearLayoutBoton);
-
-                contlay.setId(str2int(newIdCont));
-                LContenido.addView(contlay);
-
-                ids_contenidos.add(str2int(newIdCont));
-                ids_botones.add(boton.getId());
-
+                Log.d(TAG, "BOTONES DISPONIBLES: " + ids_botones.toString());
+                Log.d(TAG, "Contenidos DISPONIBLES: " + ids_contenidos.toString());
             }
-
-            Log.d(TAG, "BOTONES DISPONIBLES: " + ids_botones.toString());
-            Log.d(TAG, "Contenidos DISPONIBLES: " + ids_contenidos.toString());
-
             if (this.dialog.isShowing()) {
                 this.dialog.dismiss();
             }
@@ -620,6 +649,18 @@ public class VistaTopologica extends Activity {
         }
 
     }
+
+    private Boton getButton(ArrayList<String> botones, String buscado) {
+        for(String b: botones){
+            String[] datos = b.split(";");
+            Boton button = new Boton(datos[0],datos[1],datos[2]);
+            if(button.getId().equals(buscado))return button;
+        }
+
+        return null;
+    }
+
+
 
     public void fatc(View v) {
         Intent i = new Intent(this, FactActivity.class);
@@ -874,10 +915,11 @@ public class VistaTopologica extends Activity {
         }
     }
 
-    public LinearLayout putButtonAddTV() {
+    public LinearLayout putButtonAddTV(String name) {
         isTV = true;
         LinearLayout agregar = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.layoutbuttonadd, null, false);
         Button add = (Button) agregar.findViewById(R.id.buttonAdd);
+        add.setText(name);
         add.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -921,10 +963,11 @@ public class VistaTopologica extends Activity {
         return agregar;
     }
 
-    public LinearLayout putButtonReactivateTV() {
+    public LinearLayout putButtonReactivateTV(String name) {
         isTV = true;
         LinearLayout agregar = (LinearLayout) LayoutInflater.from(getApplicationContext()).inflate(R.layout.layoutbuttonreactivate, null, false);
         Button add = (Button) agregar.findViewById(R.id.buttonAdd);
+        add.setText(name);
         add.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -965,14 +1008,22 @@ public class VistaTopologica extends Activity {
         protected void onPreExecute() {
             dialog = new ProgressDialog(mContext);
             dialog.setCancelable(false);
-            dialog.setMessage("Buscando información...");
+            dialog.setMessage("Buscando información...\nEste proceso podría tardar unos segundos.");
             dialog.show();
         }
 
         @Override
         protected String doInBackground(String... params) {
             try {
-                String query = URLs.DCTRESOURCE;
+                String query;
+                if (Phone.equals("2")) {
+                    query = URLs.DCTRESOURCE;
+                } else {
+                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                    String IMEI = telephonyManager.getDeviceId();
+                    String IMSI = telephonyManager.getSimSerialNumber();
+                    query = SoapRequestMovistar.getDCTOnDemand(IMEI, IMSI, Phone);
+                }
 
                 ArrayList<String> retorno = XMLParser.getReturnCode(query);
                 int code = Integer.valueOf(retorno.get(0));
@@ -994,10 +1045,10 @@ public class VistaTopologica extends Activity {
         protected void onPostExecute(String s) {
             if (stateOK) {
                 try {
-
                     ArrayList<Bundle> dct = XMLParser.getResourcesNew(s);
                     Log.d("DCTACTIONBUTTON", "LARGO " + dct.size());
-                    dibujar_dct(dct.get(0));
+                    dibujar_dct(dct.get(0), XMLParser.getStateButtonsDCT(s));
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(mContext, "Error en la información obtenida. Por favor reintente.", Toast.LENGTH_LONG).show();
@@ -1010,9 +1061,9 @@ public class VistaTopologica extends Activity {
         }
     }
 
-    private void dibujar_dct(Bundle b) {
+    private void dibujar_dct(Bundle b, boolean buttonDCT) {
         View contView = LContenido.findViewById(idCajaContent);
-        ((LinearLayout)contView).removeAllViews();
+        ((LinearLayout) contView).removeAllViews();
         View v = LayoutInflater.from(mContext).inflate(R.layout.dct_view, null, false);
         LinearLayout contlay = (LinearLayout) v.findViewById(R.id.dct_content);
         Button dct = (Button) v.findViewById(R.id.dct_button);
@@ -1020,9 +1071,15 @@ public class VistaTopologica extends Activity {
             @Override
             public void onClick(View v) {
                 Intent para = new Intent(mContext, DCT.class);
+                para.putExtra("PHONE", Phone);
                 startActivity(para);
             }
         });
+
+        if (buttonDCT) {
+            dct.setVisibility(View.VISIBLE);
+        } else
+            dct.setVisibility(View.GONE);
 
         ArrayList<String> datos = b.getStringArrayList("IDENTIFICATION");
 

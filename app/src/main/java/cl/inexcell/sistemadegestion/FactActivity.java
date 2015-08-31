@@ -615,6 +615,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
 
     private void openCasaCerrada(){
         Intent i = new Intent(this, CasaCerrada.class);
+        i.putExtra("PHONE", Phone);
         startActivity(i);
     }
 

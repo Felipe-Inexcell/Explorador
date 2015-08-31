@@ -73,7 +73,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         class="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_above="@+id/editText16" />
+        android:layout_above="@+id/description" />
 
         <Button
             android:id="@+id/tomarfoto"
@@ -110,7 +110,7 @@
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:ems="10"
-            android:id="@+id/editText16"
+            android:id="@+id/description"
             android:layout_above="@+id/tomarfoto"
             android:lines="4"
             android:gravity="top|left"
