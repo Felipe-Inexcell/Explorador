@@ -16,7 +16,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.conn.ConnectTimeoutException;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 
 import cl.inexcell.sistemadegestion.objetos.DCTParamCaja;
 import cl.inexcell.sistemadegestion.objetos.DCTParamFono;
@@ -88,8 +95,23 @@ public class DCT extends Activity {
                 } else {
                     return retorno.get(1);
                 }
+            } catch (ConnectTimeoutException e) {
+                e.printStackTrace();
+                return "Se agoto el tiempo de espera. Por favor reintente";
+            } catch (SAXException e) {
+                e.printStackTrace();
+                return "Error al leer el XML";
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+                return "Error al leer el XML";
+            } catch (XPathExpressionException e) {
+                e.printStackTrace();
+                return "Error al leer el XML";
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "Error en la conexión con el servidor. Por favor reintente";
             } catch (Exception e) {
-                return e.getMessage();
+                return "Error no controlado. Causa: "+e.getCause();
             }
         }
 
@@ -102,9 +124,11 @@ public class DCT extends Activity {
                     dibujar(response);
                 } catch (Exception e) {
                     Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                    ((Activity) mContext).finish();
                 }
             } else {
                 Toast.makeText(mContext, s, Toast.LENGTH_LONG).show();
+                ((Activity) mContext).finish();
             }
             if (dialog.isShowing()) dialog.dismiss();
         }

@@ -57,7 +57,8 @@ public class SoapRequestMovistar {
     //private static final String URL = "https://pcba.telefonicachile.cl/smartphone/ws/sca_dev.php";
     //final String URL="https://pcba.telefonicachile.cl:443/smartphone/ws/shark.php";
     //final String URL="http://cmn81.gratishosting.cl:80/shark_fijo.php";
-    private static final String URL = "https://pcba.telefonicachile.cl/smartphone/ws/sca_dev_copiaOP.php";
+    //private static final String URL = "https://pcba.telefonicachile.cl/smartphone/ws/sca_dev_copiaOP.php";
+    private static final String URL = "https://pcba.telefonicachile.cl/smartphone/ws/sca_dev_TodoPruebas.php";
 
 	/*
 	 * Clase Principal de Conexion SSL a WDSL
@@ -828,6 +829,18 @@ public class SoapRequestMovistar {
 
         httpPost.setEntity(se);
 
+        HttpParams httpParameters = new BasicHttpParams();
+// Set the timeout in milliseconds until a connection is established.
+// The default value is zero, that means the timeout is not used.
+        int timeoutConnection = 20000;
+        HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+// Set the default socket timeout (SO_TIMEOUT)
+// in milliseconds which is the timeout for waiting for data.
+        int timeoutSocket = 60000;
+        HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+
+        httpPost.setParams(httpParameters);
+
         HttpResponse httpResponse = httpClient.execute(httpPost);
         HttpEntity resEntity = httpResponse.getEntity();
         response = EntityUtils.toString(resEntity);
@@ -884,6 +897,18 @@ public class SoapRequestMovistar {
         httpPost.addHeader(SOAP_ACTION, URL);
 
         httpPost.setEntity(se);
+
+        HttpParams httpParameters = new BasicHttpParams();
+// Set the timeout in milliseconds until a connection is established.
+// The default value is zero, that means the timeout is not used.
+        int timeoutConnection = 20000;
+        HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+// Set the default socket timeout (SO_TIMEOUT)
+// in milliseconds which is the timeout for waiting for data.
+        int timeoutSocket = 60000;
+        HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+
+        httpPost.setParams(httpParameters);
 
         HttpResponse httpResponse = httpClient.execute(httpPost);
         HttpEntity resEntity = httpResponse.getEntity();

@@ -30,6 +30,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.conn.ConnectTimeoutException;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
@@ -1046,9 +1047,12 @@ public class VistaTopologica extends Activity {
                 } else
                     return retorno.get(1);
 
-            } catch (Exception e) {
+            }catch(ConnectTimeoutException e) {
+                e.printStackTrace();
+                return "Se agoto el tiempo de espera. Por favor reintente";
+            }catch (Exception e) {
                 Log.e("DCTACTIONBUTTON", e.getMessage());
-                return "Error.";
+                return "Error";
             }
 
         }
