@@ -89,6 +89,8 @@ public class SoapRequestMovistar {
         }
     }
 
+
+
     /*
      * XML-007: Certificacion DSL
      */
@@ -951,6 +953,63 @@ public class SoapRequestMovistar {
 
     }
 
+    /*
+     * XML-007: Certificacion DSL
+     */
+    //TODO: en revision
+    public static String getButtonBlock(String IMEI, String IMSI) throws Exception {
+        final String SOAP_ACTION = "urn:Demo#bloqueoBotones";
+        String response = null;
+        String xml = null;
+        DateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date fecha = new Date();
+        HttpClient httpClient = getNewHttpClient();
+        HttpPost httpPost = new HttpPost(URL);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.encodingStyle = SoapSerializationEnvelope.ENC;
+        envelope.dotNet = false;
+        envelope.implicitTypes = true;
+
+        String bodyOut =
+                "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Demo\">" +
+                           "<soapenv:Header/>" +
+                           "<soapenv:Body>" +
+                              "<urn:bloqueoBotones soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                                 "<RequestbloqueoBotones xsi:type=\"urn:RequestbloqueoBotones\">" +
+                                    "<Operation xsi:type=\"urn:OperationType\">" +
+                                       "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
+                                       "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
+                                       "<!--Optional:-->" +
+                                       "<DateTime xsi:type=\"xsd:string\">"+formatter.format(fecha)+"</DateTime>" +
+                                       "<!--Optional:-->" +
+                                       "<IdUser xsi:type=\"xsd:string\">"+IMEI+"</IdUser>" +
+                                       "<IMEI xsi:type=\"xsd:string\">"+IMEI+"</IMEI>" +
+                                       "<IMSI xsi:type=\"xsd:string\">"+IMSI+"</IMSI>" +
+                                    "</Operation>" +
+                                    "<Service xsi:type=\"urn:ServicebloqueoBotonesIn\">" +
+                                       "<bloqueoBotones xsi:type=\"urn:bloqueoBotonesIn\">" +
+                                          "<Input xsi:type=\"urn:bloqueoBotonesInData\">" +
+                                             "<IMEI xsi:type=\"xsd:string\">?</IMEI>" +
+                                          "</Input>" +
+                                       "</bloqueoBotones>" +
+                                    "</Service>"+
+                                 "</RequestbloqueoBotones>" +
+                              "</urn:bloqueoBotones>" +
+                           "</soapenv:Body>" +
+                        "</soapenv:Envelope>";
+
+        xml = bodyOut;
+        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+        se.setContentType("text/xml");
+        httpPost.addHeader(SOAP_ACTION, URL);
+
+        httpPost.setEntity(se);
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+        HttpEntity resEntity = httpResponse.getEntity();
+        response = EntityUtils.toString(resEntity);
+        return response;
+    }
 
 
 

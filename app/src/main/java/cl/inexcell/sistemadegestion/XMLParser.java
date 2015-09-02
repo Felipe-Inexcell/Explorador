@@ -764,6 +764,33 @@ public class XMLParser {
     }
 
 
+    public static ArrayList<Boton> getButtons(String xml) throws ParserConfigurationException,
+            SAXException, IOException, XPathExpressionException {
+
+        ArrayList<Boton> datos = new ArrayList<>();
+
+        DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        InputSource is = new InputSource();
+        is.setCharacterStream(new StringReader(xml));
+
+        Document doc = db.parse(is);
+        NodeList botones = doc.getElementsByTagName("Element");
+
+        for(int i = 0; i< botones.getLength(); i++){
+            Element b = (Element) botones.item(i);
+            Boton boton = new Boton();
+
+            boton.setId(getValue(b, "idBoton"));
+            boton.setEnabled(getValue(b, "Code"));
+            boton.setName(getValue(b, "Description"));
+            datos.add(boton);
+        }
+
+
+        return datos;
+    }
+
+
     private static String getValue(Element e, String TagName) {
         return getCharacterDataFromElement((Element) e.getElementsByTagName(TagName).item(0));
     }

@@ -97,8 +97,7 @@
                     android:id="@+id/Spinner013"
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:entries="@array/averias"/>
+                    android:layout_weight="1" />
 
             </LinearLayout>
 
@@ -120,8 +119,7 @@
                     android:id="@+id/Spinner021"
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:entries="@array/equipos"/>
+                    android:layout_weight="1" />
                     <!-- android:background="@drawable/spinner_shape"-->
 
             </LinearLayout>
@@ -162,8 +160,7 @@
                     android:id="@+id/Spinner012"
                     android:layout_width="fill_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:entries="@array/averias" />
+                    android:layout_weight="1" />
 
             </LinearLayout>
 

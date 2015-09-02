@@ -39,12 +39,15 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import cl.inexcell.sistemadegestion.objetos.Boton;
+import cl.inexcell.sistemadegestion.preferences.BloqueoBotones;
 
 public class VistaTopologica extends Activity {
     private String TAG = "TOPOLOGICA";
     public static Activity topo;
     private Context mContext;
     private boolean isTV = false;
+
+    private BloqueoBotones bloqueo;
 
     int idButton = R.layout.layoutbuttontopologica;
     int contentlayout = R.layout.contenidolayout;
@@ -81,6 +84,7 @@ public class VistaTopologica extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_topologica);
         topo = this;
+        bloqueo = new BloqueoBotones(this);
         mContext = this;
         Phone = getIntent().getStringExtra("PHONE");
         conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -135,14 +139,18 @@ public class VistaTopologica extends Activity {
 
 
     public void consultar(View v) {
-        State state3g = conMan.getNetworkInfo(0).getState();
-        State stateWifi = conMan.getNetworkInfo(1).getState();
-        if (state3g == State.CONNECTED || stateWifi == State.CONNECTED) {
-            Intent certificar = new Intent(this, Certificar.class);
-            certificar.putExtra("PHONE", Phone);
-            startActivity(certificar);
+        if (bloqueo.getState("Certifica")) {
+            Toast.makeText(this, bloqueo.getMsg("Certifica"), Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(getApplicationContext(), "Error: \nNo hay conexión a internet", Toast.LENGTH_SHORT).show();
+            State state3g = conMan.getNetworkInfo(0).getState();
+            State stateWifi = conMan.getNetworkInfo(1).getState();
+            if (state3g == State.CONNECTED || stateWifi == State.CONNECTED) {
+                Intent certificar = new Intent(this, Certificar.class);
+                certificar.putExtra("PHONE", Phone);
+                startActivity(certificar);
+            } else {
+                Toast.makeText(getApplicationContext(), "Error: \nNo hay conexión a internet", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -663,13 +671,17 @@ public class VistaTopologica extends Activity {
 
 
     public void fatc(View v) {
-        Intent i = new Intent(this, FactActivity.class);
-        i.putStringArrayListExtra("DECOS", decos_reg);
-        i.putStringArrayListExtra("CLIENTE", datos_cliente_reg);
-        i.putExtra("PHONE", Phone);
-        startActivity(i);
-        Log.d("TEST", decos_reg.toString());
-        Log.d("TEST", datos_cliente_reg.toString());
+        if (bloqueo.getState("Fact")) {
+            Toast.makeText(this, bloqueo.getMsg("Fact"), Toast.LENGTH_LONG).show();
+        } else {
+            Intent i = new Intent(this, FactActivity.class);
+            i.putStringArrayListExtra("DECOS", decos_reg);
+            i.putStringArrayListExtra("CLIENTE", datos_cliente_reg);
+            i.putExtra("PHONE", Phone);
+            startActivity(i);
+            Log.d("TEST", decos_reg.toString());
+            Log.d("TEST", datos_cliente_reg.toString());
+        }
     }
 
     //TODO: str2int

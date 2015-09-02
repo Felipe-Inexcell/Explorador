@@ -38,11 +38,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.conn.ConnectTimeoutException;
+
 import cl.inexcell.sistemadegestion.daemon.MyLocationListener;
 
 public class Notificar_Averias extends Activity {
 
 	private ArrayList<String> res;
+    Context mContext;
 
 	private Bitmap foto;
 	private Spinner s, dano, clas, afec;
@@ -71,6 +74,7 @@ public class Notificar_Averias extends Activity {
 		
 		setContentView(R.layout.activity_notificar_averias);
 
+        mContext = this;
         geocoder = new Geocoder(this);
         gps = new MyLocationListener(getApplicationContext());
 
@@ -91,14 +95,14 @@ public class Notificar_Averias extends Activity {
 			public void onItemSelected(AdapterView<?> arg0, View arg1,
 					int arg2, long arg3) {
 				// TODO Auto-generated method stub
-                SearchElement searchElement = new SearchElement(arg2,arg0.getSelectedItem().toString());
+                SearchElement searchElement = new SearchElement(mContext,arg2,arg0.getSelectedItem().toString());
                 searchElement.execute();
 
 			}
 			
 		});
 
-        SearchElement create = new SearchElement();
+        SearchElement create = new SearchElement(this);
         create.execute();
 	}
 
@@ -354,19 +358,22 @@ private class Enviar_Averia extends AsyncTask<String,Integer,String> {
    	}
 
 private class SearchElement extends AsyncTask<String,Integer,String> {
-		
-		private final ProgressDialog dialog = new ProgressDialog(Notificar_Averias.this);
+		Context context;
+		private ProgressDialog dialog;
         private String positionSelected;
         private String message;
         private String operationId;
+    String errorMSG = "";
 
-        public SearchElement(int position, String elementSelected){
+        public SearchElement(Context c,int position, String elementSelected){
+            this.context = c;
             this.positionSelected = String.valueOf(position);
             this.message = "Buscando elementos de "+ elementSelected+"...";
             this.operationId = "02";
         }
 
-        public SearchElement(){
+        public SearchElement(Context c){
+            this.context = c;
             this.positionSelected = "";
             this.message = "Cargando...";
             this.operationId = "01";
@@ -374,6 +381,7 @@ private class SearchElement extends AsyncTask<String,Integer,String> {
         }
 		
 		protected void onPreExecute() {
+            this.dialog = new ProgressDialog(Notificar_Averias.this);
 			this.dialog.setMessage(this.message);
 			this.dialog.setCanceledOnTouchOutside(false);
 			this.dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -390,7 +398,7 @@ private class SearchElement extends AsyncTask<String,Integer,String> {
 		 
 	    protected String doInBackground(String... params) {
 	    	
-			String response = null;
+			String response;
 			
 			try 
 			{
@@ -400,13 +408,16 @@ private class SearchElement extends AsyncTask<String,Integer,String> {
 
                 Log.d(TAG, "operationId: "+this.operationId+ " - posicion: "+this.positionSelected);
 				response = SoapRequestMovistar.getDamage(IMEI,IMSI,this.operationId,this.positionSelected);
-			} catch (Exception e1) {
-				e1.printStackTrace();
+			} catch (ConnectTimeoutException timeoutException){
+                Log.d("AVERIA", timeoutException.getMessage());
+                errorMSG = "Se ahotó el tiempo de espera con el servidor, verifique su conexión a internet";
+                return null;
+            }catch (Exception e1) {
+                errorMSG = "Ha ocurrido un error, por favor reintente";
                 Log.e(TAG, e1.getMessage());
                 response = null;
 			}
 
-            Log.w(TAG, response.toString());
 
 	        return response;
 	    }
@@ -417,7 +428,6 @@ private class SearchElement extends AsyncTask<String,Integer,String> {
 			if (this.dialog.isShowing()) {
 		        this.dialog.dismiss();
 		     }
-			Log.d(TAG, result);
 	    	if (result != null && this.operationId.equals("01"))
 	    	{
                 Log.d(TAG,"is 01");
@@ -491,8 +501,8 @@ private class SearchElement extends AsyncTask<String,Integer,String> {
 	    	}
 	    	if(result == null)
 	    	{
-                Notificar_Averias.this.finish();
-	    		Toast.makeText(getApplicationContext(), "Error en la conexión del servicio. Revise su conexión de Internet o 3G.", Toast.LENGTH_LONG).show();
+                ((Activity)context).finish();
+	    		Toast.makeText(getApplicationContext(),errorMSG, Toast.LENGTH_LONG).show();
 	    	}
 	    }
 	}
