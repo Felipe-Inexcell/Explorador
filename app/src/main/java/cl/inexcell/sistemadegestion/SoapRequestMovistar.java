@@ -58,7 +58,8 @@ public class SoapRequestMovistar {
     //final String URL="https://pcba.telefonicachile.cl:443/smartphone/ws/shark.php";
     //final String URL="http://cmn81.gratishosting.cl:80/shark_fijo.php";
     //private static final String URL = "https://pcba.telefonicachile.cl/smartphone/ws/sca_dev_copiaOP.php";
-    private static final String URL = "https://pcba.telefonicachile.cl/smartphone/ws/sca_dev_TodoPruebas.php";
+    //private static final String URL = "https://pcba.telefonicachile.cl/smartphone/ws/sca_dev_TodoPruebas.php";
+    private static final String URL = "https://pcba.telefonicachile.cl/smartphone/ws/sca_dev_produccion.php";
 
 	/*
 	 * Clase Principal de Conexion SSL a WDSL
@@ -918,7 +919,7 @@ public class SoapRequestMovistar {
     }
 
 
-    public static String sendClosedHouse(String IMEI, String IMSI, String DESC, String IMG, String LAT, String LNG) throws IOException {
+    public static String sendClosedHouse(String IMEI, String IMSI, String DESC, String IMG, String LAT, String LNG, String FONO) throws IOException {
 
         final String SOAP_ACTION = "urn:Demo#CasaCerrada";
         String response = null;
@@ -943,7 +944,7 @@ public class SoapRequestMovistar {
                                        "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
                                        "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
                                        "<!--Optional:-->" +
-                                       "<DateTime xsi:type=\"xsd:string\">?</DateTime>" +
+                                       "<DateTime xsi:type=\"xsd:string\">"+formatter.format(fecha)+"</DateTime>" +
                                        "<!--Optional:-->" +
                                        "<IdUser xsi:type=\"xsd:string\">"+IMEI+"</IdUser>" +
                                        "<IMEI xsi:type=\"xsd:string\">"+IMEI+"</IMEI>" +
@@ -952,6 +953,7 @@ public class SoapRequestMovistar {
                                     "<Service xsi:type=\"urn:ServiceCasaCerradaIn\">" +
                                        "<CasaCerrada xsi:type=\"urn:CasaCerradaIn\">" +
                                           "<Input xsi:type=\"urn:CasaCerradaInData\">" +
+                                             "<Phone xsi:type=\"xsd:string\">"+FONO+"</Phone>" +
                                              "<description xsi:type=\"xsd:string\">"+DESC+"</description>" +
                                              "<Foto xsi:type=\"xsd:string\">"+IMG+"</Foto>" +
                                              "<GPSLat xsi:type=\"xsd:string\">"+LAT+"</GPSLat>" +

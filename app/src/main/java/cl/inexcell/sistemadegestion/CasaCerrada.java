@@ -230,10 +230,10 @@ public class CasaCerrada extends FragmentActivity implements GoogleMap.OnMapLoad
                 String IMEI = telephonyManager.getDeviceId();
                 String IMSI = telephonyManager.getSimSerialNumber();
                 String query;
-                if(Phone.equals("2")){
+                if(Phone.equals("3")){
                     query = URLs.CASACERRADA;
                 }else{
-                    query = SoapRequestMovistar.sendClosedHouse(IMEI,IMSI,params[0],params[1],params[2],params[3]);
+                    query = SoapRequestMovistar.sendClosedHouse(IMEI,IMSI,params[0],params[1],params[2],params[3], Phone);
                 }
 
                 ArrayList<String> retorno = XMLParser.getReturnCode(query);
