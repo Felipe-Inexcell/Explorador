@@ -92,19 +92,6 @@ public class CertificarPar extends Activity {
  			this.dialog.setMessage("Buscando información sobre el par...");
  			this.dialog.setCanceledOnTouchOutside(false);
             this.dialog.setCancelable(false);
- 			this.dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					// TODO Auto-generated method stub
-                    Funciones.makeAlert(getApplicationContext(), null, "Operación Interrumpida",false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            CertificarPar.this.finish();
-                        }
-                    }).show();
-				}
-			});
  		    this.dialog.show();
          }
 
@@ -120,7 +107,7 @@ public class CertificarPar extends Activity {
    				String IMEI = telephonyManager.getDeviceId();
    				String IMSI =  telephonyManager.getSimSerialNumber();
 
-                    if(Phone.compareTo("00222011551")!=0) {
+                    if(Phone.compareTo("07302321456")!=0) {
                         respuesta = SoapRequestMovistar.getCertifyDSL(Phone, "04", "", IMEI, IMSI);
                     }else
                         respuesta = nada1();

@@ -28,6 +28,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -45,6 +46,7 @@ public class Notificar_Averias extends Activity {
 
 	private ArrayList<String> res;
     Context mContext;
+    Activity p;
 
 	private Bitmap foto;
 	private Spinner s, dano, clas, afec;
@@ -57,9 +59,6 @@ public class Notificar_Averias extends Activity {
 	private Bitmap b = null;
 	private static int TAKE_PICTURE = 1;
 	private static int SELECT_PICTURE = 2;
-	final CharSequence[] opcionCaptura = {
-    		"Tomar Fotografía"
-    };
 	private String name = "";
 	private MyLocationListener gps;
 	
@@ -73,6 +72,7 @@ public class Notificar_Averias extends Activity {
 		
 		setContentView(R.layout.activity_notificar_averias);
 
+        p= this;
         mContext = this;
         geocoder = new Geocoder(this);
         gps = new MyLocationListener(getApplicationContext());
@@ -229,8 +229,11 @@ public class Notificar_Averias extends Activity {
 	
 	/** Boton Volver **/
 	public void volver(View view) {
-
-        Funciones.makeBackAlert(this).show();
+        InputMethodManager imm = (InputMethodManager) p.getSystemService(Context.INPUT_METHOD_SERVICE);
+        View foco = p.getCurrentFocus();
+        if (foco == null || !imm.hideSoftInputFromWindow(foco.getWindowToken(), 0)) {
+            Funciones.makeBackAlert(this).show();
+        }
     }
 	
 private class Enviar_Averia extends AsyncTask<String,Integer,String> {
@@ -389,20 +392,7 @@ private class SearchElement extends AsyncTask<String,Integer,String> {
             this.dialog = new ProgressDialog(Notificar_Averias.this);
 			this.dialog.setMessage(this.message);
 			this.dialog.setCanceledOnTouchOutside(false);
-			this.dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-			
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				// TODO Auto-generated method stub
-                Funciones.makeAlert(mContext, null, "Operacion Interrumpida", false)
-                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ((Activity)mContext).finish();
-                            }
-                        }).show();
-			}
-		});
+            this.dialog.setCancelable(false);
 		    this.dialog.show();
      }
 		 
@@ -420,7 +410,7 @@ private class SearchElement extends AsyncTask<String,Integer,String> {
 				response = SoapRequestMovistar.getDamage(IMEI,IMSI,this.operationId,this.positionSelected);
 			} catch (ConnectTimeoutException timeoutException){
                 Log.d("AVERIA", timeoutException.getMessage());
-                errorMSG = "Se ahotó el tiempo de espera con el servidor, verifique su conexión a internet";
+                errorMSG = "Se agotó el tiempo de espera con el servidor, verifique su conexión a internet";
                 return null;
             }catch (Exception e1) {
                 errorMSG = "Ha ocurrido un error, por favor reintente";

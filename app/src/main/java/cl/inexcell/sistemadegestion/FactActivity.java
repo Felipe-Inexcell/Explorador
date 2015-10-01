@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -52,6 +53,7 @@ import cl.inexcell.sistemadegestion.objetos.Formulario;
 import cl.inexcell.sistemadegestion.objetos.FormularioEnvio;
 import cl.inexcell.sistemadegestion.objetos.ParametrosEnvioForm;
 import cl.inexcell.sistemadegestion.objetos.ParametrosFormulario;
+import cl.inexcell.sistemadegestion.preferences.FactSave;
 
 
 public class FactActivity extends Activity implements View.OnClickListener {
@@ -62,6 +64,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
     Formulario formularioFinal;
     String Phone;
     Boolean isEmail = true;
+    FactSave reg;
 
     int positionInsert = 0;
 
@@ -75,13 +78,131 @@ public class FactActivity extends Activity implements View.OnClickListener {
     AlertDialog.Builder dialog_preview;
     View preview_view;
     ImageView IVpreview;
-    Button verCarnet;
+    Button verCarnet, verFirma;
 
     private Bitmap b = null;
     private Bitmap firma = null;
     private static int TAKE_PICTURE = 1;
     private static int SELECT_PICTURE = 2;
     String name = Environment.getExternalStorageDirectory() + "/carnet.jpg"; //picture filename
+    View subContentCPY = null;
+    View tabHeaderCPY = null;
+
+
+    private void saveData() {
+        for (int i = 0; i < editTextsBA.size(); i++) {
+            EditText tmp = editTextsBA.get(i);
+            reg.setValue(TextsBA.get(i).getText() + "" + tmp.getId(), tmp.getText().toString());
+        }
+        for (int i = 0; i < editTextsTelef.size(); i++) {
+            EditText tmp = editTextsTelef.get(i);
+            reg.setValue(TextsTelef.get(i).getText() + "" + tmp.getId(), tmp.getText().toString());
+        }
+        for (int i = 0; i < editTextsTelev.size(); i++) {
+            EditText tmp = editTextsTelev.get(i);
+            reg.setValue(TextsTelev.get(i).getText() + "" + tmp.getId(), tmp.getText().toString());
+        }
+        for (int i = 0; i < editTextsCierre.size(); i++) {
+            EditText tmp = editTextsCierre.get(i);
+            reg.setValue(TextsCierre.get(i).getText() + "" + tmp.getId(), tmp.getText().toString());
+        }
+
+        for (int i = 0; i < editTextsRetiro.size(); i++) {
+            reg.setValue("FACTRETIRO" + i, TextsRetiro.get(i) + ";" + editTextsRetiro.get(i));
+        }
+        if (b != null) {
+            reg.setValue("FACTFOTO", Funciones.encodeTobase64(b));
+        }
+        if (firma != null)
+            reg.setValue("FACTFIRMA", Funciones.encodeTobase64(firma));
+    }
+
+    private void loadImages() {
+        String sign = reg.getValue("FACTFIRMA");
+        String photo = reg.getValue("FACTFOTO");
+        try {
+            if (!photo.equals("0"))
+                b = Funciones.decodeBase64(photo);
+            if (!sign.equals("0"))
+                firma = Funciones.decodeBase64(sign);
+
+            if (b != null) verCarnet.setEnabled(true);
+            if (firma != null) verFirma.setEnabled(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        reg.clear();
+    }
+
+    private void loadRetiros() {
+        int i = 0;
+        String registro;
+        while (!(registro = reg.getValue("FACTRETIRO" + i)).equals("0")) {
+            String[] info = registro.split(";");
+            final int lastInster = TextsRetiro.size();
+            if (info[0].equals("Decos")) {
+
+                final View uno = LayoutInflater.from(mContext).inflate(R.layout.tabrow_retiro_deco, null, false);
+
+                ImageButton borrar = (ImageButton) uno.findViewById(R.id.button_erase);
+                borrar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((ViewManager) subContentCPY).removeView(uno);
+                        Log.d("remove", "" + lastInster);
+                        editTextsRetiro.remove(lastInster);
+                        TextsRetiro.remove(lastInster);
+                    }
+                });
+
+
+                TextView elemento = (TextView) uno.findViewById(R.id.elemento);
+                EditText serieDeco = (EditText) uno.findViewById(R.id.edit_deco);
+                EditText serieTarjeta = (EditText) uno.findViewById(R.id.edit_tarjeta);
+                elemento.setText(info[0]);
+                serieDeco.setText(info[1]);
+                serieTarjeta.setText(info[2]);
+                ((LinearLayout) subContentCPY).addView(uno);
+
+
+                editTextsRetiro.add(info[1] + ";" + info[2]);
+                TextsRetiro.add(info[0]);
+                Log.d("positionInsert", "" + positionInsert);
+                Log.d("TextRetiro.size()", TextsRetiro.size() + "");
+                positionInsert++;
+                tabHeaderCPY.setVisibility(View.VISIBLE);
+            } else {
+                final View uno = LayoutInflater.from(mContext).inflate(R.layout.tabrow_retiro, null, false);
+                TextView elemento = (TextView) uno.findViewById(R.id.elemento);
+
+                ImageButton borrar = (ImageButton) uno.findViewById(R.id.button_erase);
+                borrar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((ViewManager) subContentCPY).removeView(uno);
+                        Log.d("remove", "" + lastInster);
+                        editTextsRetiro.remove(lastInster);
+                        TextsRetiro.remove(lastInster);
+                    }
+                });
+
+                    EditText serieVista = (EditText) uno.findViewById(R.id.edit_retiro);
+                    elemento.setText(info[0]);
+                    serieVista.setText(info[1]);
+                    ((LinearLayout) subContentCPY).addView(uno);
+
+
+                    editTextsRetiro.add(info[1]);
+                    TextsRetiro.add(info[0]);
+
+                    Log.d("TextRetiro.size()", TextsRetiro.size() + "");
+                    positionInsert++;
+                    tabHeaderCPY.setVisibility(View.VISIBLE);
+            }
+            i++;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +213,8 @@ public class FactActivity extends Activity implements View.OnClickListener {
         /** ASIGNACIONES */
         mContext = this;
         p = this;
+
+        reg = new FactSave(this);
 
         Phone = getIntent().getExtras().getString("PHONE");
 
@@ -119,17 +242,17 @@ public class FactActivity extends Activity implements View.OnClickListener {
         task.execute();
     }
 
-    private List<String> getElementos(ArrayList<ParametrosFormulario> parametros){
+    private List<String> getElementos(ArrayList<ParametrosFormulario> parametros) {
         List<String> result = new ArrayList<>();
-        for(ParametrosFormulario p: parametros){
+        for (ParametrosFormulario p : parametros) {
             result.add(p.getAtributo());
         }
         return result;
     }
 
-    private int getInputType(String type){
+    private int getInputType(String type) {
         int input;
-        switch (type){
+        switch (type) {
             case "int":
                 input = InputType.TYPE_CLASS_NUMBER;
                 break;
@@ -176,6 +299,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                 Button add = (Button) agregar.findViewById(R.id.buttonAdd);
                 add.setText("Ingresar Retiro");
                 final View tableHeader2 = LayoutInflater.from(mContext).inflate(R.layout.tabheader_retiro, null, false);
+                tabHeaderCPY = tableHeader2;
                 add.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -183,13 +307,13 @@ public class FactActivity extends Activity implements View.OnClickListener {
                         final Spinner spinner = (Spinner) content.findViewById(R.id.retiro_elementos);
                         final LinearLayout decos = (LinearLayout) content.findViewById(R.id.layout_deco);
                         final LinearLayout general = (LinearLayout) content.findViewById(R.id.layout_general);
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext,android.R.layout.simple_spinner_dropdown_item, getElementos(ef.getParameters()));
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_dropdown_item, getElementos(ef.getParameters()));
                         spinner.setAdapter(adapter);
                         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                                if (parent.getSelectedItem().toString().compareTo("Decos")==0) {
+                                if (parent.getSelectedItem().toString().compareTo("Decos") == 0) {
                                     decos.setVisibility(View.VISIBLE);
                                     general.setVisibility(View.GONE);
 
@@ -204,7 +328,6 @@ public class FactActivity extends Activity implements View.OnClickListener {
 
                             }
                         });
-
 
 
                         final AlertDialog d = new AlertDialog.Builder(mContext)
@@ -223,11 +346,9 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                     }
                                 }).create();
                         d.show();
-                        d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-                        {
+                        d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View v)
-                            {
+                            public void onClick(View v) {
                                 final int lastInster = TextsRetiro.size();
                                 if (spinner.getSelectedItem().toString().compareTo("Decos") == 0) {
 
@@ -249,7 +370,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
 
 
                                     TextView elemento = (TextView) uno.findViewById(R.id.elemento);
-                                    if (serie1.getText().toString().compareTo("") != 0 && serie2.getText().toString().compareTo("") != 0 && serie1.getText().toString().length() == 10 && serie2.getText().toString().length()==10) {
+                                    if (serie1.getText().toString().compareTo("") != 0 && serie2.getText().toString().compareTo("") != 0 && serie1.getText().toString().length() == 10 && serie2.getText().toString().length() == 10) {
                                         EditText serieDeco = (EditText) uno.findViewById(R.id.edit_deco);
                                         EditText serieTarjeta = (EditText) uno.findViewById(R.id.edit_tarjeta);
                                         elemento.setText(spinner.getSelectedItem().toString());
@@ -309,6 +430,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                 });
                 ((LinearLayout) subContenido).addView(agregar);
 
+
                 tableHeader2.setVisibility(View.GONE);
                 ((LinearLayout) subContenido).addView(tableHeader2);
             }
@@ -324,9 +446,14 @@ public class FactActivity extends Activity implements View.OnClickListener {
                         editTextsBA.add(cantidad1);
                         TextsBA.add(material1);
 
+
                         material1.setText(pf.getAtributo());
                         cantidad1.setHint(pf.getValue());
                         cantidad1.setEnabled(pf.getEnabled());
+
+                        String valor = reg.getValue(pf.getAtributo() + "" + cantidad1.getId());
+                        if (!valor.equals("0"))
+                            cantidad1.setText(valor);
 
                         ((LinearLayout) subContenido).addView(tableRow1);
                         break;
@@ -342,6 +469,9 @@ public class FactActivity extends Activity implements View.OnClickListener {
                         cantidad2.setHint(pf.getValue());
                         cantidad2.setEnabled(pf.getEnabled());
 
+                        valor = reg.getValue(pf.getAtributo() + "" + cantidad2.getId());
+                        if (!valor.equals("0"))
+                            cantidad2.setText(valor);
                         ((LinearLayout) subContenido).addView(tableRow2);
                         break;
                     case "DigitalTelevision":
@@ -370,11 +500,14 @@ public class FactActivity extends Activity implements View.OnClickListener {
                             material3.setText(pf.getAtributo());
                             cantidad3.setHint(pf.getValue());
                             cantidad3.setEnabled(pf.getEnabled());
-
+                            valor = reg.getValue(pf.getAtributo() + "" + cantidad3.getId());
+                            if (!valor.equals("0"))
+                                cantidad3.setText(valor);
                             ((LinearLayout) subContenido).addView(tableRow3);
                         }
                         break;
                     case "remove":
+                        subContentCPY = subContenido;
                         break;
                     case "ClosingData":
                         View linea;
@@ -394,6 +527,10 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                 campo1.setInputType(InputType.TYPE_CLASS_TEXT);
 
                                 ids_campos.add(campo1.getId());
+                                valor = reg.getValue(title1.getText() + "" + campo1.getId());
+                                if (!valor.equals("0")) {
+                                    campo1.setText(valor);
+                                }
 
                                 ((LinearLayout) subContenido).addView(linea);
                                 break;
@@ -425,12 +562,17 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                 title3.setText("Email");
                                 TextsCierre.add(title3);
 
+                                valor = reg.getValue(title2.getText() + "" + campo2.getId());
+                                if (!valor.equals("0")) {
+                                    campo2.setText(valor);
+                                }
+
                                 ((LinearLayout) subContenido).addView(linea);
                                 break;
                             case "FotoCarnet":
                                 View botoneras = LayoutInflater.from(this).inflate(R.layout.view_firmafoto, null, false);
                                 Button firmar = (Button) botoneras.findViewById(R.id.boton_firma);
-                                final Button verFirma = (Button) botoneras.findViewById(R.id.button_verfirma);
+                                verFirma = (Button) botoneras.findViewById(R.id.button_verfirma);
                                 verCarnet = (Button) botoneras.findViewById(R.id.button_vercarnet);
 
                                 firmar.setOnClickListener(new View.OnClickListener() {
@@ -519,11 +661,11 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                 ((LinearLayout) subContenido).addView(botoneras);
                                 break;
                             default:
-                                if(pf.getTypeInput().compareTo("MultilineBox")==0){
+                                if (pf.getTypeInput().compareTo("MultilineBox") == 0) {
 
                                     linea = LayoutInflater.from(mContext).inflate(R.layout.view_texto_campo_multilinea, null, false);
 
-                                }else {
+                                } else {
                                     linea = LayoutInflater.from(mContext).inflate(R.layout.view_texto_campo, null, false);
                                 }
                                 TextView title4 = (TextView) linea.findViewById(R.id.title);
@@ -532,11 +674,17 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                 editTextsCierre.add(campo4);
                                 TextsCierre.add(title4);
 
+
                                 if (pf.getValue().compareTo("0") != 0)
                                     campo4.setHint(pf.getValue());
                                 title4.setText(pf.getAtributo());
                                 campo4.setId(str2int("cierrecampo" + pf.getAtributo() + pf.getTypeInput() + pf.getTypeDataInput()));
                                 ids_campos.add(campo4.getId());
+
+                                valor = reg.getValue(title4.getText() + "" + campo4.getId());
+                                if (!valor.equals("0")) {
+                                    campo4.setText(valor);
+                                }
                                 ((LinearLayout) subContenido).addView(linea);
                                 break;
                         }
@@ -582,19 +730,21 @@ public class FactActivity extends Activity implements View.OnClickListener {
 
         }
 
+        loadRetiros();
+        loadImages();
         fatcLayout.addView(putCasaCerradaBTN());
         return true;
     }
 
-    private View putCasaCerradaBTN(){
+    private View putCasaCerradaBTN() {
         Button v = new Button(this);
         v.setText("Casa Cerrada");
 
         LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        param.setMargins(0,10,0,10);
+        param.setMargins(0, 10, 0, 10);
         param.gravity = Gravity.RIGHT;
         v.setLayoutParams(param);
-        v.setPadding(16,0,16,0);
+        v.setPadding(16, 0, 16, 0);
         v.setBackgroundResource(R.drawable.custom_button_blue);
         v.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -607,7 +757,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
         return v;
     }
 
-    private void openCasaCerrada(){
+    private void openCasaCerrada() {
         Intent i = new Intent(this, CasaCerrada.class);
         i.putExtra("PHONE", Phone);
         startActivity(i);
@@ -629,6 +779,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
         actividades.add(VistaTopologica.topo);
         actividades.add(this);
         Funciones.makeExitAlert(this, actividades).show();
+        saveData();
     }
 
     /**
@@ -723,24 +874,24 @@ public class FactActivity extends Activity implements View.OnClickListener {
                         } else if (editTextsCierre.get(i).getText().toString().compareTo("") != 0) {
 
                             if (parametros.get(i).getAtributo().compareTo("Email") == 0) {
-                                if(isEmail && Funciones.validateEmail(editTextsCierre.get(i).getText().toString())) {
+                                if (isEmail && Funciones.validateEmail(editTextsCierre.get(i).getText().toString())) {
                                     p.setAttribute(TextsCierre.get(i).getText().toString());
                                     p.setValue(editTextsCierre.get(i).getText().toString());
                                     parametrosEnvioForms.add(p);
-                                }else {
+                                } else {
                                     Funciones.makeResultAlert(mContext, "Email incorrecto", false).show();
-                                    isOK= false;
+                                    isOK = false;
                                 }
-                            }else if (parametros.get(i).getAtributo().compareTo("Rut") == 0) {
-                                if(Funciones.validateRut(editTextsCierre.get(i).getText().toString())){
+                            } else if (parametros.get(i).getAtributo().compareTo("Rut") == 0) {
+                                if (Funciones.validateRut(editTextsCierre.get(i).getText().toString())) {
                                     p.setAttribute(TextsCierre.get(i).getText().toString());
                                     p.setValue(editTextsCierre.get(i).getText().toString());
                                     parametrosEnvioForms.add(p);
-                                }else{
+                                } else {
                                     Funciones.makeResultAlert(mContext, "Rut incorrecto", false).show();
-                                    isOK= false;
+                                    isOK = false;
                                 }
-                            }else{
+                            } else {
                                 p.setAttribute(TextsCierre.get(i).getText().toString());
                                 p.setValue(editTextsCierre.get(i).getText().toString());
                                 parametrosEnvioForms.add(p);
@@ -853,14 +1004,21 @@ public class FactActivity extends Activity implements View.OnClickListener {
         //super.onBackPressed();
         volver(null);
     }
+
     public void volver(View view) {
 
-        Funciones.makeBackAlert(this).show();
+        InputMethodManager imm = (InputMethodManager) p.getSystemService(Context.INPUT_METHOD_SERVICE);
+        View foco = p.getCurrentFocus();
+        if (foco == null || !imm.hideSoftInputFromWindow(foco.getWindowToken(), 0)) {
+            saveData();
+            Funciones.makeBackAlert(this).show();
+
+        }
     }
 
-        /*
-        Todo: Obtener Formulario
-         */
+    /*
+    Todo: Obtener Formulario
+     */
     class Obtener_Formulario extends AsyncTask<String, String, Formulario> {
         Context tContext;
         ProgressDialog dialog;
@@ -884,10 +1042,10 @@ public class FactActivity extends Activity implements View.OnClickListener {
                 String IMEI = telephonyManager.getDeviceId();
                 String IMSI = telephonyManager.getSimSerialNumber();
                 String request;
-                if(Phone.compareTo("2")!=0)
+                if (Phone.compareTo("2") != 0)
                     request = SoapRequestMovistar.postCertifyDSL(Phone, IMEI, IMSI, "?", "?");
                 else
-                    request= getResponseNew();
+                    request = getResponseNew();
                 Formulario parse = XMLParser.getForm(request);
                 return parse;
 
@@ -906,19 +1064,19 @@ public class FactActivity extends Activity implements View.OnClickListener {
                     if (generarVista(formulario) && dialog.isShowing()) {
                         dialog.dismiss();
                     } else {
-                        Funciones.makeAlert(getApplicationContext(), null, formulario.getReturnDescription(),false)
+                        Funciones.makeAlert(getApplicationContext(), null, formulario.getReturnDescription(), false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ((Activity) mContext).finish();
-                            }
-                        }).show();
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ((Activity) mContext).finish();
+                                    }
+                                }).show();
                         if (dialog.isShowing())
                             dialog.dismiss();
                     }
 
-            }else{
-                Funciones.makeAlert(getApplicationContext(), "Error en la conexión", "Compruebe su conexión a internet y reintente.",false)
+            } else {
+                Funciones.makeAlert(getApplicationContext(), "Error en la conexión", "Compruebe su conexión a internet y reintente.", false)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -1402,6 +1560,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                     "</SOAP-ENV:Envelope>";
         }
     }
+
     /*
     TODO Enviar
      */
@@ -1432,24 +1591,24 @@ public class FactActivity extends Activity implements View.OnClickListener {
                 //String request = getGuardarFact();
                 ArrayList<String> parse = XMLParser.getReturnCodeForm(request);
                 ArrayList<String> parseFoto;
-                if(parse.get(0).compareTo("0")==0){
-                    FormularioEnvio fotos = formularioEnvio.get(formularioEnvio.size()-1);
-                    for(ParametrosEnvioForm p: fotos.getParametros()){
-                        if(p.getAttribute().compareTo("Carnet")==0){
-                            request = SoapRequestMovistar.subirFoto(parse.get(2),p.getValue(),0,IMEI,IMSI);
+                if (parse.get(0).compareTo("0") == 0) {
+                    FormularioEnvio fotos = formularioEnvio.get(formularioEnvio.size() - 1);
+                    for (ParametrosEnvioForm p : fotos.getParametros()) {
+                        if (p.getAttribute().compareTo("Carnet") == 0) {
+                            request = SoapRequestMovistar.subirFoto(parse.get(2), p.getValue(), 0, IMEI, IMSI);
                             parseFoto = XMLParser.getReturnCode(request);
-                            if(parseFoto.get(0).compareTo("0")==0){
+                            if (parseFoto.get(0).compareTo("0") == 0) {
                                 Log.d("ENVIANDO", "CARNET OK");
-                            }else{
+                            } else {
                                 Log.e("ENVIANDO", "CARNET NOK");
                             }
                         }
-                        if(p.getAttribute().compareTo("Firma")==0){
-                            request = SoapRequestMovistar.subirFoto(parse.get(2),p.getValue(),1,IMEI,IMSI);
+                        if (p.getAttribute().compareTo("Firma") == 0) {
+                            request = SoapRequestMovistar.subirFoto(parse.get(2), p.getValue(), 1, IMEI, IMSI);
                             parseFoto = XMLParser.getReturnCode(request);
-                            if(parseFoto.get(0).compareTo("0")==0){
+                            if (parseFoto.get(0).compareTo("0") == 0) {
                                 Log.d("ENVIANDO", "FIRMA OK");
-                            }else{
+                            } else {
                                 Log.e("ENVIANDO", "FIRMA NOK");
                             }
                         }
@@ -1458,7 +1617,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                 }
                 return parse;
             } catch (Exception e) {
-                Log.e("ENVIANDO", e.getMessage()+"\n"+e.getLocalizedMessage()+"\n"+e.getCause());
+                Log.e("ENVIANDO", e.getMessage() + "\n" + e.getLocalizedMessage() + "\n" + e.getCause());
                 return null;
             }
 
@@ -1466,29 +1625,31 @@ public class FactActivity extends Activity implements View.OnClickListener {
 
         @Override
         protected void onPostExecute(ArrayList<String> response) {
-            if(response != null) {
+            if (response != null) {
                 if (response.get(0).compareTo("0") == 0) {
                     if (response.size() >= 2)
-                        Funciones.makeAlert(getApplicationContext(), null, response.get(1),false)
+                        Funciones.makeAlert(getApplicationContext(), null, response.get(1), false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        if(VistaTopologica.topo != null)VistaTopologica.topo.finish();
+                                        if (VistaTopologica.topo != null)
+                                            VistaTopologica.topo.finish();
                                         ((Activity) mContext).finish();
                                     }
                                 }).show();
                     else
-                        Funciones.makeAlert(getApplicationContext(), null, "Formulado enviado",false)
+                        Funciones.makeAlert(getApplicationContext(), null, "Formulado enviado", false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        if(VistaTopologica.topo!= null)VistaTopologica.topo.finish();
+                                        if (VistaTopologica.topo != null)
+                                            VistaTopologica.topo.finish();
                                         ((Activity) mContext).finish();
                                     }
                                 }).show();
                 } else {
                     if (response.size() >= 2)
-                        Funciones.makeAlert(getApplicationContext(), null, response.get(1),false)
+                        Funciones.makeAlert(getApplicationContext(), null, response.get(1), false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -1496,7 +1657,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                     }
                                 }).show();
                     else
-                        Funciones.makeAlert(getApplicationContext(), null, "Error al enviar. Por favor reintente.",false)
+                        Funciones.makeAlert(getApplicationContext(), null, "Error al enviar. Por favor reintente.", false)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -1504,8 +1665,8 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                     }
                                 }).show();
                 }
-            }else{
-                Funciones.makeAlert(getApplicationContext(), null, "Error desconocido, no se pudo enviar.",false)
+            } else {
+                Funciones.makeAlert(getApplicationContext(), null, "Error desconocido, no se pudo enviar.", false)
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -1531,7 +1692,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
     }
 
 
-    private String getGuardarFact(){
+    private String getGuardarFact() {
         return "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:tns=\"urn:Demo\">" +
                 "<SOAP-ENV:Body>" +
                 "<ns1:GuardarFactResponse xmlns:ns1=\"urn:Demo\">" +
@@ -1554,4 +1715,5 @@ public class FactActivity extends Activity implements View.OnClickListener {
                 "</SOAP-ENV:Body>" +
                 "</SOAP-ENV:Envelope>";
     }
+
 }

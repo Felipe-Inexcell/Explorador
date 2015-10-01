@@ -99,7 +99,7 @@ public class Principal extends Activity {
         Context context;
         ProgressDialog d;
         Boolean ok = false;
-        Boton actualizar= null;
+        Boton actualizar = null;
 
         private Botones(Context context) {
             this.context = context;
@@ -125,28 +125,29 @@ public class Principal extends Activity {
                 ArrayList<Boton> response = XMLParser.getButtons(query);
 
                 for (Boton b : response) {
-                    if(response.indexOf(b) == 0)
+                    if (response.indexOf(b) == 0)
                         actualizar = b;
                     else {
                         bloqueo.setBloqueo(b.getId(), b.isEnabled(), b.getName());
                     }
+                    ok = true;
                 }
                 return "BLOQUEO OK";
             } catch (SAXException e) {
                 e.printStackTrace();
-                return e.getMessage();
+                return "Error al leer el xml";
             } catch (ParserConfigurationException e) {
                 e.printStackTrace();
-                return e.getMessage();
+                return "Error al leer el xml";
             } catch (XPathExpressionException e) {
                 e.printStackTrace();
-                return e.getMessage();
+                return "Error al leer el xml";
             } catch (IOException e) {
                 e.printStackTrace();
-                return e.getMessage();
+                return "Se agotó el tiempo de espera con el servidor. Compruebe su conexión a internet y reinicie la aplicación";
             } catch (Exception e) {
                 e.printStackTrace();
-                return e.getMessage();
+                return "Error no controlado:\n" + e.getMessage();
             }
 
         }
@@ -154,44 +155,56 @@ public class Principal extends Activity {
         @Override
         protected void onPostExecute(String s) {
             if (d.isShowing()) d.dismiss();
-            String versionActual = getResources().getString(R.string.versioncode);
-            /*if(versionActual.compareTo(actualizar.getId())<0){
-                AlertDialog.Builder builder = Funciones.makeAlert(mContext,
-                        "Hay una nueva versión de la Aplicación",
-                        "Versión Instalada: "
-                                + versionActual
-                                + "\nVersión a Instalar: " + actualizar.getId()
-                                + "\nDebe actualizar la aplicación para continuar utilizandola.",
-                        false);
+            if (!ok) {
+                Funciones.makeAlert(mContext, null, s, false)
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                p.finish();
+                            }
+                        }).show();
+            } else {
+                String versionActual = getResources().getString(R.string.versioncode);
+                if (versionActual.compareTo(actualizar.getId()) < 0) {
+                    AlertDialog.Builder builder = Funciones.makeAlert(mContext,
+                            "Hay una nueva versión de la Aplicación",
+                            "Versión Instalada: "
+                                    + versionActual
+                                    + "\nVersión a Instalar: " + actualizar.getId()
+                                    + "\nDebe actualizar la aplicación para continuar utilizandola.",
+                            false);
 
-                builder.setPositiveButton("Descargar e Instalar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(mContext, "Descargando... si claro", Toast.LENGTH_LONG).show();
+                    builder.setPositiveButton("Descargar e Instalar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        /*Toast.makeText(mContext, "Descargando... si claro", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/app-debug.apk")), "application/vnd.android.package-archive");
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         p.finish();
-                        dialog.dismiss();
-                    }
-                });
-                builder.setNegativeButton("Cerrar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        p.finish();
-                        dialog.dismiss();
-                    }
-                });
-                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        p.finish();
-                    }
-                });
-                builder.show();
-            }*/
-            Log.i("BLOQUEO", s);
+                        dialog.dismiss();*/
+                            Update u = new Update(context, actualizar.getName());
+                            u.execute();
+                        }
+                    });
+                    builder.setNegativeButton("Cerrar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            p.finish();
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            p.finish();
+                        }
+                    });
+                    builder.show();
+                }
+            }
+            //Log.i("BLOQUEO", s);
         }
     }
 
@@ -275,7 +288,9 @@ public class Principal extends Activity {
     public void openFAQ(View view) {
         if (bloqueo.getState("Preguntas")) {
             Funciones.makeResultAlert(mContext, bloqueo.getMsg("Preguntas"), false).show();
-        } else {startActivity(new Intent(this, FAQActivity.class));}
+        } else {
+            startActivity(new Intent(this, FAQActivity.class));
+        }
     }
 
 
@@ -365,6 +380,45 @@ public class Principal extends Activity {
                 this.dialog.dismiss();
             }
 
+        }
+    }
+
+    private class Update extends AsyncTask<String, String, File> {
+        Context ctx;
+        ProgressDialog d;
+        String url;
+
+        private Update(Context ctx, String URL) {
+            this.ctx = ctx;
+            this.url = URL;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            d = new ProgressDialog(ctx);
+            d.setCancelable(false);
+            d.setCanceledOnTouchOutside(false);
+            d.setMessage("Descargando nueva versión...");
+            d.show();
+        }
+
+        @Override
+        protected File doInBackground(String... params) {
+            return Funciones.Update(url);
+        }
+
+        @Override
+        protected void onPostExecute(File file) {
+            if (d.isShowing()) d.dismiss();
+            if (file != null) {
+                //Toast.makeText(ctx, file, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+
+            }
+            p.finish();
         }
     }
 

@@ -707,6 +707,8 @@ public class VistaTopologica extends Activity {
     @SuppressWarnings("deprecation")
     public TableLayout dibujarTabla(int tamBorde, int numeroFilas, int numeroColumnas, String colorBorde) {
         TableLayout tabla = new TableLayout(this);
+        TextView tmp = new TextView(this);
+        RelativeLayout temp = new RelativeLayout(this);
         if (numeroFilas > 0 && numeroColumnas > 0) {
             TableRow fila;
 
@@ -799,7 +801,9 @@ public class VistaTopologica extends Activity {
 
                         if (tipo.compareTo("TELEFONO") == 0 && valor.compareTo(" ") != 0 && valor.length() > 2) {
                             telefono_clickable = true;
-                            texto.setBackgroundResource(R.drawable.custom_button_search);
+                            //texto.setBackgroundResource(R.drawable.custom_button_search);
+                            tmp = texto;
+                            temp = borde;
                         }
                         if (tipo.compareTo("ESTADO") == 0 && tipoProcedimiento != 0) {
                             texto.setBackgroundResource(R.drawable.custom_button_search);
@@ -840,10 +844,16 @@ public class VistaTopologica extends Activity {
                                 dialog.show();
                             }
                         });
+                        if(texto.getText().toString().equals("OCUPADO BA")){
+                            tmp.setBackgroundResource(R.drawable.custom_button_search);
+                            temp.setClickable(true);
+                        }else{
+                            temp.setClickable(false);
+                        }
                     }
 
-                    if (telefono_clickable) {
-                        borde.setClickable(true);
+                    if (telefono_clickable ) {
+                        //borde.setClickable(true);
                         borde.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View v) {

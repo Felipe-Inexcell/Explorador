@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -53,7 +54,7 @@ public class CasaCerrada extends FragmentActivity implements GoogleMap.OnMapLoad
     LinearLayout mapStatus;
     TextView mapStatusText;
     EditText description;
-
+    Activity p;
     String Phone;
 
     Button tomarFoto, verFoto, enviar;
@@ -70,6 +71,7 @@ public class CasaCerrada extends FragmentActivity implements GoogleMap.OnMapLoad
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_casa_cerrada);
         mContext = this;
+        p=this;
 
         Phone = getIntent().getStringExtra("PHONE");
 
@@ -130,7 +132,11 @@ public class CasaCerrada extends FragmentActivity implements GoogleMap.OnMapLoad
     }
 
     public void volver(View view) {
-        Funciones.makeBackAlert(mContext).show();
+        InputMethodManager imm = (InputMethodManager) p.getSystemService(Context.INPUT_METHOD_SERVICE);
+        View foco = p.getCurrentFocus();
+        if (foco == null || !imm.hideSoftInputFromWindow(foco.getWindowToken(), 0)) {
+            Funciones.makeBackAlert(mContext).show();
+        }
     }
 
     /**
