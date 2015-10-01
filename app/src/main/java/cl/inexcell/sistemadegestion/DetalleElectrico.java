@@ -13,6 +13,8 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class DetalleElectrico extends Activity {
 
     String vendor;
@@ -176,18 +178,24 @@ public class DetalleElectrico extends Activity {
         conenido.addView(pElec);
     }
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        volver(null);
+    }
+
     public void volver(View v){
-        finish();
+
+        Funciones.makeBackAlert(this).show();
     }
 
     public void shutdown(View v){
-        if(DCT.actividad != null)
-            DCT.actividad.finish();
-        if (VistaTopologica.topo!=  null)
-            VistaTopologica.topo.finish();
-        if(Principal.p != null)
-            Principal.p.finish();
-        finish();
+        ArrayList<Activity> actividades = new ArrayList<>();
+        actividades.add(Principal.p);
+        actividades.add(VistaTopologica.topo);
+        actividades.add(DCT.actividad);
+        actividades.add(this);
+        Funciones.makeExitAlert(this, actividades).show();
     }
 
 

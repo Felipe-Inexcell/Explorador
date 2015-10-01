@@ -1,12 +1,15 @@
 package cl.inexcell.sistemadegestion;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Base64;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -106,5 +110,75 @@ public class Funciones {
         t.setText(text);
         return t;
     }
+
+    public static AlertDialog.Builder makeAlert(Context CONTEXTO, String TITULO, String MENSAJE, Boolean CANCELABLE){
+        AlertDialog.Builder builder = new AlertDialog.Builder(CONTEXTO);
+        if(TITULO != null)
+            builder.setTitle(TITULO);
+        if(MENSAJE != null)
+            builder.setMessage(MENSAJE);
+        builder.setCancelable(CANCELABLE);
+        return builder;
+
+    }
+
+    public static AlertDialog.Builder makeExitAlert(Context CONTEXTO, final ArrayList<Activity> Actividades){
+        AlertDialog.Builder b = new AlertDialog.Builder(CONTEXTO);
+        b.setMessage("¿Seguro que desea cerrar la aplicación?");
+        b.setPositiveButton("Sí, Salir", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                for(Activity a: Actividades)
+                    if(a!= null)a.finish();
+                dialog.dismiss();
+            }
+        });
+        b.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        return b;
+
+    }
+
+    public static AlertDialog.Builder makeBackAlert(final Context CONTEXTO){
+        AlertDialog.Builder b = new AlertDialog.Builder(CONTEXTO);
+        b.setMessage("¿Seguro que desea volver?");
+        b.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ((Activity)CONTEXTO).finish();
+
+            }
+        });
+        b.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        return b;
+
+    }
+
+    public static AlertDialog.Builder makeResultAlert(Context CONTEXTO, String MENSAJE,Boolean CANCELABLE){
+        AlertDialog.Builder builder = new AlertDialog.Builder(CONTEXTO);
+        builder.setMessage(MENSAJE);
+        builder.setCancelable(CANCELABLE);
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        return builder;
+
+    }
+
+
 
 }

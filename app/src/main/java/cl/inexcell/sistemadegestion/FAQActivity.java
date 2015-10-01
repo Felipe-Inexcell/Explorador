@@ -12,7 +12,8 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+
+import java.util.ArrayList;
 
 /**
  * Created by Felipe on 05/03/2015.
@@ -91,9 +92,19 @@ public class FAQActivity extends Activity {
     }
 
 
-    public void back(View v){finish();}
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        back(null);
+    }
+
+    public void back(View v){
+        Funciones.makeBackAlert(this).show();}
+
     public void shutdown(View v){
-        Principal.p.finish();
-        finish();
+        ArrayList<Activity> actividades = new ArrayList<>();
+        actividades.add(Principal.p);
+        actividades.add(this);
+        Funciones.makeExitAlert(this, actividades).show();
     }
 }

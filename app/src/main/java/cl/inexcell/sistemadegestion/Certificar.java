@@ -34,7 +34,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class Certificar extends Activity {
@@ -109,8 +108,14 @@ public class Certificar extends Activity {
 			dslContent.setVisibility(View.GONE);
 		}
 	}
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        volver(null);
+    }
 	public void volver(View view){
-		this.finish();
+        Funciones.makeBackAlert(this).show();
 	}
 	
 	public void certificarAgain(View v){
@@ -128,7 +133,7 @@ public class Certificar extends Activity {
             wifiContent.setVisibility(View.GONE);
             certificar();
         }else {
-            Toast.makeText(getApplicationContext(), "Error: \nNo hay conexión a internet", Toast.LENGTH_SHORT).show();
+            Funciones.makeResultAlert(context, "Error: \nNo hay conexión a internet", false).show();
         }
 
 	}
@@ -138,11 +143,11 @@ public class Certificar extends Activity {
 	
 
 	public void shutdown1(View v){
-        if(VistaTopologica.topo != null)
-		    VistaTopologica.topo.finish();
-        if(Principal.p != null)
-		    Principal.p.finish();
-		finish();
+        ArrayList<Activity> actividades = new ArrayList<>();
+        actividades.add(Principal.p);
+        actividades.add(VistaTopologica.topo);
+        actividades.add(this);
+        Funciones.makeExitAlert(this, actividades).show();
 	}
 
 
@@ -362,16 +367,7 @@ public class Certificar extends Activity {
  		protected void onPreExecute() {
  			this.dialog.setMessage("Certificando línea telefónica...");
  			this.dialog.setCanceledOnTouchOutside(false);
- 			this.dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					// TODO Auto-generated method stub
-					Toast.makeText(getApplicationContext(), "Operación Interrumpida.", Toast.LENGTH_SHORT).show();
-					
-					Certificar.this.finish();
-				}
-			});
+ 			this.dialog.setCancelable(false);
  		    this.dialog.show();
          }
    		 
@@ -459,8 +455,7 @@ public class Certificar extends Activity {
  				dsl.setCompoundDrawablesWithIntrinsicBounds( 0, 0,R.drawable.error,0);
  				dsl.setText("Banda Ancha: Error de Conexión");
  				//finish.setEnabled(false);
- 				Toast.makeText(getApplicationContext(), "No se pudo realizar la certificación.", Toast.LENGTH_SHORT).show();
- 				
+                Funciones.makeResultAlert(context, "No se pudo realizar la certificación", false).show();
  			}
 
             ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

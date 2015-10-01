@@ -28,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.xml.sax.SAXException;
@@ -117,31 +116,28 @@ public class VistaTopologica extends Activity {
 
             }
 
-        } catch (ParserConfigurationException e) {
+        } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error al leer la respuesta del servidor.", Toast.LENGTH_SHORT).show();
-        } catch (SAXException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Error al leer la respuesta del servidor.", Toast.LENGTH_SHORT).show();
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Error al leer la respuesta del servidor.", Toast.LENGTH_SHORT).show();
+
+            Funciones.makeResultAlert(mContext, "Error al leer la respuesta del servidor.", false).show();
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error al leer la respuesta del servidor.", Toast.LENGTH_SHORT).show();
+            Funciones.makeResultAlert(mContext, "Se agotó el tiempo de conexión. Por favor reintente", false).show();
         }
 
     }
 
     public void shutdown(View v) {
-        Principal.p.finish();
-        finish();
+        ArrayList<Activity> actividades = new ArrayList<>();
+        actividades.add(Principal.p);
+        actividades.add(topo);
+        Funciones.makeExitAlert(this, actividades).show();
     }
 
 
     public void consultar(View v) {
         if (bloqueo.getState("Certifica")) {
-            Toast.makeText(this, bloqueo.getMsg("Certifica"), Toast.LENGTH_LONG).show();
+            Funciones.makeResultAlert(mContext, bloqueo.getMsg("Certifica"), false).show();
         } else {
             State state3g = conMan.getNetworkInfo(0).getState();
             State stateWifi = conMan.getNetworkInfo(1).getState();
@@ -150,7 +146,7 @@ public class VistaTopologica extends Activity {
                 certificar.putExtra("PHONE", Phone);
                 startActivity(certificar);
             } else {
-                Toast.makeText(getApplicationContext(), "Error: \nNo hay conexión a internet", Toast.LENGTH_SHORT).show();
+                Funciones.makeResultAlert(mContext, "Error: \nNo hay conexión a internet", false).show();
             }
         }
     }
@@ -161,8 +157,13 @@ public class VistaTopologica extends Activity {
         startActivity(certificar);
     }
 
+    @Override
+    public void onBackPressed() {
+        volver(null);
+    }
+
     public void volver(View view) {
-        this.finish();
+        Funciones.makeBackAlert(this).show();
     }
 
     public void init() {
@@ -188,12 +189,12 @@ public class VistaTopologica extends Activity {
         protected void onPreExecute() {
             this.dialog.setMessage("Consultando Información Cliente...");
             this.dialog.setCanceledOnTouchOutside(false);
+            this.dialog.setCancelable(false);
             this.dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
                 @Override
                 public void onCancel(DialogInterface dialog) {
-                    Toast.makeText(getApplicationContext(), "Operación Interrumpida.", Toast.LENGTH_SHORT).show();
-
+                    Funciones.makeResultAlert(mContext, "Operación Interrumpida", false).show();
                 }
             });
             this.dialog.show();
@@ -222,8 +223,13 @@ public class VistaTopologica extends Activity {
             ids_contenidos = new ArrayList<>();
             nodesIn = new ArrayList<>();
             if(result == null){
-                Toast.makeText(mContext, "Error al leer el XML", Toast.LENGTH_SHORT).show();
-                ((Activity)mContext).finish();
+                Funciones.makeAlert(mContext, null, "Error al leer el XML", false)
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((Activity)mContext).finish();
+                            }
+                        }).show();
             }else {
                 for (Bundle b : result) {
 
@@ -376,7 +382,7 @@ public class VistaTopologica extends Activity {
                                                                         ab.execute();
                                                                         dial.dismiss();
                                                                     } else {
-                                                                        Toast.makeText(VistaTopologica.topo, "Debe ingresar ambos números de serie de 10 digitos.", Toast.LENGTH_LONG).show();
+                                                                        Funciones.makeResultAlert(mContext, "Debe ingresar ambos números de serie de 10 digitos.", false).show();
                                                                     }
                                                                 }
                                                             });
@@ -673,7 +679,7 @@ public class VistaTopologica extends Activity {
 
     public void fatc(View v) {
         if (bloqueo.getState("Fact")) {
-            Toast.makeText(this, bloqueo.getMsg("Fact"), Toast.LENGTH_LONG).show();
+            Funciones.makeResultAlert(mContext, bloqueo.getMsg("Fact"), false).show();
         } else {
             Intent i = new Intent(this, FactActivity.class);
             i.putStringArrayListExtra("DECOS", decos_reg);
@@ -818,7 +824,7 @@ public class VistaTopologica extends Activity {
                                             a = new ActionButtonTask(Phone, parActual + ";" + cols[0].split("/")[1], "ACTION301");
                                             a.execute();
                                         } else
-                                            Toast.makeText(VistaTopologica.topo, "Error: Par actualmente asignado", Toast.LENGTH_LONG).show();
+                                            Funciones.makeResultAlert(mContext, "Error\nPar actualmente asignado", false).show();
 
                                     }
                                 });
@@ -904,14 +910,7 @@ public class VistaTopologica extends Activity {
             super.onPreExecute();
             this.dialog.setMessage("Enviando solicitud de accion...");
             this.dialog.setCanceledOnTouchOutside(false);
-            this.dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    Toast.makeText(getApplicationContext(), "Operación Interrumpida.", Toast.LENGTH_SHORT).show();
-
-                }
-            });
+            this.dialog.setCancelable(false);
             this.dialog.show();
         }
 
@@ -919,9 +918,9 @@ public class VistaTopologica extends Activity {
         protected void onPostExecute(ArrayList<String> s) {
             super.onPostExecute(s);
             if (s != null && s.size() > 1)
-                Toast.makeText(VistaTopologica.topo, s.get(1), Toast.LENGTH_LONG).show();
+                Funciones.makeResultAlert(mContext,s.get(1), false).show();
             if (s == null)
-                Toast.makeText(VistaTopologica.topo, "Error en la conexión", Toast.LENGTH_LONG).show();
+                Funciones.makeResultAlert(mContext,"Error en la conexión", false).show();
             if (this.dialog.isShowing()) {
                 this.dialog.dismiss();
             }
@@ -956,7 +955,7 @@ public class VistaTopologica extends Activity {
                             ab.execute();
                             dial.dismiss();
                         } else {
-                            Toast.makeText(VistaTopologica.topo, "Debe ingresar ambos números de serie de 10 digitos.", Toast.LENGTH_LONG).show();
+                            Funciones.makeResultAlert(mContext, "Debe ingresar ambos números de serie de 10 dígitos", false).show();
                         }
                     }
                 });
@@ -1067,10 +1066,10 @@ public class VistaTopologica extends Activity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Toast.makeText(mContext, "Error en la información obtenida. Por favor reintente.", Toast.LENGTH_LONG).show();
+                    Funciones.makeResultAlert(mContext, "Error en la información obtenida. Por favor reintente.", false).show();
                 }
             } else {
-                Toast.makeText(mContext, s, Toast.LENGTH_LONG).show();
+                Funciones.makeResultAlert(mContext, s, false).show();
             }
 
             if (dialog.isShowing()) dialog.dismiss();

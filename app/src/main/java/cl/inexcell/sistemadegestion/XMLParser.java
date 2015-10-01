@@ -780,10 +780,20 @@ public class XMLParser {
             Element b = (Element) botones.item(i);
             Boton boton = new Boton();
 
-            boton.setId(getValue(b, "idBoton"));
-            boton.setEnabled(getValue(b, "Code"));
-            boton.setName(getValue(b, "Description"));
+            if(b.getChildNodes().getLength() == 1){
+                Element act = (Element) b.getChildNodes().item(0);
+                boton.setId(getValue(act, "version"));
+                boton.setName(getValue(act, "url"));
+                Log.d("ACTUALIZACION", "version actual: "+boton.getId());
+                Log.d("ACTUALIZACION", "url: "+boton.getName());
+                datos.add(boton);
+            }else {
+                boton.setId(getValue(b, "idBoton"));
+                boton.setEnabled(getValue(b, "Code"));
+                boton.setName(getValue(b, "Description"));
+            }
             datos.add(boton);
+
         }
 
 

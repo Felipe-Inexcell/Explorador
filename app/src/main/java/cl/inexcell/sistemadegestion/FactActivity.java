@@ -9,12 +9,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
 import android.text.InputType;
@@ -36,7 +34,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.gcacace.signaturepad.views.SignaturePad;
 
@@ -84,9 +81,6 @@ public class FactActivity extends Activity implements View.OnClickListener {
     private Bitmap firma = null;
     private static int TAKE_PICTURE = 1;
     private static int SELECT_PICTURE = 2;
-    final CharSequence[] opcionCaptura = {
-            "Tomar Fotografía"
-    };
     String name = Environment.getExternalStorageDirectory() + "/carnet.jpg"; //picture filename
 
     @Override
@@ -272,7 +266,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                         tableHeader2.setVisibility(View.VISIBLE);
                                         d.dismiss();
                                     } else {
-                                        Toast.makeText(mContext, "Ingrese ambos números de serie de 10 dígitos.", Toast.LENGTH_LONG).show();
+                                        Funciones.makeResultAlert(mContext, "Debe ingresar ambos números de serie de 10 digitos", false).show();
                                     }
                                 } else {
                                     final View uno = LayoutInflater.from(mContext).inflate(R.layout.tabrow_retiro, null, false);
@@ -305,7 +299,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                         tableHeader2.setVisibility(View.VISIBLE);
                                         d.dismiss();
                                     } else {
-                                        Toast.makeText(mContext, "Ingrese el número de serie.", Toast.LENGTH_LONG).show();
+                                        Funciones.makeResultAlert(mContext, "Debe ingresar el numero de serie", false).show();
                                     }
                                 }
                                 //else dialog stays open. Make sure you have an obvious way to close the dialog especially if you set cancellable to false.
@@ -630,11 +624,11 @@ public class FactActivity extends Activity implements View.OnClickListener {
     }
 
     public void shutdown(View v) {
-        if (Principal.p != null)
-            Principal.p.finish();
-        if(VistaTopologica.topo != null)
-            VistaTopologica.topo.finish();
-        finish();
+        ArrayList<Activity> actividades = new ArrayList<>();
+        actividades.add(Principal.p);
+        actividades.add(VistaTopologica.topo);
+        actividades.add(this);
+        Funciones.makeExitAlert(this, actividades).show();
     }
 
     /**
@@ -668,7 +662,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                             parametrosEnvioForms.add(p);
                         } else {
                             if (parametros.get(i).getRequired()) {
-                                Toast.makeText(mContext, "El parametro " + TextsBA.get(i).getText() + " es obligatorio", Toast.LENGTH_LONG).show();
+                                Funciones.makeResultAlert(mContext, "El parametro " + TextsBA.get(i).getText() + " es obligatorio", false).show();
                                 isOK = false;
                             } else {
                                 p.setAttribute(TextsBA.get(i).getText().toString());
@@ -684,7 +678,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                             parametrosEnvioForms.add(p);
                         } else {
                             if (parametros.get(i).getRequired()) {
-                                Toast.makeText(mContext, "El parametro " + TextsTelef.get(i).getText() + " es obligatorio", Toast.LENGTH_LONG).show();
+                                Funciones.makeResultAlert(mContext, "El parametro " + TextsTelef.get(i).getText() + " es obligatorio", false).show();
                                 isOK = false;
                             } else {
                                 p.setAttribute(TextsTelef.get(i).getText().toString());
@@ -702,7 +696,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                             parametrosEnvioForms.add(p);
                         } else {
                             if (parametros.get(i).getRequired()) {
-                                Toast.makeText(mContext, "El parametro " + TextsTelev.get(i).getText() + " es obligatorio", Toast.LENGTH_LONG).show();
+                                Funciones.makeResultAlert(mContext, "El parametro " + TextsTelev.get(i).getText() + " es obligatorio", false).show();
                                 isOK = false;
                             } else {
                                 p.setAttribute(TextsTelev.get(i).getText().toString());
@@ -723,7 +717,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                 p.setValue(Funciones.encodeTobase64(b));
                                 parametrosEnvioForms.add(p);
                             } else {
-                                Toast.makeText(mContext, "Debe registrar la Firma y una fotografía de la Cédula de Identidad", Toast.LENGTH_LONG).show();
+                                Funciones.makeResultAlert(mContext, "Debe registrar la Firma y una fotografía de la Cédula de Identidad", false).show();
                                 isOK = false;
                             }
                         } else if (editTextsCierre.get(i).getText().toString().compareTo("") != 0) {
@@ -734,7 +728,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                     p.setValue(editTextsCierre.get(i).getText().toString());
                                     parametrosEnvioForms.add(p);
                                 }else {
-                                    Toast.makeText(mContext, "Email incorrecto", Toast.LENGTH_LONG).show();
+                                    Funciones.makeResultAlert(mContext, "Email incorrecto", false).show();
                                     isOK= false;
                                 }
                             }else if (parametros.get(i).getAtributo().compareTo("Rut") == 0) {
@@ -743,7 +737,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                     p.setValue(editTextsCierre.get(i).getText().toString());
                                     parametrosEnvioForms.add(p);
                                 }else{
-                                    Toast.makeText(mContext,"Rut incorrecto", Toast.LENGTH_LONG).show();
+                                    Funciones.makeResultAlert(mContext, "Rut incorrecto", false).show();
                                     isOK= false;
                                 }
                             }else{
@@ -754,11 +748,11 @@ public class FactActivity extends Activity implements View.OnClickListener {
                         } else {
                             if (parametros.get(i).getRequired()) {
                                 if (parametros.get(i).getAtributo().compareTo("Email") != 0) {
-                                    Toast.makeText(mContext, "El parametro " + TextsCierre.get(i).getText() + " es obligatorio", Toast.LENGTH_LONG).show();
+                                    Funciones.makeResultAlert(mContext, "El parametro " + TextsCierre.get(i).getText() + " es obligatorio", false).show();
                                     isOK = false;
                                 } else {
                                     if (isEmail) {
-                                        Toast.makeText(mContext, "El parametro " + TextsCierre.get(i).getText() + " es obligatorio", Toast.LENGTH_LONG).show();
+                                        Funciones.makeResultAlert(mContext, "El parametro " + TextsCierre.get(i).getText() + " es obligatorio", false).show();
                                         isOK = false;
                                     }
                                 }
@@ -806,26 +800,17 @@ public class FactActivity extends Activity implements View.OnClickListener {
      * Boton Camara *
      */
     public void capturarImagen(View v) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        int item = TAKE_PICTURE;
+        if (item == TAKE_PICTURE) {
+            Uri output = Uri.fromFile(new File(name));
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
+        } else if (item == SELECT_PICTURE) {
+            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+            item = SELECT_PICTURE;
+        }
+        startActivityForResult(intent, item);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Escoja una Opcion:");
-        builder.setIcon(R.drawable.ic_camera);
-        builder.setItems(opcionCaptura, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                int code = TAKE_PICTURE;
-                if (item == TAKE_PICTURE) {
-                    Uri output = Uri.fromFile(new File(name));
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
-                } else if (item == SELECT_PICTURE) {
-                    intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-                    code = SELECT_PICTURE;
-                }
-                startActivityForResult(intent, code);
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 
     @Override
@@ -862,12 +847,15 @@ public class FactActivity extends Activity implements View.OnClickListener {
     /**
      * Boton Volver *
      */
-    public void volver(View view) {
-        finish();
 
-        // Vibrar al hacer click
-        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(50);
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        volver(null);
+    }
+    public void volver(View view) {
+
+        Funciones.makeBackAlert(this).show();
     }
 
         /*
@@ -918,17 +906,27 @@ public class FactActivity extends Activity implements View.OnClickListener {
                     if (generarVista(formulario) && dialog.isShowing()) {
                         dialog.dismiss();
                     } else {
-                        Toast.makeText(mContext, formulario.getReturnDescription(), Toast.LENGTH_LONG).show();
+                        Funciones.makeAlert(getApplicationContext(), null, formulario.getReturnDescription(),false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((Activity) mContext).finish();
+                            }
+                        }).show();
                         if (dialog.isShowing())
                             dialog.dismiss();
-                        FactActivity.this.finish();
                     }
 
             }else{
-                Toast.makeText(mContext, "Error en la conexión. Por favor reintente.", Toast.LENGTH_LONG).show();
+                Funciones.makeAlert(getApplicationContext(), "Error en la conexión", "Compruebe su conexión a internet y reintente.",false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((Activity) mContext).finish();
+                            }
+                        }).show();
                 if (dialog.isShowing())
                     dialog.dismiss();
-                FactActivity.this.finish();
             }
 
         }
@@ -1471,20 +1469,49 @@ public class FactActivity extends Activity implements View.OnClickListener {
             if(response != null) {
                 if (response.get(0).compareTo("0") == 0) {
                     if (response.size() >= 2)
-                        Toast.makeText(mContext, response.get(1), Toast.LENGTH_LONG).show();
+                        Funciones.makeAlert(getApplicationContext(), null, response.get(1),false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if(VistaTopologica.topo != null)VistaTopologica.topo.finish();
+                                        ((Activity) mContext).finish();
+                                    }
+                                }).show();
                     else
-                        Toast.makeText(mContext, "Formulario enviado", Toast.LENGTH_LONG).show();
-                    if (VistaTopologica.topo != null)
-                        VistaTopologica.topo.finish();
-                    FactActivity.this.finish();
+                        Funciones.makeAlert(getApplicationContext(), null, "Formulado enviado",false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if(VistaTopologica.topo!= null)VistaTopologica.topo.finish();
+                                        ((Activity) mContext).finish();
+                                    }
+                                }).show();
                 } else {
                     if (response.size() >= 2)
-                        Toast.makeText(mContext, response.get(1), Toast.LENGTH_LONG).show();
+                        Funciones.makeAlert(getApplicationContext(), null, response.get(1),false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                    }
+                                }).show();
                     else
-                        Toast.makeText(mContext, "Error desconocido, no se pudo enviar.", Toast.LENGTH_LONG).show();
+                        Funciones.makeAlert(getApplicationContext(), null, "Error al enviar. Por favor reintente.",false)
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ((Activity) mContext).finish();
+                                    }
+                                }).show();
                 }
             }else{
-                Toast.makeText(mContext, "Error desconocido, no se pudo enviar.", Toast.LENGTH_LONG).show();
+                Funciones.makeAlert(getApplicationContext(), null, "Error desconocido, no se pudo enviar.",false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((Activity) mContext).finish();
+                            }
+                        }).show();
             }
             if (dialog.isShowing())
                 dialog.dismiss();

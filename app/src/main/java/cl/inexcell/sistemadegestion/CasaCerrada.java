@@ -1,38 +1,28 @@
 package cl.inexcell.sistemadegestion;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -125,14 +115,22 @@ public class CasaCerrada extends FragmentActivity implements GoogleMap.OnMapLoad
     }
 
     public void shutdown(View v) {
-        if (Principal.p != null) Principal.p.finish();
-        if (FactActivity.p != null) FactActivity.p.finish();
-        if (VistaTopologica.topo != null) VistaTopologica.topo.finish();
-        finish();
+        ArrayList<Activity> actividades = new ArrayList<>();
+        actividades.add(Principal.p);
+        actividades.add(FactActivity.p);
+        actividades.add(VistaTopologica.topo);
+        actividades.add(this);
+        Funciones.makeExitAlert(this, actividades).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        volver(null);
     }
 
     public void volver(View view) {
-        this.finish();
+        Funciones.makeBackAlert(mContext).show();
     }
 
     /**
@@ -191,12 +189,12 @@ public class CasaCerrada extends FragmentActivity implements GoogleMap.OnMapLoad
         }
         if (v.getId() == R.id.enviar) {
             if (b == null) {
-                Toast.makeText(this, "Debe tomar una fotografía del lugar.", Toast.LENGTH_LONG).show();
+                Funciones.makeResultAlert(mContext, "Debe tomar una fotografía del lugar", false).show();
                 return;
             }
 
             if (description.getText().length() == 0) {
-                Toast.makeText(this, "Debe ingresar una observación", Toast.LENGTH_LONG).show();
+                Funciones.makeResultAlert(mContext, "Debe ingresar una observación", false).show();
                 return;
             }
 
@@ -257,13 +255,19 @@ public class CasaCerrada extends FragmentActivity implements GoogleMap.OnMapLoad
 
         @Override
         protected void onPostExecute(String s) {
-            Toast.makeText(tContext, s, Toast.LENGTH_LONG).show();
-            if (isOk) {
-                ((Activity) tContext).finish();
-                if (FactActivity.p != null)
-                    FactActivity.p.finish();
+            Funciones.makeAlert(mContext, null, s,false)
+                    .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (isOk) {
+                                ((Activity) tContext).finish();
+                                if (FactActivity.p != null)
+                                    FactActivity.p.finish();
 
-            }
+                            }
+                        }
+                    }).show();
+
             if(d.isShowing())d.dismiss();
         }
     }

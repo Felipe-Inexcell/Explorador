@@ -10,8 +10,10 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo.State;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Vibrator;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -27,6 +29,7 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.HttpHostConnectException;
 import org.xml.sax.SAXException;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.text.ParseException;
@@ -46,6 +49,7 @@ public class Principal extends Activity {
     private static final String TAG = "Principal Activity";
     LocationManager locationManager;
     private EditText phone;
+    Context mContext;
 
     private String asd;
 
@@ -56,6 +60,7 @@ public class Principal extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_principal);
         p = this;
+        mContext = this;
 
         bloqueo = new BloqueoBotones(this);
 
@@ -94,6 +99,7 @@ public class Principal extends Activity {
         Context context;
         ProgressDialog d;
         Boolean ok = false;
+        Boton actualizar= null;
 
         private Botones(Context context) {
             this.context = context;
@@ -119,7 +125,11 @@ public class Principal extends Activity {
                 ArrayList<Boton> response = XMLParser.getButtons(query);
 
                 for (Boton b : response) {
-                    bloqueo.setBloqueo(b.getId(), b.isEnabled(), b.getName());
+                    if(response.indexOf(b) == 0)
+                        actualizar = b;
+                    else {
+                        bloqueo.setBloqueo(b.getId(), b.isEnabled(), b.getName());
+                    }
                 }
                 return "BLOQUEO OK";
             } catch (SAXException e) {
@@ -144,6 +154,43 @@ public class Principal extends Activity {
         @Override
         protected void onPostExecute(String s) {
             if (d.isShowing()) d.dismiss();
+            String versionActual = getResources().getString(R.string.versioncode);
+            /*if(versionActual.compareTo(actualizar.getId())<0){
+                AlertDialog.Builder builder = Funciones.makeAlert(mContext,
+                        "Hay una nueva versión de la Aplicación",
+                        "Versión Instalada: "
+                                + versionActual
+                                + "\nVersión a Instalar: " + actualizar.getId()
+                                + "\nDebe actualizar la aplicación para continuar utilizandola.",
+                        false);
+
+                builder.setPositiveButton("Descargar e Instalar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(mContext, "Descargando... si claro", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/app-debug.apk")), "application/vnd.android.package-archive");
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        p.finish();
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton("Cerrar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        p.finish();
+                        dialog.dismiss();
+                    }
+                });
+                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        p.finish();
+                    }
+                });
+                builder.show();
+            }*/
             Log.i("BLOQUEO", s);
         }
     }
@@ -158,7 +205,7 @@ public class Principal extends Activity {
 
     public void show_notificar_averias(View view) {
         if (bloqueo.getState("localizarAveria")) {
-            Toast.makeText(this, bloqueo.getMsg("localizarAveria"), Toast.LENGTH_LONG).show();
+            Funciones.makeResultAlert(mContext, bloqueo.getMsg("localizarAveria"), false).show();
         } else {
             ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -170,14 +217,14 @@ public class Principal extends Activity {
                 startActivityForResult(i, 0);
 
             } else {
-                Toast.makeText(getApplicationContext(), "No existe conexión a internet para utilizar el Programa", Toast.LENGTH_LONG).show();
+                Funciones.makeResultAlert(mContext, "No existe conexión a internet para utilizar el Programa", false).show();
             }
         }
     }
 
     public void buscar_cliente(View view) {
         if (bloqueo.getState("busquedaInicial")) {
-            Toast.makeText(this, bloqueo.getMsg("busquedaInicial"), Toast.LENGTH_LONG).show();
+            Funciones.makeResultAlert(mContext, bloqueo.getMsg("busquedaInicial"), false).show();
         } else {
             ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -185,14 +232,14 @@ public class Principal extends Activity {
             State wifi = conMan.getNetworkInfo(1).getState();
             if (senal3g == State.CONNECTED || wifi == State.CONNECTED) {
                 if (phone.getText().length() == 0 || phone.getText() == null) {
-                    Toast.makeText(getApplicationContext(), "Ingrese télefono del cliente", Toast.LENGTH_SHORT).show();
+                    Funciones.makeResultAlert(mContext, "Ingrese un número de teléfono", false).show();
                     return;
                 }
 
                 Consulta_Resources c = new Consulta_Resources();
                 c.execute();
             } else {
-                Toast.makeText(getApplicationContext(), "No existe conexión a internet para utilizar el Programa", Toast.LENGTH_LONG).show();
+                Funciones.makeResultAlert(mContext, "No existe conexión a internet para utilizar el Programa", false).show();
             }
         }
     }
@@ -200,7 +247,7 @@ public class Principal extends Activity {
 
     public void show_plantas_externas(View view) {
         if (bloqueo.getState("PlantasExternas")) {
-            Toast.makeText(this, bloqueo.getMsg("PlantasExternas"), Toast.LENGTH_LONG).show();
+            Funciones.makeResultAlert(mContext, bloqueo.getMsg("PantasExternas"), false).show();
         } else {
             ConnectivityManager conMan = (ConnectivityManager)
                     getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -213,18 +260,21 @@ public class Principal extends Activity {
                 startActivityForResult(i, 0);
 
             } else {
-                Toast.makeText(getApplicationContext(), "No existe conexión a internet para utilizar el Programa", Toast.LENGTH_LONG).show();
+                Funciones.makeResultAlert(mContext, "No existe conexión a internet para utilizar el Programa", false).show();
             }
         }
     }
 
     public void shutdown(View view) {
-        this.finish();
+        ArrayList<Activity> actividades = new ArrayList<>();
+        actividades.add(p);
+
+        Funciones.makeExitAlert(mContext, actividades).show();
     }
 
     public void openFAQ(View view) {
         if (bloqueo.getState("Preguntas")) {
-            Toast.makeText(this, bloqueo.getMsg("Preguntas"), Toast.LENGTH_LONG).show();
+            Funciones.makeResultAlert(mContext, bloqueo.getMsg("Preguntas"), false).show();
         } else {startActivity(new Intent(this, FAQActivity.class));}
     }
 
@@ -238,15 +288,7 @@ public class Principal extends Activity {
         protected void onPreExecute() {
             this.dialog.setMessage("Buscando Cliente...");
             this.dialog.setCanceledOnTouchOutside(false);
-            this.dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    // TODO Auto-generated method stub
-                    Toast.makeText(getApplicationContext(), "Operación Interrumpida.", Toast.LENGTH_SHORT).show();
-
-                }
-            });
+            this.dialog.setCancelable(false);
             this.dialog.show();
             //super.onPreExecute();
         }
@@ -313,10 +355,10 @@ public class Principal extends Activity {
                     Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                     vibrator.vibrate(50);
                 } else {
-                    Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+                    Funciones.makeResultAlert(mContext, result, false).show();
                 }
             } else {
-                Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
+                Funciones.makeResultAlert(mContext, errorMessage, false).show();
             }
 
             if (this.dialog.isShowing()) {

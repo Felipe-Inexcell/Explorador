@@ -5,8 +5,8 @@ import java.net.SocketTimeoutException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,15 +20,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.HttpHostConnectException;
@@ -43,6 +40,7 @@ public class Plantas_Externas extends FragmentActivity implements GoogleMap.OnMa
     MyLocationListener gps;
     List<Address> matches;
     Geocoder geoCoder;
+    Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +49,7 @@ public class Plantas_Externas extends FragmentActivity implements GoogleMap.OnMa
         // Activity sin parte superior
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_plantas_externas);
-
+        mContext = this;
         gps = new MyLocationListener(this);
         geoCoder = new Geocoder(this);
 
@@ -96,12 +94,21 @@ public class Plantas_Externas extends FragmentActivity implements GoogleMap.OnMa
     }
 
     public void shutdown(View v) {
-        Principal.p.finish();
-        finish();
+        ArrayList<Activity> actividades = new ArrayList<>();
+        actividades.add(Principal.p);
+        actividades.add(this);
+        Funciones.makeExitAlert(this, actividades).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        volver(null);
     }
 
     public void volver(View view) {
-        this.finish();
+
+        Funciones.makeBackAlert(this).show();
     }
 
     @Override
@@ -128,7 +135,7 @@ public class Plantas_Externas extends FragmentActivity implements GoogleMap.OnMa
             Search_Points bm = new Search_Points(matches, this);
             bm.execute();
         } else
-            Toast.makeText(this, "No se puede acceder a su ubicación, intente más tarde", Toast.LENGTH_SHORT).show();
+            Funciones.makeResultAlert(mContext, "No se puede acceder a su ubicación, intente más tarde", false).show();
     }
 
     @Override
@@ -186,7 +193,7 @@ public class Plantas_Externas extends FragmentActivity implements GoogleMap.OnMa
                 et.printStackTrace();
                 errorMessage = "Se agotó el tiempo de espera. Por favor reintente";
                 return null;
-            }catch (Exception e1) {
+            } catch (Exception e1) {
                 e1.printStackTrace();
                 errorMessage = "Ha ocurrido un error con la respuesta del servidor.";
                 return null;
@@ -205,7 +212,7 @@ public class Plantas_Externas extends FragmentActivity implements GoogleMap.OnMa
 
                 @Override
                 public void onCancel(DialogInterface dialog) {
-                    Toast.makeText(getApplicationContext(), "Operación Interrumpida.", Toast.LENGTH_SHORT).show();
+                    Funciones.makeResultAlert(mContext, "Operación Interrumpida", false).show();
                     isCancel = true;
                 }
             });
@@ -226,8 +233,8 @@ public class Plantas_Externas extends FragmentActivity implements GoogleMap.OnMa
                             .snippet(point.getDescription());
                     mapa.addMarker(markerOptions);
                 }
-            }else{
-                Toast.makeText(mContext, errorMessage, Toast.LENGTH_LONG).show();
+            } else {
+                Funciones.makeResultAlert(mContext, errorMessage, false).show();
             }
 
             if (dialog.isShowing())

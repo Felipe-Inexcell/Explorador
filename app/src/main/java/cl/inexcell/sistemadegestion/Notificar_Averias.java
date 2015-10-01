@@ -36,7 +36,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.http.conn.ConnectTimeoutException;
 
@@ -107,21 +106,22 @@ public class Notificar_Averias extends Activity {
 	}
 
 	public void shutdown(View v){
-        if(Principal.p != null)
-		    Principal.p.finish();
-		finish();
+        ArrayList<Activity> actividades = new ArrayList<>();
+        actividades.add(Principal.p);
+        actividades.add(this);
+        Funciones.makeExitAlert(this, actividades).show();
 	}
 	/** Boton Guardar Informacion **/
 	public void guardarInformacion (View view){
 
         //Comprobamos que se haya ingresado una observación
 		if(et.getText().toString().compareTo("") == 0){
-			Toast.makeText(getApplicationContext(), "Debe ingresar una observación.", Toast.LENGTH_LONG).show();
+            Funciones.makeResultAlert(mContext, "Debe ingresar una observación", false).show();
 			return;
 		}
         //Comprobamos que se haya tomado una fotografía
 		if(b == null){
-			Toast.makeText(getApplicationContext(), "Debe tomar fotografía.", Toast.LENGTH_LONG).show();
+            Funciones.makeResultAlert(mContext, "Debe tomar una fotografía", false).show();
 			return;
 		}
 
@@ -163,7 +163,7 @@ public class Notificar_Averias extends Activity {
                     Enviar_Averia ea = new Enviar_Averia(objeto, tipodano, afectacion, clasificacion, observacion, foto);
                     ea.execute();
                 }else
-                    Toast.makeText(getApplicationContext(), "Falta información.", Toast.LENGTH_LONG).show();
+                    Funciones.makeResultAlert(mContext, "Falta información", false).show();
             }
         });
 
@@ -179,26 +179,18 @@ public class Notificar_Averias extends Activity {
 	
 	/** Boton Camara **/
 	public void capturarImagen(View view){
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Escoja una Opcion:");
-        builder.setIcon(R.drawable.ic_camera);
-        builder.setItems(opcionCaptura, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-            	Intent intent =  new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            	int code = TAKE_PICTURE;
-            	if (item==TAKE_PICTURE) {            		
-            	    Uri output = Uri.fromFile(new File(name));
-            	    intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
-            	} else if (item==SELECT_PICTURE){
-            	    intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-            	    code = SELECT_PICTURE;
-            	}
-            	startActivityForResult(intent, code);
-            }
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
+        Intent intent =  new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        int item = TAKE_PICTURE;
+        if (item==TAKE_PICTURE) {
+            Uri output = Uri.fromFile(new File(name));
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
+        } else if (item==SELECT_PICTURE){
+            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+            item = SELECT_PICTURE;
+        }
+        startActivityForResult(intent, item);
+
 	}
 	
 	@Override 
@@ -228,14 +220,17 @@ public class Notificar_Averias extends Activity {
 	    
 	    
 	}
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        volver(null);
+    }
 	
 	/** Boton Volver **/
 	public void volver(View view) {
-    	finish();
-    	
-    	// Vibrar al hacer click        
-        Vibrator vibrator =(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(50);
+
+        Funciones.makeBackAlert(this).show();
     }
 	
 private class Enviar_Averia extends AsyncTask<String,Integer,String> {
@@ -275,8 +270,13 @@ private class Enviar_Averia extends AsyncTask<String,Integer,String> {
 				@Override
 				public void onCancel(DialogInterface dialog) {
 					// TODO Auto-generated method stub
-					Toast.makeText(getApplicationContext(), "Operación Interrumpida.", Toast.LENGTH_LONG).show();
-					Notificar_Averias.this.finish();
+                    Funciones.makeAlert(mContext,null, "Operación Interrumpida", false)
+                            .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ((Activity) mContext).finish();
+                                }
+                            }).show();
 				}
 			});
  		    this.dialog.show();
@@ -329,18 +329,23 @@ private class Enviar_Averia extends AsyncTask<String,Integer,String> {
    	    	if (result != null)
    	    	{
    	    		if(result.equals("GPS")){
-
-   					Toast.makeText(getApplicationContext(), "Error con GPS", Toast.LENGTH_SHORT).show();
+                    Funciones.makeResultAlert(mContext, "Error con GPS", false).show();
    					return;
    	    		}
    	    			
    	    		try {
 
    	    			res = XMLParser.setLocation(result);
-   	    			Toast.makeText(getApplicationContext(), res.get(1), Toast.LENGTH_LONG).show();
+
    	    			et.setText("");
    	    			b = foto = null;
-   	    			finish();
+                    Funciones.makeAlert(mContext, null, res.get(1), false)
+                            .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ((Activity)mContext).finish();
+                                }
+                            }).show();
    	    	    	
    	    	    	// Vibrar al hacer click        
    	    	        Vibrator vibrator =(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -352,7 +357,7 @@ private class Enviar_Averia extends AsyncTask<String,Integer,String> {
    	    	}
    	    	else
    	    	{
-   	    		Toast.makeText(getApplicationContext(), "Error en la conexión del servicio. Revise su conexión de Internet o 3G.", Toast.LENGTH_LONG).show();
+                Funciones.makeResultAlert(mContext, "Error en la conexión del servicio.\nRevise su conexión a Internet", false).show();
    	    	}
    	    }
    	}
@@ -389,8 +394,13 @@ private class SearchElement extends AsyncTask<String,Integer,String> {
 			@Override
 			public void onCancel(DialogInterface dialog) {
 				// TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext(), "Operación Interrumpida.", Toast.LENGTH_LONG).show();
-				Notificar_Averias.this.finish();
+                Funciones.makeAlert(mContext, null, "Operacion Interrumpida", false)
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((Activity)mContext).finish();
+                            }
+                        }).show();
 			}
 		});
 		    this.dialog.show();
@@ -446,8 +456,13 @@ private class SearchElement extends AsyncTask<String,Integer,String> {
                     }
 
                     if(classification == null || affectation == null || damage == null){
-                        finish();
-                        Toast.makeText(getApplicationContext(), "Ha ocurrido un error. Inténtelo más tarde.", Toast.LENGTH_LONG).show();
+                        Funciones.makeAlert(mContext, null, "Ha ocurrido un error. Por favor reintente", false)
+                                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ((Activity)mContext).finish();
+                                    }
+                                }).show();
 
                     }
 
@@ -484,8 +499,13 @@ private class SearchElement extends AsyncTask<String,Integer,String> {
                     }
 
                     if(element == null){
-                        finish();
-                        Toast.makeText(getApplicationContext(), "Ha ocurrido un error. Inténtelo más tarde.", Toast.LENGTH_LONG).show();
+                        Funciones.makeAlert(mContext, null, "Operacion Interrumpida", false)
+                                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ((Activity)mContext).finish();
+                                    }
+                                }).show();
 
                     }
 
@@ -501,8 +521,13 @@ private class SearchElement extends AsyncTask<String,Integer,String> {
 	    	}
 	    	if(result == null)
 	    	{
-                ((Activity)context).finish();
-	    		Toast.makeText(getApplicationContext(),errorMSG, Toast.LENGTH_LONG).show();
+                Funciones.makeAlert(mContext, null, errorMSG, false)
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((Activity)mContext).finish();
+                            }
+                        }).show();
 	    	}
 	    }
 	}

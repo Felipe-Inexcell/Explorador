@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import java.util.ArrayList;
 
 public class CertificarPar extends Activity {
@@ -54,9 +53,15 @@ public class CertificarPar extends Activity {
 	}
 
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        volver(null);
+    }
 
 	public void volver(View view){
-		this.finish();
+
+        Funciones.makeBackAlert(this).show();
 	}
 
 	public void certificarAgain(View v){
@@ -71,9 +76,11 @@ public class CertificarPar extends Activity {
 
 
 	public void shutdown1(View v){
-		VistaTopologica.topo.finish();
-		Principal.p.finish();
-		finish();
+        ArrayList<Activity> actividades = new ArrayList<>();
+        actividades.add(Principal.p);
+        actividades.add(VistaTopologica.topo);
+        actividades.add(this);
+        Funciones.makeExitAlert(this, actividades).show();
 	}
 
 
@@ -84,14 +91,18 @@ public class CertificarPar extends Activity {
  		protected void onPreExecute() {
  			this.dialog.setMessage("Buscando información sobre el par...");
  			this.dialog.setCanceledOnTouchOutside(false);
+            this.dialog.setCancelable(false);
  			this.dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
 				@Override
 				public void onCancel(DialogInterface dialog) {
 					// TODO Auto-generated method stub
-					Toast.makeText(getApplicationContext(), "Operación Interrumpida.", Toast.LENGTH_SHORT).show();
-
-					CertificarPar.this.finish();
+                    Funciones.makeAlert(getApplicationContext(), null, "Operación Interrumpida",false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            CertificarPar.this.finish();
+                        }
+                    }).show();
 				}
 			});
  		    this.dialog.show();

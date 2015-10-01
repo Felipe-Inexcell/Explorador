@@ -310,11 +310,11 @@ public class FactActivity_bak extends Activity implements View.OnClickListener {
     }
 
     public void shutdown(View v) {
-        if (Principal.p != null)
-            Principal.p.finish();
-        if (VistaTopologica.topo != null)
-            VistaTopologica.topo.finish();
-        finish();
+        ArrayList<Activity> actividades = new ArrayList<>();
+        actividades.add(Principal.p);
+        actividades.add(VistaTopologica.topo);
+        actividades.add(this);
+        Funciones.makeExitAlert(this, actividades).show();
     }
 
     /**

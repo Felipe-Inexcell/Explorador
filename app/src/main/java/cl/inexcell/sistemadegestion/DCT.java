@@ -3,6 +3,7 @@ package cl.inexcell.sistemadegestion;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.http.conn.ConnectTimeoutException;
 import org.xml.sax.SAXException;
@@ -49,16 +49,23 @@ public class DCT extends Activity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        volver(null);
+    }
+
     public void volver(View v) {
-        finish();
+
+        Funciones.makeBackAlert(this).show();
     }
 
     public void shutdown(View v) {
-        if (VistaTopologica.topo != null)
-            VistaTopologica.topo.finish();
-        if (Principal.p != null)
-            Principal.p.finish();
-        finish();
+        ArrayList<Activity> actividades = new ArrayList<>();
+        actividades.add(Principal.p);
+        actividades.add(VistaTopologica.topo);
+        actividades.add(this);
+        Funciones.makeExitAlert(this, actividades).show();
     }
 
     private class ObtenerDCT extends AsyncTask<String, String, String> {
@@ -123,12 +130,21 @@ public class DCT extends Activity {
                     cl.inexcell.sistemadegestion.objetos.DCT response = XMLParser.getDCTinfo(s);
                     dibujar(response);
                 } catch (Exception e) {
-                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
-                    ((Activity) mContext).finish();
+
+                    Funciones.makeAlert(getApplicationContext(), null, e.getMessage(),false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ((Activity) mContext).finish();
+                        }
+                    }).show();
                 }
             } else {
-                Toast.makeText(mContext, s, Toast.LENGTH_LONG).show();
-                ((Activity) mContext).finish();
+                Funciones.makeAlert(getApplicationContext(), null, s,false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ((Activity) mContext).finish();
+                    }
+                }).show();
             }
             if (dialog.isShowing()) dialog.dismiss();
         }

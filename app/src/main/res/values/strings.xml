@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string name="versioncode">2.3.0</string>
     <string name="Version">Versión 2.3.0 @ 2015 VPT</string>
     <string name="SubLogo">\@ 2015 VPT</string>
     <string name="app_name">Explorador©</string>
