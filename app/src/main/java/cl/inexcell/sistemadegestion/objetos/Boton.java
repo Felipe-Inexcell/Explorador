@@ -7,6 +7,7 @@ public class Boton {
     String id;
     String name;
     boolean enabled;
+    boolean actualizacion;
 
 
     public Boton(String id, String name, String enabled) {
@@ -16,6 +17,14 @@ public class Boton {
     }
 
     public Boton() {
+    }
+
+    public boolean isActualizacion() {
+        return actualizacion;
+    }
+
+    public void setActualizacion(boolean actualizacion) {
+        this.actualizacion = actualizacion;
     }
 
     public String getId() {

@@ -125,7 +125,7 @@ public class Principal extends Activity {
                 ArrayList<Boton> response = XMLParser.getButtons(query);
 
                 for (Boton b : response) {
-                    if (response.indexOf(b) == 0)
+                    if (b.isActualizacion())
                         actualizar = b;
                     else {
                         bloqueo.setBloqueo(b.getId(), b.isEnabled(), b.getName());
@@ -163,7 +163,7 @@ public class Principal extends Activity {
                                 p.finish();
                             }
                         }).show();
-            } else {
+            } else if(actualizar.isActualizacion()){
                 String versionActual = getResources().getString(R.string.versioncode);
                 if (versionActual.compareTo(actualizar.getId()) < 0) {
                     AlertDialog.Builder builder = Funciones.makeAlert(mContext,

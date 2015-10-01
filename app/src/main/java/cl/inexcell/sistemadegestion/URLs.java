@@ -2,62 +2,67 @@ package cl.inexcell.sistemadegestion;
 
 public class URLs {
 
-    public static String BLOQUEO = "<?xml version=\"1.0\"?>" +
-            "<SOAP-ENV:Envelope xmlns:tns=\"urn:Demo\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
-            "<SOAP-ENV:Body>" +
-            "<ns1:bloqueoBotonesResponse xmlns:ns1=\"urn:Demo\">" +
-            "<ResponsebloqueoBotones xsi:type=\"tns:ResponsebloqueoBotones\">" +
-            "<Operation xsi:type=\"tns:OperationType\">" +
-            "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
-            "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
-            "<DateTime xsi:type=\"xsd:string\">?</DateTime>" +
-            "<IdUser xsi:type=\"xsd:string\">?</IdUser>" +
-            "<IMEI xsi:type=\"xsd:string\" xsi:nil=\"true\"/>" +
-            "<IMSI xsi:type=\"xsd:string\">?</IMSI>" +
-            "</Operation>" +
-            "<Service xsi:type=\"tns:ServicebloqueoBotonesOut\">" +
-            "<bloqueoBotones xsi:type=\"tns:bloqueoBotonesOut\">" +
-            "<Output xsi:type=\"tns:bloqueoBotonesOutData\">" +
-            "<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
-            "<idBoton xsi:type=\"xsd:string\">busquedaInicial</idBoton>" +
-            "<Code xsi:type=\"xsd:string\">true</Code>" +
-            "<Description xsi:type=\"xsd:string\">Licencia no activa para esta funcionalidad</Description>" +
-            "</Element>" +
-            "<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
-            "<idBoton xsi:type=\"xsd:string\">PlantasExternas</idBoton>" +
-            "<Code xsi:type=\"xsd:string\">false</Code>" +
-            "<Description xsi:type=\"xsd:string\">Licencia no activa para esta funcionalidad</Description>" +
-            "</Element>" +
-            "<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
-            "<idBoton xsi:type=\"xsd:string\">localizarAveria</idBoton>" +
-            "<Code xsi:type=\"xsd:string\">false</Code>" +
-            "<Description xsi:type=\"xsd:string\">Licencia no activa para esta funcionalidad</Description>" +
-            "</Element>" +
-            "<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
-            "<idBoton xsi:type=\"xsd:string\">Preguntas</idBoton>" +
-            "<Code xsi:type=\"xsd:string\">false</Code>" +
-            "<Description xsi:type=\"xsd:string\">Licencia no activa para esta funcionalidad</Description>" +
-            "</Element>" +
-            "<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
-            "<idBoton xsi:type=\"xsd:string\">Certifica</idBoton>" +
-            "<Code xsi:type=\"xsd:string\">false</Code>" +
-            "<Description xsi:type=\"xsd:string\">Licencia no activa para esta funcionalidad</Description>" +
-            "</Element>" +
-            "<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
-            "<idBoton xsi:type=\"xsd:string\">Fact</idBoton>" +
-            "<Code xsi:type=\"xsd:string\">false</Code>" +
-            "<Description xsi:type=\"xsd:string\">Licencia no activa para esta funcionalidad</Description>" +
-            "</Element>" +
-            "<Return xsi:type=\"tns:ReturnType\">" +
-            "<Code xsi:type=\"xsd:string\" xsi:nil=\"true\"/>" +
-            "<Description xsi:type=\"xsd:string\" xsi:nil=\"true\"/>" +
-            "</Return>" +
-            "</Output>" +
-            "</bloqueoBotones>" +
-            "</Service>" +
-            "</ResponsebloqueoBotones>" +
-            "</ns1:bloqueoBotonesResponse>" +
-            "</SOAP-ENV:Body>" +
+    public static String BLOQUEO = "<SOAP-ENV:Envelope SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:tns=\"urn:Demo\">" +
+               "<SOAP-ENV:Body>" +
+                  "<ns1:bloqueoBotonesResponse xmlns:ns1=\"urn:Demo\">" +
+                     "<ResponsebloqueoBotones xsi:type=\"tns:ResponsebloqueoBotones\">" +
+                        "<Operation xsi:type=\"tns:OperationType\">" +
+                           "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
+                           "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
+                           "<DateTime xsi:type=\"xsd:string\">?</DateTime>" +
+                           "<IdUser xsi:type=\"xsd:string\">?</IdUser>" +
+                           "<IMEI xsi:nil=\"true\" xsi:type=\"xsd:string\"/>" +
+                           "<IMSI xsi:type=\"xsd:string\">?</IMSI>" +
+                        "</Operation>" +
+                        "<Service xsi:type=\"tns:ServicebloqueoBotonesOut\">" +
+                           "<bloqueoBotones xsi:type=\"tns:bloqueoBotonesOut\">" +
+                              "<Output xsi:type=\"tns:bloqueoBotonesOutData\">" +
+                                 "<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
+                                    "<actualizacion xsi:type=\"tns:actualizacionDispobible\">" +
+                                       "<version xsi:type=\"xsd:string\">2.3.0</version>" +
+                                       "<url xsi:type=\"xsd:string\">por definir</url>" +
+                                    "</actualizacion>" +
+                                 "</Element>" +
+                                 "<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
+                                    "<idBoton xsi:type=\"xsd:string\">busquedaInicial</idBoton>" +
+                                    "<Code xsi:type=\"xsd:string\">false</Code>" +
+                                    "<Description xsi:type=\"xsd:string\">Licencia no activa</Description>" +
+                                 "</Element>" +
+                                 "<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
+                                    "<idBoton xsi:type=\"xsd:string\">PlantasExternas</idBoton>" +
+                                    "<Code xsi:type=\"xsd:string\">false</Code>" +
+                                    "<Description xsi:type=\"xsd:string\">Licencia no activa</Description>" +
+                                 "</Element>" +
+                                 "<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
+                                    "<idBoton xsi:type=\"xsd:string\">localizarAveria</idBoton>" +
+                                    "<Code xsi:type=\"xsd:string\">true</Code>" +
+                                    "<Description xsi:type=\"xsd:string\">Licencia no activa</Description>" +
+                                 "</Element>" +
+                                 "<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
+                                    "<idBoton xsi:type=\"xsd:string\">Preguntas</idBoton>" +
+                                    "<Code xsi:type=\"xsd:string\">true</Code>" +
+                                    "<Description xsi:type=\"xsd:string\">Licencia no activa</Description>" +
+                                 "</Element>" +
+                                 "<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
+                                    "<idBoton xsi:type=\"xsd:string\">Certifica</idBoton>" +
+                                    "<Code xsi:type=\"xsd:string\">false</Code>" +
+                                    "<Description xsi:type=\"xsd:string\">Licencia no activa</Description>" +
+                                 "</Element>" +
+                                 "<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
+                                    "<idBoton xsi:type=\"xsd:string\">Fact</idBoton>" +
+                                    "<Code xsi:type=\"xsd:string\">false</Code>" +
+                                    "<Description xsi:type=\"xsd:string\">Licencia no activa</Description>" +
+                                 "</Element>" +
+                                 "<Return xsi:type=\"tns:ReturnType\">" +
+                                    "<Code xsi:nil=\"true\" xsi:type=\"xsd:string\"/>" +
+                                    "<Description xsi:nil=\"true\" xsi:type=\"xsd:string\"/>" +
+                                 "</Return>" +
+                              "</Output>" +
+                           "</bloqueoBotones>" +
+                        "</Service>" +
+                     "</ResponsebloqueoBotones>" +
+                  "</ns1:bloqueoBotonesResponse>" +
+               "</SOAP-ENV:Body>" +
             "</SOAP-ENV:Envelope>";
 
     

@@ -784,15 +784,17 @@ public class XMLParser {
                 Element act = (Element) b.getChildNodes().item(0);
                 boton.setId(getValue(act, "version"));
                 boton.setName(getValue(act, "url"));
-                Log.d("ACTUALIZACION", "version actual: "+boton.getId());
+                boton.setActualizacion(true);
+                Log.d("ACTUALIZACION", "version en servidor: "+boton.getId());
                 Log.d("ACTUALIZACION", "url: "+boton.getName());
                 datos.add(boton);
             }else {
                 boton.setId(getValue(b, "idBoton"));
                 boton.setEnabled(getValue(b, "Code"));
                 boton.setName(getValue(b, "Description"));
+                boton.setActualizacion(false);
+                datos.add(boton);
             }
-            datos.add(boton);
 
         }
 
