@@ -13,14 +13,12 @@ import android.net.NetworkInfo.State;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Vibrator;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -42,6 +40,7 @@ import cl.inexcell.sistemadegestion.objetos.Boton;
 import cl.inexcell.sistemadegestion.preferences.BloqueoBotones;
 
 public class Principal extends Activity {
+    private static final int REQUEST_SETTINGS_ACTION = 0;
     public static Activity p;
 
     private BloqueoBotones bloqueo;
@@ -82,7 +81,13 @@ public class Principal extends Activity {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle("GPS está desactivado!")
                     .setMessage("Active GPS e reinicie la aplicación.")
-                    .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {//un listener que al pulsar, cierre la aplicacion
+                    .setPositiveButton("Ir a Configuración", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_SETTINGS_ACTION);
+                        }
+                    })
+                    .setNeutralButton("Salir", new DialogInterface.OnClickListener() {//un listener que al pulsar, cierre la aplicacion
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             //Salir
@@ -163,20 +168,21 @@ public class Principal extends Activity {
                                 p.finish();
                             }
                         }).show();
-            } else if(actualizar.isActualizacion()){
+            } else if(actualizar != null && actualizar.isActualizacion()){
                 String versionActual = getResources().getString(R.string.versioncode);
-                if (versionActual.compareTo(actualizar.getId()) < 0) {
-                    AlertDialog.Builder builder = Funciones.makeAlert(mContext,
-                            "Hay una nueva versión de la Aplicación",
-                            "Versión Instalada: "
-                                    + versionActual
-                                    + "\nVersión a Instalar: " + actualizar.getId()
-                                    + "\nDebe actualizar la aplicación para continuar utilizandola.",
-                            false);
+                try {
+                    if (versionActual.compareTo(actualizar.getId()) < 0) {
+                        AlertDialog.Builder builder = Funciones.makeAlert(mContext,
+                                "Hay una nueva versión de la Aplicación",
+                                "Versión Instalada: "
+                                        + versionActual
+                                        + "\nVersión a Instalar: " + actualizar.getId()
+                                        + "\nDebe actualizar la aplicación para continuar utilizandola.",
+                                false);
 
-                    builder.setPositiveButton("Descargar e Instalar", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                        builder.setPositiveButton("Descargar e Instalar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
                         /*Toast.makeText(mContext, "Descargando... si claro", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/app-debug.apk")), "application/vnd.android.package-archive");
@@ -184,24 +190,32 @@ public class Principal extends Activity {
                         startActivity(intent);
                         p.finish();
                         dialog.dismiss();*/
-                            Update u = new Update(context, actualizar.getName());
-                            u.execute();
-                        }
-                    });
-                    builder.setNegativeButton("Cerrar", new DialogInterface.OnClickListener() {
+                                Update u = new Update(context, actualizar.getName());
+                                u.execute();
+                            }
+                        });
+                        builder.setNegativeButton("Cerrar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                p.finish();
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                p.finish();
+                            }
+                        });
+                        builder.show();
+                    }
+                }catch (Exception e){
+                    Funciones.makeAlert(mContext, e.getMessage(), e.getCause().toString(), false).setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            p.finish();
-                            dialog.dismiss();
+
                         }
-                    });
-                    builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                        @Override
-                        public void onCancel(DialogInterface dialog) {
-                            p.finish();
-                        }
-                    });
-                    builder.show();
+                    }).show();
                 }
             }
             //Log.i("BLOQUEO", s);
@@ -215,6 +229,16 @@ public class Principal extends Activity {
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_SETTINGS_ACTION) {
+            Log.d("SETTINGS", "CODE: " + resultCode);
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                Toast.makeText(this, "Sigue desactivado el GPS.", Toast.LENGTH_LONG).show();
+                p.finish();
+            }
+        }
+    }
 
     public void show_notificar_averias(View view) {
         if (bloqueo.getState("localizarAveria")) {

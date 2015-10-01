@@ -1632,6 +1632,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        reg.clear();
                                         if (VistaTopologica.topo != null)
                                             VistaTopologica.topo.finish();
                                         ((Activity) mContext).finish();
@@ -1642,6 +1643,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        reg.clear();
                                         if (VistaTopologica.topo != null)
                                             VistaTopologica.topo.finish();
                                         ((Activity) mContext).finish();
@@ -1661,7 +1663,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        ((Activity) mContext).finish();
+
                                     }
                                 }).show();
                 }
@@ -1670,7 +1672,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ((Activity) mContext).finish();
+
                             }
                         }).show();
             }

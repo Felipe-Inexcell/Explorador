@@ -17,12 +17,12 @@ public class URLs {
                         "<Service xsi:type=\"tns:ServicebloqueoBotonesOut\">" +
                            "<bloqueoBotones xsi:type=\"tns:bloqueoBotonesOut\">" +
                               "<Output xsi:type=\"tns:bloqueoBotonesOutData\">" +
-                                 "<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
+                                 /*"<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
                                     "<actualizacion xsi:type=\"tns:actualizacionDispobible\">" +
                                        "<version xsi:type=\"xsd:string\">2.3.0</version>" +
                                        "<url xsi:type=\"xsd:string\">por definir</url>" +
                                     "</actualizacion>" +
-                                 "</Element>" +
+                                 "</Element>" +*/
                                  "<Element xsi:type=\"tns:ElementTypeBloqueo\">" +
                                     "<idBoton xsi:type=\"xsd:string\">busquedaInicial</idBoton>" +
                                     "<Code xsi:type=\"xsd:string\">false</Code>" +

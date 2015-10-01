@@ -58,8 +58,8 @@ public class SoapRequestMovistar {
     //final String URL="https://pcba.telefonicachile.cl:443/smartphone/ws/shark.php";
     //final String URL="http://cmn81.gratishosting.cl:80/shark_fijo.php";
     //private static final String URL = "https://pcba.telefonicachile.cl/smartphone/ws/sca_dev_copiaOP.php";
-    //private static final String URL = "https://pcba.telefonicachile.cl/smartphone/ws/sca_dev_TodoPruebas.php";
-    private static final String URL = "https://pcba.telefonicachile.cl/smartphone/ws/sca_dev_produccion.php";
+    private static final String URL = "https://pcba.telefonicachile.cl/smartphone/ws/sca_dev_TodoPruebas.php";
+    //private static final String URL = "https://pcba.telefonicachile.cl/smartphone/ws/sca_dev_produccion.php";
 
 	/*
 	 * Clase Principal de Conexion SSL a WDSL
