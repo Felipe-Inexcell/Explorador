@@ -28,9 +28,10 @@ public class FactSave {
         return sharedPreferences.getString(boton, "0");
     }
 
-    public void clear(){
-        sharedPreferences.edit().clear();
-        sharedPreferences.edit().apply();
+    public void clearPreferences(){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+       editor.apply();
     }
 
 

@@ -222,15 +222,15 @@ public class VistaTopologica extends Activity {
             ids_botones = new ArrayList<>();
             ids_contenidos = new ArrayList<>();
             nodesIn = new ArrayList<>();
-            if(result == null){
+            if (result == null) {
                 Funciones.makeAlert(mContext, null, "Error al leer el XML", false)
                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ((Activity)mContext).finish();
+                                ((Activity) mContext).finish();
                             }
                         }).show();
-            }else {
+            } else {
                 for (Bundle b : result) {
 
 
@@ -666,15 +666,14 @@ public class VistaTopologica extends Activity {
     }
 
     private Boton getButton(ArrayList<String> botones, String buscado) {
-        for(String b: botones){
+        for (String b : botones) {
             String[] datos = b.split(";");
-            Boton button = new Boton(datos[0],datos[1],datos[2]);
-            if(button.getId().equals(buscado))return button;
+            Boton button = new Boton(datos[0], datos[1], datos[2]);
+            if (button.getId().equals(buscado)) return button;
         }
 
         return null;
     }
-
 
 
     public void fatc(View v) {
@@ -707,8 +706,6 @@ public class VistaTopologica extends Activity {
     @SuppressWarnings("deprecation")
     public TableLayout dibujarTabla(int tamBorde, int numeroFilas, int numeroColumnas, String colorBorde) {
         TableLayout tabla = new TableLayout(this);
-        TextView tmp = new TextView(this);
-        RelativeLayout temp = new RelativeLayout(this);
         if (numeroFilas > 0 && numeroColumnas > 0) {
             TableRow fila;
 
@@ -718,6 +715,8 @@ public class VistaTopologica extends Activity {
             int ancho;
             int columna;
 
+            TextView tmp = new TextView(this);
+            RelativeLayout temp = new RelativeLayout(this);
             for (int i = 0; i < numeroFilas; i++) {
                 columna = 0;
                 final String[] cols = pares.get(i).split(";");
@@ -800,10 +799,13 @@ public class VistaTopologica extends Activity {
                         }
 
                         if (tipo.compareTo("TELEFONO") == 0 && valor.compareTo(" ") != 0 && valor.length() > 2) {
-                            telefono_clickable = true;
-                            //texto.setBackgroundResource(R.drawable.custom_button_search);
-                            tmp = texto;
-                            temp = borde;
+                            String[] estado = cols[2].split("/");
+                            if (estado.length == 2 && estado[1].equals("OCUPADO BA")) {
+                                telefono_clickable = true;
+                                texto.setBackgroundResource(R.drawable.custom_button_search);
+                            }
+
+
                         }
                         if (tipo.compareTo("ESTADO") == 0 && tipoProcedimiento != 0) {
                             texto.setBackgroundResource(R.drawable.custom_button_search);
@@ -844,16 +846,10 @@ public class VistaTopologica extends Activity {
                                 dialog.show();
                             }
                         });
-                        if(texto.getText().toString().equals("OCUPADO BA")){
-                            tmp.setBackgroundResource(R.drawable.custom_button_search);
-                            temp.setClickable(true);
-                        }else{
-                            temp.setClickable(false);
-                        }
                     }
 
-                    if (telefono_clickable ) {
-                        //borde.setClickable(true);
+                    if (telefono_clickable) {
+                        borde.setClickable(true);
                         borde.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -928,9 +924,9 @@ public class VistaTopologica extends Activity {
         protected void onPostExecute(ArrayList<String> s) {
             super.onPostExecute(s);
             if (s != null && s.size() > 1)
-                Funciones.makeResultAlert(mContext,s.get(1), false).show();
+                Funciones.makeResultAlert(mContext, s.get(1), false).show();
             if (s == null)
-                Funciones.makeResultAlert(mContext,"Error en la conexión", false).show();
+                Funciones.makeResultAlert(mContext, "Error en la conexión", false).show();
             if (this.dialog.isShowing()) {
                 this.dialog.dismiss();
             }
@@ -1056,10 +1052,10 @@ public class VistaTopologica extends Activity {
                 } else
                     return retorno.get(1);
 
-            }catch(ConnectTimeoutException e) {
+            } catch (ConnectTimeoutException e) {
                 e.printStackTrace();
                 return "Se agoto el tiempo de espera. Por favor reintente";
-            }catch (Exception e) {
+            } catch (Exception e) {
                 Log.e("DCTACTIONBUTTON", e.getMessage());
                 return "Error";
             }

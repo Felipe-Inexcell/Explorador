@@ -35,6 +35,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.gcacace.signaturepad.views.SignaturePad;
 
@@ -110,14 +111,14 @@ public class FactActivity extends Activity implements View.OnClickListener {
         for (int i = 0; i < editTextsRetiro.size(); i++) {
             reg.setValue("FACTRETIRO" + i, TextsRetiro.get(i) + ";" + editTextsRetiro.get(i));
         }
-        if (b != null) {
+        /*if (b != null) {
             reg.setValue("FACTFOTO", Funciones.encodeTobase64(b));
         }
         if (firma != null)
-            reg.setValue("FACTFIRMA", Funciones.encodeTobase64(firma));
+            reg.setValue("FACTFIRMA", Funciones.encodeTobase64(firma));*/
     }
 
-    private void loadImages() {
+    /*private void loadImages() {
         String sign = reg.getValue("FACTFIRMA");
         String photo = reg.getValue("FACTFOTO");
         try {
@@ -133,7 +134,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
         }
 
         reg.clear();
-    }
+    }*/
 
     private void loadRetiros() {
         int i = 0;
@@ -187,18 +188,18 @@ public class FactActivity extends Activity implements View.OnClickListener {
                     }
                 });
 
-                    EditText serieVista = (EditText) uno.findViewById(R.id.edit_retiro);
-                    elemento.setText(info[0]);
-                    serieVista.setText(info[1]);
-                    ((LinearLayout) subContentCPY).addView(uno);
+                EditText serieVista = (EditText) uno.findViewById(R.id.edit_retiro);
+                elemento.setText(info[0]);
+                serieVista.setText(info[1]);
+                ((LinearLayout) subContentCPY).addView(uno);
 
 
-                    editTextsRetiro.add(info[1]);
-                    TextsRetiro.add(info[0]);
+                editTextsRetiro.add(info[1]);
+                TextsRetiro.add(info[0]);
 
-                    Log.d("TextRetiro.size()", TextsRetiro.size() + "");
-                    positionInsert++;
-                    tabHeaderCPY.setVisibility(View.VISIBLE);
+                Log.d("TextRetiro.size()", TextsRetiro.size() + "");
+                positionInsert++;
+                tabHeaderCPY.setVisibility(View.VISIBLE);
             }
             i++;
         }
@@ -731,7 +732,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
         }
 
         loadRetiros();
-        loadImages();
+        //loadImages();
         fatcLayout.addView(putCasaCerradaBTN());
         return true;
     }
@@ -888,7 +889,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                     p.setValue(editTextsCierre.get(i).getText().toString());
                                     parametrosEnvioForms.add(p);
                                 } else {
-                                    Funciones.makeResultAlert(mContext, "Rut incorrecto", false).show();
+                                    Funciones.makeResultAlert(mContext, "Rut incorrecto\nFormato: 12345678-1", false).show();
                                     isOK = false;
                                 }
                             } else {
@@ -952,16 +953,9 @@ public class FactActivity extends Activity implements View.OnClickListener {
      */
     public void capturarImagen(View v) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        int item = TAKE_PICTURE;
-        if (item == TAKE_PICTURE) {
-            Uri output = Uri.fromFile(new File(name));
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
-        } else if (item == SELECT_PICTURE) {
-            intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-            item = SELECT_PICTURE;
-        }
-        startActivityForResult(intent, item);
-
+        Uri output = Uri.fromFile(new File(name));
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
+        startActivityForResult(intent, TAKE_PICTURE);
     }
 
     @Override
@@ -969,27 +963,18 @@ public class FactActivity extends Activity implements View.OnClickListener {
         if (requestCode == TAKE_PICTURE) {
             if (data != null) {
                 if (data.hasExtra("data")) {
-                    b = (Bitmap) data.getParcelableExtra("data");
+                    b = data.getParcelableExtra("data");
                 }
             } else {
                 b = BitmapFactory.decodeFile(name);
 
-            }
-        } else if (requestCode == SELECT_PICTURE) {
-            Uri selectedImage = data.getData();
-            InputStream is;
-            try {
-                is = getContentResolver().openInputStream(selectedImage);
-                BufferedInputStream bis = new BufferedInputStream(is);
-                b = BitmapFactory.decodeStream(bis);
-
-            } catch (FileNotFoundException e) {
             }
         }
         try {
             b = Bitmap.createScaledBitmap(b, 640, 480, true);
             verCarnet.setEnabled(true);
         } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
 
@@ -1064,8 +1049,8 @@ public class FactActivity extends Activity implements View.OnClickListener {
                     if (generarVista(formulario) && dialog.isShowing()) {
                         dialog.dismiss();
                     } else {
-                        Funciones.makeAlert(getApplicationContext(), null, formulario.getReturnDescription(), false)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        Funciones.makeAlert(p, null, formulario.getReturnDescription(), false)
+                                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         ((Activity) mContext).finish();
@@ -1076,8 +1061,8 @@ public class FactActivity extends Activity implements View.OnClickListener {
                     }
 
             } else {
-                Funciones.makeAlert(getApplicationContext(), "Error en la conexión", "Compruebe su conexión a internet y reintente.", false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                Funciones.makeAlert(p, "Error en la conexión", "Compruebe su conexión a internet y reintente.", false)
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 ((Activity) mContext).finish();
@@ -1602,6 +1587,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                             } else {
                                 Log.e("ENVIANDO", "CARNET NOK");
                             }
+                            break;
                         }
                         if (p.getAttribute().compareTo("Firma") == 0) {
                             request = SoapRequestMovistar.subirFoto(parse.get(2), p.getValue(), 1, IMEI, IMSI);
@@ -1612,6 +1598,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                 Log.e("ENVIANDO", "FIRMA NOK");
                             }
                         }
+                        break;
                     }
 
                 }
@@ -1625,59 +1612,68 @@ public class FactActivity extends Activity implements View.OnClickListener {
 
         @Override
         protected void onPostExecute(ArrayList<String> response) {
+            AlertDialog.Builder builder;
             if (response != null) {
                 if (response.get(0).compareTo("0") == 0) {
-                    if (response.size() >= 2)
-                        Funciones.makeAlert(getApplicationContext(), null, response.get(1), false)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    if (response.size() >= 2) {
+                        //Toast.makeText(p, response.get(1), Toast.LENGTH_LONG).show();
+                        builder = Funciones.makeAlert(p, null, response.get(1), false)
+                                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        reg.clear();
                                         if (VistaTopologica.topo != null)
                                             VistaTopologica.topo.finish();
                                         ((Activity) mContext).finish();
+                                        reg.clearPreferences();
                                     }
-                                }).show();
-                    else
-                        Funciones.makeAlert(getApplicationContext(), null, "Formulado enviado", false)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                });
+                    } else {
+                        //Toast.makeText(mContext, "Formulado enviado", Toast.LENGTH_LONG).show();
+                        builder = Funciones.makeAlert(p, null, "Formulado enviado", false)
+                                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        reg.clear();
                                         if (VistaTopologica.topo != null)
                                             VistaTopologica.topo.finish();
                                         ((Activity) mContext).finish();
+                                        reg.clearPreferences();
                                     }
-                                }).show();
+                                });
+                    }
                 } else {
-                    if (response.size() >= 2)
-                        Funciones.makeAlert(getApplicationContext(), null, response.get(1), false)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    if (response.size() >= 2) {
+                        //Toast.makeText(mContext, response.get(1), Toast.LENGTH_LONG).show();
+                        builder = Funciones.makeAlert(p, null, response.get(1), false)
+                                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
 
                                     }
-                                }).show();
-                    else
-                        Funciones.makeAlert(getApplicationContext(), null, "Error al enviar. Por favor reintente.", false)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                });
+                    } else
+                        //Toast.makeText(mContext,"Error al enviar. Por favor reintente.",Toast.LENGTH_LONG).show();
+                        builder = Funciones.makeAlert(p, null, "Error al enviar. Por favor reintente.", false)
+                                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
 
                                     }
-                                }).show();
+                                });
                 }
             } else {
-                Funciones.makeAlert(getApplicationContext(), null, "Error desconocido, no se pudo enviar.", false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                //Toast.makeText(mContext,"Error desconocido, no se pudo enviar.",Toast.LENGTH_LONG).show();
+                builder = Funciones.makeAlert(p, null, "Error desconocido, no se pudo enviar.", false)
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
                             }
-                        }).show();
+                        });
             }
-            if (dialog.isShowing())
+            if (dialog.isShowing()) {
                 dialog.dismiss();
+                if (!dialog.isShowing()) builder.show();
+            }
         }
     }
 
