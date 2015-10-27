@@ -1576,6 +1576,9 @@ public class FactActivity extends Activity implements View.OnClickListener {
                 //String request = getGuardarFact();
                 ArrayList<String> parse = XMLParser.getReturnCodeForm(request);
                 ArrayList<String> parseFoto;
+                Log.d("ENVIANDO", "DATO 0:  " + parse.get(0));
+                Log.d("ENVIANDO", "DATO 1:  " + parse.get(1));
+                Log.d("ENVIANDO", "DATO 2:  " + parse.get(2));
                 if (parse.get(0).compareTo("0") == 0) {
                     FormularioEnvio fotos = formularioEnvio.get(formularioEnvio.size() - 1);
                     for (ParametrosEnvioForm p : fotos.getParametros()) {
@@ -1587,7 +1590,6 @@ public class FactActivity extends Activity implements View.OnClickListener {
                             } else {
                                 Log.e("ENVIANDO", "CARNET NOK");
                             }
-                            break;
                         }
                         if (p.getAttribute().compareTo("Firma") == 0) {
                             request = SoapRequestMovistar.subirFoto(parse.get(2), p.getValue(), 1, IMEI, IMSI);
@@ -1598,10 +1600,10 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                 Log.e("ENVIANDO", "FIRMA NOK");
                             }
                         }
-                        break;
                     }
 
-                }
+                }else
+                    Log.e("ENVIANDO", "FACT FAIL");
                 return parse;
             } catch (Exception e) {
                 Log.e("ENVIANDO", e.getMessage() + "\n" + e.getLocalizedMessage() + "\n" + e.getCause());

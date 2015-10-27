@@ -40,7 +40,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCNKjolCLF9D0fx5se3fwInZrY2l1SHFno" />
+            android:value="AIzaSyAmkbnEZWOa39nlAwMLOW6XnzeuEPiM1qE" />
 
         <service android:name=".Demonio_Certificar_3G" />
 
