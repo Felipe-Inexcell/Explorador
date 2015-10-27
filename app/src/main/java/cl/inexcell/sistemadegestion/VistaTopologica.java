@@ -463,7 +463,7 @@ public class VistaTopologica extends Activity {
                                             @Override
                                             public void onClick(View v) {
                                                 final CharSequence[] options, actions;
-                                                options = new CharSequence[]{"RESET PTO DSLAM", "CONSULTAR ESTADO"};
+                                                options = new CharSequence[]{"RS", "CONSULTAR ESTADO"};
                                                 actions = new CharSequence[]{"ACTION201", "ACTION202"};
 
                                                 AlertDialog.Builder dialog = new AlertDialog.Builder(VistaTopologica.topo);
