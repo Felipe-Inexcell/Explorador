@@ -62,7 +62,7 @@ public class SoapRequestMovistar {
     //private static final String URL = "https://pcba.telefonicachile.cl/smartphone/ws/sca_dev_produccion.php";
 
 	/*
-	 * Clase Principal de Conexion SSL a WDSL
+     * Clase Principal de Conexion SSL a WDSL
 	 */
 
     private static HttpClient getNewHttpClient() {
@@ -90,7 +90,6 @@ public class SoapRequestMovistar {
             return new DefaultHttpClient();
         }
     }
-
 
 
     /*
@@ -645,7 +644,7 @@ public class SoapRequestMovistar {
         return response;
     }
 
-    public static String guardarFact(String Phone, String IMEI, String IMSI, String OperationCode, String OperationId, ArrayList<FormularioEnvio> formulario) throws Exception {
+    public static String guardarFact(String Phone, String IMEI, String IMSI, String OperationCode, String OperationId, ArrayList<FormularioEnvio> formulario, ArrayList<String> decos) throws Exception {
         final String SOAP_ACTION = "urn:Demo#GuardarFact";
         String response = null;
         String xml = null;
@@ -681,25 +680,40 @@ public class SoapRequestMovistar {
                         "<Phone xsi:type=\"xsd:string\">" + Phone + "</Phone>";
 
         for (FormularioEnvio fe : formulario) {
-            Log.w("XML", "*"+fe.getType());
+            Log.w("XML", "*" + fe.getType());
             bodyOut += "<Element xsi:type=\"urn:ElementData\">" +
-                    "<type xsi:type=\"xsd:string\">"+fe.getType()+"</type>"+
+                    "<type xsi:type=\"xsd:string\">" + fe.getType() + "</type>" +
                     "<Identification xsi:type=\"urn:IdentificationData\">";
-                    for(ParametrosEnvioForm pef: fe.getParametros()) {
-                            if(pef.getAttribute().compareTo("Carnet")!= 0 && pef.getAttribute().compareTo("Firma")!=0) {
-                                Log.w("XML","***"+pef.getAttribute()+" - "+pef.getValue());
-                                bodyOut +=
-                                        "<Parameter xsi:type=\"urn:ParameterData\">" +
-                                                "<Attribute xsi:type=\"xsd:string\">" + pef.getAttribute() + "</Attribute>" +
-                                                "<Value xsi:type=\"xsd:string\">" + pef.getValue() + "</Value>" +
-                                                "</Parameter>";
-                            }
+            for (ParametrosEnvioForm pef : fe.getParametros()) {
+                if (pef.getAttribute().compareTo("Carnet") != 0 && pef.getAttribute().compareTo("Firma") != 0) {
+                    Log.w("XML", "***" + pef.getAttribute() + " - " + pef.getValue());
+                    bodyOut +=
+                            "<Parameter xsi:type=\"urn:ParameterData\">" +
+                                    "<Attribute xsi:type=\"xsd:string\">" + pef.getAttribute() + "</Attribute>" +
+                                    "<Value xsi:type=\"xsd:string\">" + pef.getValue() + "</Value>" +
+                                    "</Parameter>";
+                }
 
-                    }
-                    bodyOut+="</Identification>" +
+            }
+            bodyOut += "</Identification>" +
                     "</Element>";
         }
-        bodyOut += "</Input>" +
+        if(decos.size() > 0 ) {
+            bodyOut += "<IngresarSerial xsi:type=\"urn:IngresarSerialData\">" +
+                    "<Serial xsi:tyoe=\"urn:SerialesData\">" +
+                    "<TypeNodo xsi:type=\"xsd:string\">FactBandaAnchaSeriales</TypeNodo>";
+
+            for (String s : decos) {
+                bodyOut += "<IdentificationSeriales xsi:type=\"urn:IdentificationSerialesData\">" +
+                        "<type xsi:type=\"xsd:string\">serieDeco;serieTarjeta</type>" +
+                        "<Serial xsi:type=\"xsd:string\">" + s + "</Serial>" +
+                        "</IdentificationSeriales>";
+            }
+
+            bodyOut += "</Serial>" +
+                    "</IngresarSerial>";
+        }
+                bodyOut +="</Input>" +
                 "</GuardarFact>" +
                 "</Service>" +
                 "</RequestGuardarFact>" +
@@ -746,18 +760,18 @@ public class SoapRequestMovistar {
                         "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
                         "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
                         "<!--Optional:-->" +
-                        "<DateTime xsi:type=\"xsd:string\">"+formatter.format(fecha)+"</DateTime>" +
+                        "<DateTime xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</DateTime>" +
                         "<!--Optional:-->" +
                         "<IdUser xsi:type=\"xsd:string\">?</IdUser>" +
-                        "<IMEI xsi:type=\"xsd:string\">"+IMEI+"</IMEI>" +
-                        "<IMSI xsi:type=\"xsd:string\">"+IMSI+"</IMSI>" +
+                        "<IMEI xsi:type=\"xsd:string\">" + IMEI + "</IMEI>" +
+                        "<IMSI xsi:type=\"xsd:string\">" + IMSI + "</IMSI>" +
                         "</Operation>" +
                         "<Service xsi:type=\"urn:ServiceGuardarFotosFactIn\">" +
                         "<GuardarFotosFact xsi:type=\"urn:GuardarFotosFactIn\">" +
                         "<Input xsi:type=\"urn:GuardarFotosFactInData\">" +
-                        "<IdFact xsi:type=\"xsd:string\">"+id+"</IdFact>" +
-                        "<Type xsi:type=\"xsd:string\">"+Type+"</Type>" +
-                        "<Foto xsi:type=\"xsd:string\">"+imagen+"</Foto>" +
+                        "<IdFact xsi:type=\"xsd:string\">" + id + "</IdFact>" +
+                        "<Type xsi:type=\"xsd:string\">" + Type + "</Type>" +
+                        "<Foto xsi:type=\"xsd:string\">" + imagen + "</Foto>" +
                         "</Input>" +
                         "</GuardarFotosFact>" +
                         "</Service>" +
@@ -797,30 +811,30 @@ public class SoapRequestMovistar {
 
         String bodyOut =
                 "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Demo\">" +
-                           "<soapenv:Header/>" +
-                           "<soapenv:Body>" +
-                              "<urn:DCTOnDemand soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
-                                 "<RequestDCTOnDemand xsi:type=\"urn:RequestDCTOnDemand\">" +
-                                    "<Operation xsi:type=\"urn:OperationType\">" +
-                                       "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
-                                       "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
-                                       "<!--Optional:-->" +
-                                       "<DateTime xsi:type=\"xsd:string\">"+formatter.format(fecha)+"</DateTime>" +
-                                       "<!--Optional:-->" +
-                                       "<IdUser xsi:type=\"xsd:string\">"+IMEI+"</IdUser>" +
-                                       "<IMEI xsi:type=\"xsd:string\">"+IMEI+"</IMEI>" +
-                                       "<IMSI xsi:type=\"xsd:string\">"+IMSI+"</IMSI>" +
-                                    "</Operation>" +
-                                    "<Service xsi:type=\"urn:ServiceDCTOnDemandIn\">" +
-                                       "<DCTOnDemand xsi:type=\"urn:DCTOnDemandIn\">" +
-                                          "<Input xsi:type=\"urn:DCTOnDemandInData\">" +
-                                             "<Phone xsi:type=\"xsd:string\">"+PHONE+"</Phone>" +
-                                          "</Input>" +
-                                       "</DCTOnDemand>" +
-                                    "</Service>" +
-                                 "</RequestDCTOnDemand>" +
-                              "</urn:DCTOnDemand>" +
-                           "</soapenv:Body>" +
+                        "<soapenv:Header/>" +
+                        "<soapenv:Body>" +
+                        "<urn:DCTOnDemand soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                        "<RequestDCTOnDemand xsi:type=\"urn:RequestDCTOnDemand\">" +
+                        "<Operation xsi:type=\"urn:OperationType\">" +
+                        "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
+                        "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
+                        "<!--Optional:-->" +
+                        "<DateTime xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</DateTime>" +
+                        "<!--Optional:-->" +
+                        "<IdUser xsi:type=\"xsd:string\">" + IMEI + "</IdUser>" +
+                        "<IMEI xsi:type=\"xsd:string\">" + IMEI + "</IMEI>" +
+                        "<IMSI xsi:type=\"xsd:string\">" + IMSI + "</IMSI>" +
+                        "</Operation>" +
+                        "<Service xsi:type=\"urn:ServiceDCTOnDemandIn\">" +
+                        "<DCTOnDemand xsi:type=\"urn:DCTOnDemandIn\">" +
+                        "<Input xsi:type=\"urn:DCTOnDemandInData\">" +
+                        "<Phone xsi:type=\"xsd:string\">" + PHONE + "</Phone>" +
+                        "</Input>" +
+                        "</DCTOnDemand>" +
+                        "</Service>" +
+                        "</RequestDCTOnDemand>" +
+                        "</urn:DCTOnDemand>" +
+                        "</soapenv:Body>" +
                         "</soapenv:Envelope>";
 
         xml = bodyOut;
@@ -866,30 +880,30 @@ public class SoapRequestMovistar {
 
         String bodyOut =
                 "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Demo\">" +
-                           "<soapenv:Header/>" +
-                           "<soapenv:Body>" +
-                              "<urn:ParaElectri soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
-                                 "<RequestParaElectri xsi:type=\"urn:RequestParaElectri\">" +
-                                    "<Operation xsi:type=\"urn:OperationType\">" +
-                                       "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
-                                       "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
-                                       "<!--Optional:-->" +
-                                       "<DateTime xsi:type=\"xsd:string\">"+formatter.format(fecha)+"</DateTime>" +
-                                       "<!--Optional:-->" +
-                                       "<IdUser xsi:type=\"xsd:string\">"+IMEI+"</IdUser>" +
-                                       "<IMEI xsi:type=\"xsd:string\">"+IMEI+"</IMEI>" +
-                                       "<IMSI xsi:type=\"xsd:string\">"+IMSI+"</IMSI>" +
-                                    "</Operation>" +
-                                    "<Service xsi:type=\"urn:ServiceParaElectriIn\">" +
-                                       "<ParaElectri xsi:type=\"urn:ParaElectriIn\">" +
-                                          "<Input xsi:type=\"urn:ParaElectriInData\">" +
-                                             "<Phone xsi:type=\"xsd:string\">"+PHONE+"</Phone>" +
-                                          "</Input>" +
-                                       "</ParaElectri>" +
-                                    "</Service>" +
-                                 "</RequestParaElectri>" +
-                              "</urn:ParaElectri>" +
-                           "</soapenv:Body>" +
+                        "<soapenv:Header/>" +
+                        "<soapenv:Body>" +
+                        "<urn:ParaElectri soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                        "<RequestParaElectri xsi:type=\"urn:RequestParaElectri\">" +
+                        "<Operation xsi:type=\"urn:OperationType\">" +
+                        "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
+                        "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
+                        "<!--Optional:-->" +
+                        "<DateTime xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</DateTime>" +
+                        "<!--Optional:-->" +
+                        "<IdUser xsi:type=\"xsd:string\">" + IMEI + "</IdUser>" +
+                        "<IMEI xsi:type=\"xsd:string\">" + IMEI + "</IMEI>" +
+                        "<IMSI xsi:type=\"xsd:string\">" + IMSI + "</IMSI>" +
+                        "</Operation>" +
+                        "<Service xsi:type=\"urn:ServiceParaElectriIn\">" +
+                        "<ParaElectri xsi:type=\"urn:ParaElectriIn\">" +
+                        "<Input xsi:type=\"urn:ParaElectriInData\">" +
+                        "<Phone xsi:type=\"xsd:string\">" + PHONE + "</Phone>" +
+                        "</Input>" +
+                        "</ParaElectri>" +
+                        "</Service>" +
+                        "</RequestParaElectri>" +
+                        "</urn:ParaElectri>" +
+                        "</soapenv:Body>" +
                         "</soapenv:Envelope>";
 
         xml = bodyOut;
@@ -936,34 +950,34 @@ public class SoapRequestMovistar {
 
         String bodyOut =
                 "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Demo\">" +
-                           "<soapenv:Header/>" +
-                           "<soapenv:Body>" +
-                              "<urn:CasaCerrada soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
-                                 "<RequestCasaCerrada xsi:type=\"urn:RequestCasaCerrada\">" +
-                                    "<Operation xsi:type=\"urn:OperationType\">" +
-                                       "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
-                                       "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
-                                       "<!--Optional:-->" +
-                                       "<DateTime xsi:type=\"xsd:string\">"+formatter.format(fecha)+"</DateTime>" +
-                                       "<!--Optional:-->" +
-                                       "<IdUser xsi:type=\"xsd:string\">"+IMEI+"</IdUser>" +
-                                       "<IMEI xsi:type=\"xsd:string\">"+IMEI+"</IMEI>" +
-                                       "<IMSI xsi:type=\"xsd:string\">"+IMSI+"</IMSI>" +
-                                    "</Operation>" +
-                                    "<Service xsi:type=\"urn:ServiceCasaCerradaIn\">" +
-                                       "<CasaCerrada xsi:type=\"urn:CasaCerradaIn\">" +
-                                          "<Input xsi:type=\"urn:CasaCerradaInData\">" +
-                                             "<Phone xsi:type=\"xsd:string\">"+FONO+"</Phone>" +
-                                             "<description xsi:type=\"xsd:string\">"+DESC+"</description>" +
-                                             "<Foto xsi:type=\"xsd:string\">"+IMG+"</Foto>" +
-                                             "<GPSLat xsi:type=\"xsd:string\">"+LAT+"</GPSLat>" +
-                                             "<GPSLng xsi:type=\"xsd:string\">"+LNG+"</GPSLng>" +
-                                          "</Input>" +
-                                       "</CasaCerrada>" +
-                                    "</Service>" +
-                                 "</RequestCasaCerrada>" +
-                              "</urn:CasaCerrada>" +
-                           "</soapenv:Body>" +
+                        "<soapenv:Header/>" +
+                        "<soapenv:Body>" +
+                        "<urn:CasaCerrada soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                        "<RequestCasaCerrada xsi:type=\"urn:RequestCasaCerrada\">" +
+                        "<Operation xsi:type=\"urn:OperationType\">" +
+                        "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
+                        "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
+                        "<!--Optional:-->" +
+                        "<DateTime xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</DateTime>" +
+                        "<!--Optional:-->" +
+                        "<IdUser xsi:type=\"xsd:string\">" + IMEI + "</IdUser>" +
+                        "<IMEI xsi:type=\"xsd:string\">" + IMEI + "</IMEI>" +
+                        "<IMSI xsi:type=\"xsd:string\">" + IMSI + "</IMSI>" +
+                        "</Operation>" +
+                        "<Service xsi:type=\"urn:ServiceCasaCerradaIn\">" +
+                        "<CasaCerrada xsi:type=\"urn:CasaCerradaIn\">" +
+                        "<Input xsi:type=\"urn:CasaCerradaInData\">" +
+                        "<Phone xsi:type=\"xsd:string\">" + FONO + "</Phone>" +
+                        "<description xsi:type=\"xsd:string\">" + DESC + "</description>" +
+                        "<Foto xsi:type=\"xsd:string\">" + IMG + "</Foto>" +
+                        "<GPSLat xsi:type=\"xsd:string\">" + LAT + "</GPSLat>" +
+                        "<GPSLng xsi:type=\"xsd:string\">" + LNG + "</GPSLng>" +
+                        "</Input>" +
+                        "</CasaCerrada>" +
+                        "</Service>" +
+                        "</RequestCasaCerrada>" +
+                        "</urn:CasaCerrada>" +
+                        "</soapenv:Body>" +
                         "</soapenv:Envelope>";
 
         xml = bodyOut;
@@ -1000,30 +1014,30 @@ public class SoapRequestMovistar {
 
         String bodyOut =
                 "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Demo\">" +
-                           "<soapenv:Header/>" +
-                           "<soapenv:Body>" +
-                              "<urn:bloqueoBotones soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
-                                 "<RequestbloqueoBotones xsi:type=\"urn:RequestbloqueoBotones\">" +
-                                    "<Operation xsi:type=\"urn:OperationType\">" +
-                                       "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
-                                       "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
-                                       "<!--Optional:-->" +
-                                       "<DateTime xsi:type=\"xsd:string\">"+formatter.format(fecha)+"</DateTime>" +
-                                       "<!--Optional:-->" +
-                                       "<IdUser xsi:type=\"xsd:string\">"+IMEI+"</IdUser>" +
-                                       "<IMEI xsi:type=\"xsd:string\">"+IMEI+"</IMEI>" +
-                                       "<IMSI xsi:type=\"xsd:string\">"+IMSI+"</IMSI>" +
-                                    "</Operation>" +
-                                    "<Service xsi:type=\"urn:ServicebloqueoBotonesIn\">" +
-                                       "<bloqueoBotones xsi:type=\"urn:bloqueoBotonesIn\">" +
-                                          "<Input xsi:type=\"urn:bloqueoBotonesInData\">" +
-                                             "<IMEI xsi:type=\"xsd:string\">?</IMEI>" +
-                                          "</Input>" +
-                                       "</bloqueoBotones>" +
-                                    "</Service>"+
-                                 "</RequestbloqueoBotones>" +
-                              "</urn:bloqueoBotones>" +
-                           "</soapenv:Body>" +
+                        "<soapenv:Header/>" +
+                        "<soapenv:Body>" +
+                        "<urn:bloqueoBotones soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                        "<RequestbloqueoBotones xsi:type=\"urn:RequestbloqueoBotones\">" +
+                        "<Operation xsi:type=\"urn:OperationType\">" +
+                        "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
+                        "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
+                        "<!--Optional:-->" +
+                        "<DateTime xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</DateTime>" +
+                        "<!--Optional:-->" +
+                        "<IdUser xsi:type=\"xsd:string\">" + IMEI + "</IdUser>" +
+                        "<IMEI xsi:type=\"xsd:string\">" + IMEI + "</IMEI>" +
+                        "<IMSI xsi:type=\"xsd:string\">" + IMSI + "</IMSI>" +
+                        "</Operation>" +
+                        "<Service xsi:type=\"urn:ServicebloqueoBotonesIn\">" +
+                        "<bloqueoBotones xsi:type=\"urn:bloqueoBotonesIn\">" +
+                        "<Input xsi:type=\"urn:bloqueoBotonesInData\">" +
+                        "<IMEI xsi:type=\"xsd:string\">?</IMEI>" +
+                        "</Input>" +
+                        "</bloqueoBotones>" +
+                        "</Service>" +
+                        "</RequestbloqueoBotones>" +
+                        "</urn:bloqueoBotones>" +
+                        "</soapenv:Body>" +
                         "</soapenv:Envelope>";
 
         xml = bodyOut;
@@ -1037,7 +1051,6 @@ public class SoapRequestMovistar {
         response = EntityUtils.toString(resEntity);
         return response;
     }
-
 
 
 }

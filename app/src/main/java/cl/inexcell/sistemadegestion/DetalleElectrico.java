@@ -35,7 +35,7 @@ public class DetalleElectrico extends Activity {
         init();
     }
 
-    private void init(){
+    private void init() {
         LinearLayout conenido = (LinearLayout) findViewById(R.id.contenido);
 
         LinearLayout all = new LinearLayout(this);
@@ -55,7 +55,7 @@ public class DetalleElectrico extends Activity {
         par.setGravity(Gravity.CENTER_HORIZONTAL);
         par.setOrientation(LinearLayout.VERTICAL);
 
-        TextView  attr = new TextView(this);
+        TextView attr = new TextView(this);
         TextView val = new TextView(this);
         attr.setText("VENDOR");
         attr.setTextColor(Color.BLUE);
@@ -65,13 +65,13 @@ public class DetalleElectrico extends Activity {
         val.setText(vendor);
         val.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         val.setGravity(Gravity.CENTER_HORIZONTAL);
-        val.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+        val.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
 
         par.addView(attr);
         par.addView(val);
         par.setPadding(7, 7, 7, 7);
 
-        doblepar.addView(par,params);
+        doblepar.addView(par, params);
 
         par = new LinearLayout(this);
         par.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -87,13 +87,13 @@ public class DetalleElectrico extends Activity {
         val.setText(model);
         val.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         val.setGravity(Gravity.CENTER_HORIZONTAL);
-        val.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+        val.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
 
         par.addView(attr);
         par.addView(val);
-        par.setPadding(7,7,7,7);
+        par.setPadding(7, 7, 7, 7);
 
-        doblepar.addView(par,params);
+        doblepar.addView(par, params);
         all.addView(doblepar);
         /**PRIMERA COLUMNA   VENDOR*/
         par = new LinearLayout(this);
@@ -112,7 +112,7 @@ public class DetalleElectrico extends Activity {
         val.setText(dslam);
         val.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         val.setGravity(Gravity.CENTER_HORIZONTAL);
-        val.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+        val.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
 
 
         par.addView(attr);
@@ -133,7 +133,7 @@ public class DetalleElectrico extends Activity {
         titulo.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         titulo.setText("VALORES ELÉCTRICOS");
         titulo.setGravity(Gravity.CENTER_HORIZONTAL);
-        titulo.setPadding(0,30,0,10);
+        titulo.setPadding(0, 30, 0, 10);
         titulo.setTextColor(Color.BLUE);
         titulo.setTypeface(Typeface.DEFAULT_BOLD);
 
@@ -150,10 +150,10 @@ public class DetalleElectrico extends Activity {
             tmp.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             tmp.setOrientation(LinearLayout.HORIZONTAL);
 
-            if(position == 0){
+            if (position == 0) {
                 position = 1;
                 tmp.setBackgroundColor(getResources().getColor(R.color.gris));
-            }else{
+            } else {
                 position = 0;
                 tmp.setBackgroundColor(Color.WHITE);
             }
@@ -170,7 +170,7 @@ public class DetalleElectrico extends Activity {
             val.setTextColor(getResources().getColor(R.color.celeste));
             val.setTypeface(Typeface.DEFAULT_BOLD);
 
-            tmp.addView(attr,dobleCol);
+            tmp.addView(attr, dobleCol);
             tmp.addView(val, dobleCol);
 
             pElec.addView(tmp);
@@ -184,12 +184,12 @@ public class DetalleElectrico extends Activity {
         volver(null);
     }
 
-    public void volver(View v){
+    public void volver(View v) {
 
         Funciones.makeBackAlert(this).show();
     }
 
-    public void shutdown(View v){
+    public void shutdown(View v) {
         ArrayList<Activity> actividades = new ArrayList<>();
         actividades.add(Principal.p);
         actividades.add(VistaTopologica.topo);
@@ -197,7 +197,6 @@ public class DetalleElectrico extends Activity {
         actividades.add(this);
         Funciones.makeExitAlert(this, actividades).show();
     }
-
 
 
 }

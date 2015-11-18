@@ -11,7 +11,8 @@ public class ParametrosFormulario {
     Boolean required;
     ArrayList<Deco> decos;
 
-    public ParametrosFormulario(){}
+    public ParametrosFormulario() {
+    }
 
     public ArrayList<Deco> getDecos() {
         return decos;
@@ -58,9 +59,9 @@ public class ParametrosFormulario {
     }
 
     public void setEnabled(String enabled) {
-        if(enabled.compareTo("true")==0)
+        if (enabled.compareTo("true") == 0)
             this.enabled = true;
-        else if(enabled.compareTo("false")==0)
+        else if (enabled.compareTo("false") == 0)
             this.enabled = false;
     }
 
@@ -69,9 +70,9 @@ public class ParametrosFormulario {
     }
 
     public void setRequired(String required) {
-        if(required.compareTo("true")==0)
+        if (required.compareTo("true") == 0)
             this.required = true;
-        else if(required.compareTo("false")==0)
+        else if (required.compareTo("false") == 0)
             this.required = false;
     }
 }

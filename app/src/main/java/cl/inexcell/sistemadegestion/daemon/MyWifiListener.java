@@ -8,6 +8,7 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
 import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,17 +34,17 @@ public class MyWifiListener extends BroadcastReceiver {
         return wifiManager.getScanResults();
     }
 
-    public ArrayList<String> getWifiListString(){
+    public ArrayList<String> getWifiListString() {
         ArrayList<String> arrayList = new ArrayList<String>();
         wifiManager.startScan();
-        for(ScanResult scanResult : wifiManager.getScanResults()){
-            arrayList.add(scanResult.SSID+";"
-                    +scanResult.BSSID+";"
-                    +scanResult.capabilities+";"
-                    +scanResult.level+";"
-                    +getChannel(scanResult.frequency));
+        for (ScanResult scanResult : wifiManager.getScanResults()) {
+            arrayList.add(scanResult.SSID + ";"
+                    + scanResult.BSSID + ";"
+                    + scanResult.capabilities + ";"
+                    + scanResult.level + ";"
+                    + getChannel(scanResult.frequency));
         }
-        Log.d(TAG,arrayList.toString());
+        Log.d(TAG, arrayList.toString());
         return arrayList;
     }
 
@@ -59,35 +60,34 @@ public class MyWifiListener extends BroadcastReceiver {
     }
 
 
-
-    private int getChannel(int freq){
-        if(freq == 2401 || freq == 2412 || freq == 2423 )
+    private int getChannel(int freq) {
+        if (freq == 2401 || freq == 2412 || freq == 2423)
             return 1;
-        if(freq == 2404 || freq == 2417 || freq == 2428 )
+        if (freq == 2404 || freq == 2417 || freq == 2428)
             return 2;
-        if(freq == 2411 || freq == 2422 || freq == 2433 )
+        if (freq == 2411 || freq == 2422 || freq == 2433)
             return 3;
-        if(freq == 2416 || freq == 2427 || freq == 2438 )
+        if (freq == 2416 || freq == 2427 || freq == 2438)
             return 4;
-        if(freq == 2421 || freq == 2432 || freq == 2443 )
+        if (freq == 2421 || freq == 2432 || freq == 2443)
             return 5;
-        if(freq == 2426 || freq == 2437 || freq == 2448 )
+        if (freq == 2426 || freq == 2437 || freq == 2448)
             return 6;
-        if(freq == 2431 || freq == 2442 || freq == 2453 )
+        if (freq == 2431 || freq == 2442 || freq == 2453)
             return 7;
-        if(freq == 2436 || freq == 2447 || freq == 2458 )
+        if (freq == 2436 || freq == 2447 || freq == 2458)
             return 8;
-        if(freq == 2441 || freq == 2452 || freq == 2463 )
+        if (freq == 2441 || freq == 2452 || freq == 2463)
             return 9;
-        if(freq == 2446 || freq == 2457 || freq == 2468 )
+        if (freq == 2446 || freq == 2457 || freq == 2468)
             return 10;
-        if(freq == 2451 || freq == 2462 || freq == 2473 )
+        if (freq == 2451 || freq == 2462 || freq == 2473)
             return 11;
-        if(freq == 2456 || freq == 2467 || freq == 2478 )
+        if (freq == 2456 || freq == 2467 || freq == 2478)
             return 12;
-        if(freq == 2461 || freq == 2472 || freq == 2483 )
+        if (freq == 2461 || freq == 2472 || freq == 2483)
             return 13;
-        if(freq == 2473 || freq == 2484 || freq == 2495 )
+        if (freq == 2473 || freq == 2484 || freq == 2495)
             return 14;
 
         return 0;

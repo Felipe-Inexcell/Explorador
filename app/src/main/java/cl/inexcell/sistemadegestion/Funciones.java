@@ -41,10 +41,19 @@ public class Funciones {
     private static final String PATTERN_RUT = "([0-9]{7,8})-([kK0-9]{1})";
 
 
-    public static String encodeTobase64(Bitmap image) {
+    /*public static String encodeTobase64(Bitmap image) {
         Bitmap immagex = image;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         immagex.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
+        return imageEncoded;
+    }*/
+
+    public static String encodeTobase64(Bitmap image) {
+        Bitmap immagex = image;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        immagex.compress(Bitmap.CompressFormat.JPEG, 55, baos);
         byte[] b = baos.toByteArray();
         String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
         return imageEncoded;
@@ -78,7 +87,7 @@ public class Funciones {
 
     }
 
-    public static Toast makeToast(Context context, String message){
+    public static Toast makeToast(Context context, String message) {
         Toast t = new Toast(context);
         TextView text = new TextView(context);
         LinearLayout l = new LinearLayout(context);
@@ -86,15 +95,15 @@ public class Funciones {
         text.setTextColor(context.getResources().getColor(R.color.celeste));
         text.setTextSize(24);
         l.setBackgroundResource(R.drawable.fondo1);
-        l.setPadding(32,32,32,32);
+        l.setPadding(32, 32, 32, 32);
         l.addView(text);
         t.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL,
                 0, 0);
-        t.setView((View)l);
+        t.setView((View) l);
         return t;
     }
 
-    public static AlertDialog makeDialog(Context context, String message){
+    public static AlertDialog makeDialog(Context context, String message) {
         View v = LayoutInflater.from(context).inflate(R.layout.dialog_message, null, false);
         AlertDialog dialog = new AlertDialog.Builder(context)
                 .setView(v)
@@ -103,42 +112,43 @@ public class Funciones {
         return dialog;
     }
 
-    public static TextView makeTextView(Context ctx, String text){
+    public static TextView makeTextView(Context ctx, String text) {
         TextView t = new TextView(ctx);
         t.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         t.setText(text);
         return t;
     }
-    public static TextView makeTextView(Context ctx, String text,int tipo){
+
+    public static TextView makeTextView(Context ctx, String text, int tipo) {
         TextView t = new TextView(ctx);
-        if(tipo == 0)
-        t.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        if(tipo == 1)
-        t.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        if (tipo == 0)
+            t.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        if (tipo == 1)
+            t.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         t.setGravity(Gravity.CENTER_HORIZONTAL);
         t.setText(text);
         return t;
     }
 
-    public static AlertDialog.Builder makeAlert(Context CONTEXTO, String TITULO, String MENSAJE, Boolean CANCELABLE){
+    public static AlertDialog.Builder makeAlert(Context CONTEXTO, String TITULO, String MENSAJE, Boolean CANCELABLE) {
         AlertDialog.Builder builder = new AlertDialog.Builder(CONTEXTO);
-        if(TITULO != null)
+        if (TITULO != null)
             builder.setTitle(TITULO);
-        if(MENSAJE != null)
+        if (MENSAJE != null)
             builder.setMessage(MENSAJE);
         builder.setCancelable(CANCELABLE);
         return builder;
 
     }
 
-    public static AlertDialog.Builder makeExitAlert(Context CONTEXTO, final ArrayList<Activity> Actividades){
+    public static AlertDialog.Builder makeExitAlert(Context CONTEXTO, final ArrayList<Activity> Actividades) {
         AlertDialog.Builder b = new AlertDialog.Builder(CONTEXTO);
         b.setMessage("¿Seguro que desea cerrar la aplicación?");
         b.setPositiveButton("Sí, Salir", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                for(Activity a: Actividades)
-                    if(a!= null)a.finish();
+                for (Activity a : Actividades)
+                    if (a != null) a.finish();
                 dialog.dismiss();
             }
         });
@@ -153,13 +163,13 @@ public class Funciones {
 
     }
 
-    public static AlertDialog.Builder makeBackAlert(final Context CONTEXTO){
+    public static AlertDialog.Builder makeBackAlert(final Context CONTEXTO) {
         AlertDialog.Builder b = new AlertDialog.Builder(CONTEXTO);
         b.setMessage("¿Seguro que desea volver?");
         b.setPositiveButton("Sí", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ((Activity)CONTEXTO).finish();
+                ((Activity) CONTEXTO).finish();
 
             }
         });
@@ -174,7 +184,7 @@ public class Funciones {
 
     }
 
-    public static AlertDialog.Builder makeResultAlert(Context CONTEXTO, String MENSAJE,Boolean CANCELABLE){
+    public static AlertDialog.Builder makeResultAlert(Context CONTEXTO, String MENSAJE, Boolean CANCELABLE) {
         AlertDialog.Builder builder = new AlertDialog.Builder(CONTEXTO);
         builder.setMessage(MENSAJE);
         builder.setCancelable(CANCELABLE);
@@ -188,7 +198,7 @@ public class Funciones {
 
     }
 
-    public static File Update(String apkurl){
+    public static File Update(String apkurl) {
         try {
             URL url = new URL(apkurl);
             HttpURLConnection c = (HttpURLConnection) url.openConnection();
@@ -198,10 +208,10 @@ public class Funciones {
 
             String[] spliit = apkurl.split("/");
 
-                    String PATH = Environment.getExternalStorageDirectory() + "/Explorador/";
+            String PATH = Environment.getExternalStorageDirectory() + "/Explorador/";
             File file = new File(PATH);
             file.mkdirs();
-            File outputFile = new File(file, spliit[spliit.length-1]);
+            File outputFile = new File(file, spliit[spliit.length - 1]);
             FileOutputStream fos = new FileOutputStream(outputFile);
 
             InputStream is = c.getInputStream();
@@ -220,7 +230,6 @@ public class Funciones {
             return null;
         }
     }
-
 
 
 }

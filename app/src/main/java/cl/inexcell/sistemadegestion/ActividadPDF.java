@@ -25,36 +25,38 @@ public class ActividadPDF extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_pdfview);
 
-        PDFView pdfView = (PDFView)findViewById(R.id.pdfview);
-        File archivo = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/test.pdf");
-        if(archivo.exists()) {
+        PDFView pdfView = (PDFView) findViewById(R.id.pdfview);
+        File archivo = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/test.pdf");
+        if (archivo.exists()) {
             pdfView.fromFile(archivo)
                     .showMinimap(false)
                     .enableSwipe(true)
                     .load();
-        }else{
-            Toast.makeText(this,"El archivo pdf no existe.",Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "El archivo pdf no existe.", Toast.LENGTH_LONG).show();
             finish();
         }
 
     }
 
-    public void shutdown(View v){
-        if(Principal.p != null)
+    public void shutdown(View v) {
+        if (Principal.p != null)
             Principal.p.finish();
-        if(FactActivity_bak.fatc != null)
+        if (FactActivity_bak.fatc != null)
             FactActivity_bak.fatc.finish();
-        if(VistaTopologica.topo!=null)
+        if (VistaTopologica.topo != null)
             VistaTopologica.topo.finish();
         finish();
     }
 
-    /** Boton Volver **/
+    /**
+     * Boton Volver *
+     */
     public void volver(View view) {
         finish();
 
         // Vibrar al hacer click
-        Vibrator vibrator =(Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(50);
     }
 }

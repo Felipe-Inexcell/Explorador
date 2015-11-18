@@ -81,9 +81,9 @@ public class FactActivity_bak extends Activity implements View.OnClickListener {
         isEmail.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     mail_cliente.setVisibility(View.VISIBLE);
-                }else
+                } else
                     mail_cliente.setVisibility(View.GONE);
             }
         });
@@ -168,16 +168,16 @@ public class FactActivity_bak extends Activity implements View.OnClickListener {
 
     public void ingresar_retiro(View v) {
         View content = LayoutInflater.from(this).inflate(R.layout.view_ingresar_retiro, null, false);
-        Spinner spinner = (Spinner)content.findViewById(R.id.retiro_elementos);
-        final LinearLayout decos = (LinearLayout)content.findViewById(R.id.layout_deco);
-        final LinearLayout general = (LinearLayout)content.findViewById(R.id.layout_general);
+        Spinner spinner = (Spinner) content.findViewById(R.id.retiro_elementos);
+        final LinearLayout decos = (LinearLayout) content.findViewById(R.id.layout_deco);
+        final LinearLayout general = (LinearLayout) content.findViewById(R.id.layout_general);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(position == 2){
+                if (position == 2) {
                     decos.setVisibility(View.VISIBLE);
                     general.setVisibility(View.GONE);
-                }else{
+                } else {
                     general.setVisibility(View.VISIBLE);
                     decos.setVisibility(View.GONE);
                 }

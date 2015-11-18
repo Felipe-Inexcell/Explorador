@@ -168,7 +168,7 @@ public class Principal extends Activity {
                                 p.finish();
                             }
                         }).show();
-            } else if(actualizar != null && actualizar.isActualizacion()){
+            } else if (actualizar != null && actualizar.isActualizacion()) {
                 String versionActual = getResources().getString(R.string.versioncode);
                 try {
                     if (versionActual.compareTo(actualizar.getId()) < 0) {
@@ -209,7 +209,7 @@ public class Principal extends Activity {
                         });
                         builder.show();
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     Funciones.makeAlert(mContext, e.getMessage(), e.getCause().toString(), false).setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

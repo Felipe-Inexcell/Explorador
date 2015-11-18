@@ -118,7 +118,7 @@ public class DCT extends Activity {
                 e.printStackTrace();
                 return "Error en la conexión con el servidor. Por favor reintente";
             } catch (Exception e) {
-                return "Error no controlado. Causa: "+e.getCause();
+                return "Error no controlado. Causa: " + e.getCause();
             }
         }
 
@@ -131,7 +131,7 @@ public class DCT extends Activity {
                     dibujar(response);
                 } catch (Exception e) {
 
-                    Funciones.makeAlert(getApplicationContext(), null, e.getMessage(),false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    Funciones.makeAlert(getApplicationContext(), null, e.getMessage(), false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             ((Activity) mContext).finish();
@@ -139,7 +139,7 @@ public class DCT extends Activity {
                     }).show();
                 }
             } else {
-                Funciones.makeAlert(getApplicationContext(), null, s,false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                Funciones.makeAlert(getApplicationContext(), null, s, false).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         ((Activity) mContext).finish();

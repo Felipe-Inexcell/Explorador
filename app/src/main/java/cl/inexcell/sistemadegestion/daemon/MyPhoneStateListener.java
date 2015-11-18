@@ -21,42 +21,51 @@ public class MyPhoneStateListener extends PhoneStateListener {
     public MyPhoneStateListener(Context mContext) {
         this.mContext = mContext;
 
-        telephonyManager = (TelephonyManager)mContext.getSystemService(Context.TELEPHONY_SERVICE);
-        telephonyManager.listen(this,PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+        telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+        telephonyManager.listen(this, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
         neighboringCellInfos = telephonyManager.getNeighboringCellInfo();
 
     }
 
-    public void debug(){
+    public void debug() {
         CellLocation cellLocation = telephonyManager.getCellLocation();
-        Log.d(TAG,cellLocation.toString());
-        Toast.makeText(mContext,telephonyManager.getNeighboringCellInfo().toString(),Toast.LENGTH_LONG).show();
+        Log.d(TAG, cellLocation.toString());
+        Toast.makeText(mContext, telephonyManager.getNeighboringCellInfo().toString(), Toast.LENGTH_LONG).show();
         Log.d(TAG, telephonyManager.getNeighboringCellInfo().toString());
 
     }
 
-    public String getOperatorName(){
+    public String getOperatorName() {
         return telephonyManager.getNetworkOperatorName();
 
     }
 
-    public String getNetworkType(){
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_1xRTT)return  "1xRTT";
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_CDMA)return  "CDMA";
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_EDGE)return  "EDGE";
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_EHRPD)return  "eHRPD";
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_EVDO_0)return  "EVDO revision 0";
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_EVDO_A)return  "EVDO revision A";
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_EVDO_B)return  "EVDO revision B";
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_GPRS)return  "GPRS";
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_HSDPA)return  "HSDPA";
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_HSPA)return  "HSPA";
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_HSPAP)return  "HSPA+";
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_HSUPA)return  "HSUPA";
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_IDEN)return  "iDen";
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_LTE)return  "LTE";
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_UMTS)return  "UMTS";
-        if(telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_UNKNOWN)return  "Desconocido";
+    public String getNetworkType() {
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_1xRTT)
+            return "1xRTT";
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_CDMA) return "CDMA";
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_EDGE) return "EDGE";
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_EHRPD)
+            return "eHRPD";
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_EVDO_0)
+            return "EVDO revision 0";
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_EVDO_A)
+            return "EVDO revision A";
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_EVDO_B)
+            return "EVDO revision B";
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_GPRS) return "GPRS";
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_HSDPA)
+            return "HSDPA";
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_HSPA) return "HSPA";
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_HSPAP)
+            return "HSPA+";
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_HSUPA)
+            return "HSUPA";
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_IDEN) return "iDen";
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_LTE) return "LTE";
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_UMTS) return "UMTS";
+        if (telephonyManager.getNetworkType() == TelephonyManager.NETWORK_TYPE_UNKNOWN)
+            return "Desconocido";
         return "Desconocido";
     }
 
@@ -65,13 +74,12 @@ public class MyPhoneStateListener extends PhoneStateListener {
     }
 
     @Override
-    public void onSignalStrengthsChanged(SignalStrength signalStrength)
-    {
+    public void onSignalStrengthsChanged(SignalStrength signalStrength) {
         super.onSignalStrengthsChanged(signalStrength);
-        try{
+        try {
             int asu = signalStrength.getGsmSignalStrength();
-            signal = -113 + 2*asu;
-        }catch(Exception e){
+            signal = -113 + 2 * asu;
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

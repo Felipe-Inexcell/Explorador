@@ -59,16 +59,14 @@ public class FAQActivity extends Activity {
 
         setContentView(R.layout.activity_faq);
         activity = this;
-        progressBar = (ProgressBar)this.findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
         progressBar.setMax(100);
-        faq = (WebView)this.findViewById(R.id.faq_webview);
+        faq = (WebView) this.findViewById(R.id.faq_webview);
 
         faq.getSettings().setJavaScriptEnabled(true);
         faq.setWebViewClient(new MyWebViewClient());
-        faq.setWebChromeClient(new WebChromeClient()
-        {
-            public void onProgressChanged(WebView view, int progress)
-            {
+        faq.setWebChromeClient(new WebChromeClient() {
+            public void onProgressChanged(WebView view, int progress) {
                 // update the progressBar
                 progressBar.setProgress(progress);
             }
@@ -78,16 +76,16 @@ public class FAQActivity extends Activity {
         faq.requestFocus();
     }
 
-    public void prev_page(View v){
+    public void prev_page(View v) {
         faq.goBack();
     }
 
-    public void home_page(View v){
+    public void home_page(View v) {
         faq.loadUrl(FAQ_URL);
         faq.requestFocus();
     }
 
-    public void reload_page(View v){
+    public void reload_page(View v) {
         faq.reload();
     }
 
@@ -98,10 +96,11 @@ public class FAQActivity extends Activity {
         back(null);
     }
 
-    public void back(View v){
-        Funciones.makeBackAlert(this).show();}
+    public void back(View v) {
+        Funciones.makeBackAlert(this).show();
+    }
 
-    public void shutdown(View v){
+    public void shutdown(View v) {
         ArrayList<Activity> actividades = new ArrayList<>();
         actividades.add(Principal.p);
         actividades.add(this);

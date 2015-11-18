@@ -12,7 +12,7 @@ public class MapMarker {
 
     public MapMarker(Double latitude, Double longitude, String name, String description) {
         super();
-        locate = new LatLng(latitude,longitude);
+        locate = new LatLng(latitude, longitude);
         Name = name;
         Description = description;
     }

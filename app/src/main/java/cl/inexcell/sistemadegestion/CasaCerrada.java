@@ -71,7 +71,7 @@ public class CasaCerrada extends FragmentActivity implements GoogleMap.OnMapLoad
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_casa_cerrada);
         mContext = this;
-        p=this;
+        p = this;
 
         Phone = getIntent().getStringExtra("PHONE");
 
@@ -205,7 +205,7 @@ public class CasaCerrada extends FragmentActivity implements GoogleMap.OnMapLoad
             }
 
             EnviarTask t = new EnviarTask(this);
-            t.execute(description.getText().toString(),Funciones.encodeTobase64(b), String.valueOf(mapa.getMyLocation().getLatitude()), String.valueOf(mapa.getMyLocation().getLongitude()));
+            t.execute(description.getText().toString(), Funciones.encodeTobase64(b), String.valueOf(mapa.getMyLocation().getLatitude()), String.valueOf(mapa.getMyLocation().getLongitude()));
         }
     }
 
@@ -234,10 +234,10 @@ public class CasaCerrada extends FragmentActivity implements GoogleMap.OnMapLoad
                 String IMEI = telephonyManager.getDeviceId();
                 String IMSI = telephonyManager.getSimSerialNumber();
                 String query;
-                if(Phone.equals("3")){
+                if (Phone.equals("3")) {
                     query = URLs.CASACERRADA;
-                }else{
-                    query = SoapRequestMovistar.sendClosedHouse(IMEI,IMSI,params[0],params[1],params[2],params[3], Phone);
+                } else {
+                    query = SoapRequestMovistar.sendClosedHouse(IMEI, IMSI, params[0], params[1], params[2], params[3], Phone);
                 }
 
                 ArrayList<String> retorno = XMLParser.getReturnCode(query);
@@ -261,7 +261,7 @@ public class CasaCerrada extends FragmentActivity implements GoogleMap.OnMapLoad
 
         @Override
         protected void onPostExecute(String s) {
-            Funciones.makeAlert(mContext, null, s,false)
+            Funciones.makeAlert(mContext, null, s, false)
                     .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -274,7 +274,7 @@ public class CasaCerrada extends FragmentActivity implements GoogleMap.OnMapLoad
                         }
                     }).show();
 
-            if(d.isShowing())d.dismiss();
+            if (d.isShowing()) d.dismiss();
         }
     }
 }

@@ -14,10 +14,11 @@ public class ElementFormulario {
     ArrayList<ParametrosFormulario> parameters;
     int drawable;
 
-    public ElementFormulario(){}
+    public ElementFormulario() {
+    }
 
-    private int getDrawable(String type){
-        switch (type){
+    private int getDrawable(String type) {
+        switch (type) {
             case "Broadband":
                 return R.drawable.vt_baf1;
             case "DigitalTelevision":

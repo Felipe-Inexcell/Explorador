@@ -15,42 +15,43 @@ import android.view.View;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 
 public class CertificarPar extends Activity {
-	private String TAG	= "CERTIFICARPAR";
-	private ArrayList<String> res;
-	private CertificarDSL asyncDSL;
+    private String TAG = "CERTIFICARPAR";
+    private ArrayList<String> res;
+    private CertificarDSL asyncDSL;
     private LinearLayout CONTENIDO;
     String Phone;
 
-	private String asd;
+    private String asd;
 
 
-	private boolean certifyDslCorrecto;
-	public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
-	public static final int DIALOG_DOWNLOAD_PROGRESS1 = 1;
+    private boolean certifyDslCorrecto;
+    public static final int DIALOG_DOWNLOAD_PROGRESS = 0;
+    public static final int DIALOG_DOWNLOAD_PROGRESS1 = 1;
     private ProgressDialog mProgressDialog, mProgressDialog1;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		// Activity sin parte superior
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_certificar_par);
-        CONTENIDO = (LinearLayout)findViewById(R.id.certificacion_par_content);
+        // Activity sin parte superior
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_certificar_par);
+        CONTENIDO = (LinearLayout) findViewById(R.id.certificacion_par_content);
         Phone = getIntent().getStringExtra("PHONE");
         Log.i(TAG, Phone);
-		certificar();
+        certificar();
 
-	}
+    }
 
-	public void certificar(){
+    public void certificar() {
 
-		asyncDSL = new CertificarDSL();
-		asyncDSL.execute();
-	}
+        asyncDSL = new CertificarDSL();
+        asyncDSL.execute();
+    }
 
 
     @Override
@@ -59,96 +60,95 @@ public class CertificarPar extends Activity {
         volver(null);
     }
 
-	public void volver(View view){
+    public void volver(View view) {
 
         Funciones.makeBackAlert(this).show();
-	}
+    }
 
-	public void certificarAgain(View v){
-		Intent i = new Intent(VistaTopologica.topo,CertificarPar.class);
-		i.putExtra("PHONE", Phone);
-		startActivity(i);
-		this.finish();
-	}
-	public void fin_certificar(View v){
-		volver(null);
-	}
+    public void certificarAgain(View v) {
+        Intent i = new Intent(VistaTopologica.topo, CertificarPar.class);
+        i.putExtra("PHONE", Phone);
+        startActivity(i);
+        this.finish();
+    }
+
+    public void fin_certificar(View v) {
+        volver(null);
+    }
 
 
-	public void shutdown1(View v){
+    public void shutdown1(View v) {
         ArrayList<Activity> actividades = new ArrayList<>();
         actividades.add(Principal.p);
         actividades.add(VistaTopologica.topo);
         actividades.add(this);
         Funciones.makeExitAlert(this, actividades).show();
-	}
+    }
 
 
-   	private class CertificarDSL extends AsyncTask<String,Integer,ArrayList<String>> {
+    private class CertificarDSL extends AsyncTask<String, Integer, ArrayList<String>> {
 
-   		private final ProgressDialog dialog = new ProgressDialog(CertificarPar.this);
+        private final ProgressDialog dialog = new ProgressDialog(CertificarPar.this);
 
- 		protected void onPreExecute() {
- 			this.dialog.setMessage("Buscando información sobre el par...");
- 			this.dialog.setCanceledOnTouchOutside(false);
+        protected void onPreExecute() {
+            this.dialog.setMessage("Buscando información sobre el par...");
+            this.dialog.setCanceledOnTouchOutside(false);
             this.dialog.setCancelable(false);
- 		    this.dialog.show();
-         }
+            this.dialog.show();
+        }
 
-   	    protected ArrayList<String> doInBackground(String... params) {
+        protected ArrayList<String> doInBackground(String... params) {
 
- 			String respuesta = null;
-   			res = new ArrayList<String>();
-   			nada1();
-   			try {
+            String respuesta = null;
+            res = new ArrayList<String>();
+            nada1();
+            try {
 //
-   				
-   				TelephonyManager telephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-   				String IMEI = telephonyManager.getDeviceId();
-   				String IMSI =  telephonyManager.getSimSerialNumber();
 
-                    if(Phone.compareTo("07302321456")!=0) {
-                        respuesta = SoapRequestMovistar.getCertifyDSL(Phone, "04", "", IMEI, IMSI);
-                    }else
-                        respuesta = nada1();
+                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                String IMEI = telephonyManager.getDeviceId();
+                String IMSI = telephonyManager.getSimSerialNumber();
 
-                    Log.w(TAG, "RESPONSE\n"+respuesta);
-                    if(XMLParser.getReturnCode(respuesta).get(0).equals("0")) {
-                        Log.w(TAG, "RESPONSE OK");
-                        certifyDslCorrecto = true;
-                        String xml = respuesta.replace("\n","")
-                                .replace("<![CDATA[", "")
-                                .replace("]]>", "")
-                                .replace("</VPT>", "")
-                                .replace("<VPT>", "")
-                                .replace("&lt;","<")
-                                .replace("&gt;",">");
-                        Log.w(TAG,"PRE PARSE "+xml);
-                        res = XMLParser.getCertificationPar(xml);
+                if (Phone.compareTo("07302321456") != 0) {
+                    respuesta = SoapRequestMovistar.getCertifyDSL(Phone, "04", "", IMEI, IMSI);
+                } else
+                    respuesta = nada1();
 
-                        Log.w(TAG, "RESPONSE PARSE\n"+res.toString());
-                    }
-   				    else{
-                        Log.w(TAG, "RESPONSE NOK");
-                        certifyDslCorrecto = false;
-                        res = XMLParser.getReturnCode(respuesta);
+                Log.w(TAG, "RESPONSE\n" + respuesta);
+                if (XMLParser.getReturnCode(respuesta).get(0).equals("0")) {
+                    Log.w(TAG, "RESPONSE OK");
+                    certifyDslCorrecto = true;
+                    String xml = respuesta.replace("\n", "")
+                            .replace("<![CDATA[", "")
+                            .replace("]]>", "")
+                            .replace("</VPT>", "")
+                            .replace("<VPT>", "")
+                            .replace("&lt;", "<")
+                            .replace("&gt;", ">");
+                    Log.w(TAG, "PRE PARSE " + xml);
+                    res = XMLParser.getCertificationPar(xml);
 
-                    }
+                    Log.w(TAG, "RESPONSE PARSE\n" + res.toString());
+                } else {
+                    Log.w(TAG, "RESPONSE NOK");
+                    certifyDslCorrecto = false;
+                    res = XMLParser.getReturnCode(respuesta);
+
+                }
 
 
-   				
-   			} catch (Exception e1) {
-   				e1.printStackTrace();
+            } catch (Exception e1) {
+                e1.printStackTrace();
                 Log.e(TAG, "EXCEPTION!:" + e1.getMessage());
                 res = null;
-   			}   			
-   	        return res;
-   	    }
-   	    
+            }
+            return res;
+        }
 
- 		protected void onPostExecute(ArrayList<String> result) {
 
-            if(certifyDslCorrecto) {
+        protected void onPostExecute(ArrayList<String> result) {
+
+            if (certifyDslCorrecto) {
                 for (String linea : result) {
                     String[] datos = linea.split("&");
                     for (String dato : datos) {
@@ -176,19 +176,18 @@ public class CertificarPar extends Activity {
                         CONTENIDO.addView(contlay);
                     }
                 }
-            }
-            else{
-                if(result != null)
+            } else {
+                if (result != null)
                     Log.w(TAG, result.get(0));
                 else
                     Log.w(TAG, "NO HUBO RESPUESTA");
                 volver(null);
             }
- 			if (this.dialog.isShowing()) {
- 		        this.dialog.dismiss();
- 		     }
-   	    }
-   	}
+            if (this.dialog.isShowing()) {
+                this.dialog.dismiss();
+            }
+        }
+    }
 
     public String nada1() {
         return "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:tns=\"urn:Demo\">" +

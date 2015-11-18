@@ -17,26 +17,33 @@ public class FactSave {
         sharedPreferences = mContext.getSharedPreferences(NAME, Context.MODE_PRIVATE);
     }
 
-    public void setValue(String boton, String info){
+    public void setValue(String boton, String info) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(boton, info);
         editor.apply();
     }
-
-
-    public String getValue(String boton){
-        return sharedPreferences.getString(boton, "0");
+    public void setValue(String boton, int info) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(boton, info);
+        editor.apply();
     }
 
-    public void clearPreferences(){
+
+    public String getValue(String boton) {
+        String value = sharedPreferences.getString(boton, "0");
+        return value;
+    }
+
+    public int getIntValue(String boton) {
+        int valor = sharedPreferences.getInt(boton, -1);
+        return valor;
+    }
+
+    public void clearPreferences() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
-       editor.apply();
+        editor.apply();
     }
-
-
-
-
 
 
 }

@@ -20,7 +20,10 @@ public class Formulario {
     int returnCode;
     String returnDescription;
 
-    public Formulario(){};
+    public Formulario() {
+    }
+
+    ;
 
 
     public int getReturnCode() {

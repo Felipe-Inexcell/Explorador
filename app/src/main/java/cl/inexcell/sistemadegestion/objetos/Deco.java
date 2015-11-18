@@ -8,7 +8,8 @@ public class Deco {
     String serieDeco;
     String serieTarjeta;
 
-    public Deco(){}
+    public Deco() {
+    }
 
     public String getLabel() {
         return label;

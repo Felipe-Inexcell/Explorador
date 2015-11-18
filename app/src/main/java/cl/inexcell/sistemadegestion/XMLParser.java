@@ -150,7 +150,7 @@ public class XMLParser {
     }
 
 	/*
-	 * XML-009: Localizacion de Averia
+     * XML-009: Localizacion de Averia
 	 */
 
     public static ArrayList<String> setLocation(String xml) throws ParserConfigurationException,
@@ -525,7 +525,7 @@ public class XMLParser {
         //return cpe.elementAt(1).toString(); // Mostrar elemento 1 del Vector
     }
 
-    public static ArrayList<MapMarker> getMapMarkers(String xml) throws ParseException,ParserConfigurationException,
+    public static ArrayList<MapMarker> getMapMarkers(String xml) throws ParseException, ParserConfigurationException,
             SAXException, IOException, XPathExpressionException {
         ArrayList<MapMarker> marks = new ArrayList<MapMarker>();
         MapMarker mapMarker;
@@ -776,19 +776,19 @@ public class XMLParser {
         Document doc = db.parse(is);
         NodeList botones = doc.getElementsByTagName("Element");
 
-        for(int i = 0; i< botones.getLength(); i++){
+        for (int i = 0; i < botones.getLength(); i++) {
             Element b = (Element) botones.item(i);
             Boton boton = new Boton();
 
-            if(b.getChildNodes().getLength() == 1){
+            if (b.getChildNodes().getLength() == 1) {
                 Element act = (Element) b.getChildNodes().item(0);
                 boton.setId(getValue(act, "version"));
                 boton.setName(getValue(act, "url"));
                 boton.setActualizacion(true);
-                Log.d("ACTUALIZACION", "version en servidor: "+boton.getId());
-                Log.d("ACTUALIZACION", "url: "+boton.getName());
+                Log.d("ACTUALIZACION", "version en servidor: " + boton.getId());
+                Log.d("ACTUALIZACION", "url: " + boton.getName());
                 datos.add(boton);
-            }else {
+            } else {
                 boton.setId(getValue(b, "idBoton"));
                 boton.setEnabled(getValue(b, "Code"));
                 boton.setName(getValue(b, "Description"));

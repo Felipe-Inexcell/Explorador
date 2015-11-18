@@ -17,25 +17,22 @@ public class BloqueoBotones {
         sharedPreferences = mContext.getSharedPreferences(NAME, Context.MODE_PRIVATE);
     }
 
-    public void setBloqueo(String boton, Boolean estado, String msg){
+    public void setBloqueo(String boton, Boolean estado, String msg) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(boton, estado);
-        editor.putString(boton+"MSG", msg);
+        editor.putString(boton + "MSG", msg);
         editor.apply();
 
     }
 
 
-
-
-    public Boolean getState(String boton){
+    public Boolean getState(String boton) {
         return sharedPreferences.getBoolean(boton, false);
     }
 
-    public String getMsg(String boton){
-        return sharedPreferences.getString(boton+"MSG", "");
+    public String getMsg(String boton) {
+        return sharedPreferences.getString(boton + "MSG", "");
     }
-
 
 
 }

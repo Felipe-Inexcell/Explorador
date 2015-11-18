@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cl.inexcell.sistemadegestion"
     android:versionCode="1"
-    android:versionName="1.4" >
+    android:versionName="1.4">
 
     <uses-sdk
         android:maxSdkVersion="17"
@@ -34,7 +34,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_logo_icon1"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -47,7 +47,7 @@
         <activity
             android:name=".Principal"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -57,55 +57,44 @@
         <activity
             android:name=".Notificar_Averias"
             android:label="@string/app_averias"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Plantas_Externas"
             android:label="@string/app_plantas_externas"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".VistaTopologica"
             android:label="@string/certificar_wifi1"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Certificar"
             android:label="@string/certificar_wifi1"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".FactActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".FactActivity_bak"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".CertificarPar"
             android:label="@string/certificar_wifi1"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".FAQActivity"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".ActividadPDF"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".CasaCerrada"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".DCT"
-            android:screenOrientation="portrait" >
-        </activity><activity
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".DetalleElectrico"
-        android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

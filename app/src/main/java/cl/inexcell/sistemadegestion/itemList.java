@@ -1,44 +1,44 @@
 package cl.inexcell.sistemadegestion;
 
 public class itemList {
-	 private String title;
-	 private String description;
-	 private int mensaje = -1;
-	 
-	public itemList(String title, String description) {
-	    super();
-	    this.setTitle(title);
-	    this.setDescription(description);
-	}
-	
-	public itemList(String title, String description, int mensaje) {
-	    super();
-	    this.setTitle(title);
-	    this.setDescription(description);
-	    this.setMensaje(mensaje);
-	}
+    private String title;
+    private String description;
+    private int mensaje = -1;
 
-	public String getTitle() {
-		return title;
-	}
+    public itemList(String title, String description) {
+        super();
+        this.setTitle(title);
+        this.setDescription(description);
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public itemList(String title, String description, int mensaje) {
+        super();
+        this.setTitle(title);
+        this.setDescription(description);
+        this.setMensaje(mensaje);
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public int getMensaje() {
-		return mensaje;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setMensaje(int mensaje) {
-		this.mensaje = mensaje;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(int mensaje) {
+        this.mensaje = mensaje;
+    }
 }

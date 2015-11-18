@@ -67,6 +67,9 @@ public class FactActivity extends Activity implements View.OnClickListener {
     Boolean isEmail = true;
     FactSave reg;
 
+    ArrayList<String> decosUsados;
+    ArrayList<View> decosUsadosViews;
+
     int positionInsert = 0;
 
     ArrayList<FormularioEnvio> formularioEnvio;
@@ -89,6 +92,20 @@ public class FactActivity extends Activity implements View.OnClickListener {
     View subContentCPY = null;
     View tabHeaderCPY = null;
 
+    private void addDeco(String clave){
+        if(decosUsados == null)
+            decosUsados = new ArrayList<>();
+
+        decosUsados.add(clave);
+    }
+
+    private void addDecoView(View view){
+        if(decosUsadosViews == null)
+            decosUsadosViews = new ArrayList<>();
+
+        decosUsadosViews.add(view);
+    }
+
 
     private void saveData() {
         for (int i = 0; i < editTextsBA.size(); i++) {
@@ -110,6 +127,13 @@ public class FactActivity extends Activity implements View.OnClickListener {
 
         for (int i = 0; i < editTextsRetiro.size(); i++) {
             reg.setValue("FACTRETIRO" + i, TextsRetiro.get(i) + ";" + editTextsRetiro.get(i));
+        }
+
+        if(decosUsados != null){
+            reg.setValue("NDECOSUSADOS", decosUsados.size());
+            for(int i = 0; i<decosUsados.size(); i++){
+                reg.setValue("DECOUSADO" + i, decosUsados.get(i));
+            }
         }
         /*if (b != null) {
             reg.setValue("FACTFOTO", Funciones.encodeTobase64(b));
@@ -255,6 +279,9 @@ public class FactActivity extends Activity implements View.OnClickListener {
         int input;
         switch (type) {
             case "int":
+                input = InputType.TYPE_CLASS_NUMBER;
+                break;
+            case "numeric":
                 input = InputType.TYPE_CLASS_NUMBER;
                 break;
             case "decimal":
@@ -490,6 +517,130 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                     ((LinearLayout) subContenido).addView(vista);
                                 }
                             }
+                        } else if (pf.getAtributo().equals("DECOS")) {
+                            View tableRow3 = LayoutInflater.from(mContext).inflate(R.layout.tabrowadd, null, false);
+                            TextView material3 = (TextView) tableRow3.findViewById(R.id.materialName);
+                            final EditText cantidad3 = (EditText) tableRow3.findViewById(R.id.cantField);
+                            final ImageButton add = (ImageButton) tableRow3.findViewById(R.id.btn_add);
+                            cantidad3.setEnabled(false);
+                            cantidad3.setInputType(InputType.TYPE_NULL);
+
+                            final LinearLayout decosContent = new LinearLayout(mContext);
+                            decosContent.setOrientation(LinearLayout.VERTICAL);
+                            decosContent.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                   
+                            editTextsTelev.add(cantidad3);
+                            TextsTelev.add(material3);
+
+                            material3.setText(pf.getAtributo());
+
+
+
+                            add.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    View addDeco = LayoutInflater.from(mContext).inflate(R.layout.view_ingresar_deco, null, false);
+                                    final EditText serieDeco = (EditText) addDeco.findViewById(R.id.editText1);
+                                    final EditText serieTarj = (EditText) addDeco.findViewById(R.id.editText2);
+
+
+                                    AlertDialog.Builder b = new AlertDialog.Builder(mContext);
+                                    b.setTitle("Ingrese datos del Deco");
+                                    b.setView(addDeco);
+                                    b.setPositiveButton("Aceptar", null);
+                                    b.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    final AlertDialog d = b.create();
+                                    d.show();
+
+                                    d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            final View rowDeco = LayoutInflater.from(mContext).inflate(R.layout.tabrow_decos, null, false);
+                                            final EditText Deco = (EditText) rowDeco.findViewById(R.id.edit_deco);
+                                            final EditText Tarj = (EditText) rowDeco.findViewById(R.id.edit_tarjeta);
+                                            final ImageButton delete = (ImageButton) rowDeco.findViewById(R.id.button_erase);
+
+                                            final String clave = serieDeco.getText().toString()+";"+serieTarj.getText().toString();
+                                            delete.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    decosContent.removeView(rowDeco);
+                                                    decosUsados.remove(clave);
+                                                    cantidad3.setText(""+(Integer.parseInt(cantidad3.getText().toString())-1));
+                                                }
+                                            });
+                                            if(serieDeco.getText().toString().length() == 10 && serieTarj.getText().toString().length() == 10){
+
+                                                cantidad3.setText(String.valueOf(Integer.parseInt(cantidad3.getText().toString()) + 1));
+                                                Deco.setText(serieDeco.getText().toString());
+                                                Tarj.setText(serieTarj.getText().toString());
+                                                addDeco(clave);
+                                                decosContent.addView(rowDeco);
+                                                d.dismiss();
+                                            }else{
+                                                AlertDialog.Builder error = new AlertDialog.Builder(mContext);
+                                                error.setTitle("Error!");
+                                                error.setMessage("Debe ingresar ambos numeros de serie de 10 digitos");
+                                                error.setPositiveButton("CERRAR", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                                error.show();
+                                            }
+
+
+                                        }
+                                    });
+
+
+
+
+                                }
+                            });
+                            decosContent.addView(tableRow3);
+
+                            int v = reg.getIntValue("NDECOSUSADOS");
+                            if (v > 0) {
+                                cantidad3.setText(""+v);
+                                for(int x = 0; x < v; x++){
+                                    final String key = reg.getValue("DECOUSADO"+x);
+                                    addDeco(key);
+
+                                    String[] spleet = key.split(";");
+
+                                    final View rowDeco = LayoutInflater.from(mContext).inflate(R.layout.tabrow_decos, null, false);
+                                    final EditText Deco = (EditText) rowDeco.findViewById(R.id.edit_deco);
+                                    final EditText Tarj = (EditText) rowDeco.findViewById(R.id.edit_tarjeta);
+                                    final ImageButton delete = (ImageButton) rowDeco.findViewById(R.id.button_erase);
+
+                                    Deco.setText(spleet[0]);
+                                    Tarj.setText(spleet[1]);
+
+
+                                    delete.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            decosContent.removeView(rowDeco);
+                                            decosUsados.remove(key);
+                                            cantidad3.setText(""+(Integer.parseInt(cantidad3.getText().toString())-1));
+                                        }
+                                    });
+                                    decosContent.addView(rowDeco);
+                                }
+
+                            }else
+                                cantidad3.setText("0");
+
+                            ((LinearLayout) subContenido).addView(decosContent);
                         } else {
                             View tableRow3 = LayoutInflater.from(mContext).inflate(R.layout.tabrow, null, false);
                             TextView material3 = (TextView) tableRow3.findViewById(R.id.materialName);
@@ -1074,243 +1225,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
 
         }
 
-        private String getResponse() {
-            return "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:tns=\"urn:Demo\">" +
-                    "<SOAP-ENV:Body>" +
-                    "<ns1:PostCertifyDSLResponse xmlns:ns1=\"urn:Demo\">" +
-                    "<ResponsePostCertifyDSL xsi:type=\"tns:ResponsePostCertifyDSL\">" +
-                    "<Operation xsi:type=\"tns:OperationType1\">" +
-                    "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
-                    "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
-                    "<DateTime xsi:type=\"xsd:string\">?</DateTime>" +
-                    "<IdUser xsi:type=\"xsd:string\">?</IdUser>" +
-                    "<IMEI xsi:type=\"xsd:string\">353649052038772</IMEI>" +
-                    "<IMSI xsi:type=\"xsd:string\">?</IMSI>" +
-                    "<Telefono xsi:type=\"xsd:string\">2</Telefono>" +
-                    "<Television xsi:type=\"xsd:string\">2</Television>" +
-                    "<BandaAncha xsi:type=\"xsd:string\">1</BandaAncha>" +
-                    "<NombreTecnico xsi:type=\"xsd:string\">CARRASCO ZURITA LUIS</NombreTecnico>" +
-                    "</Operation>" +
-                    "<Service xsi:type=\"tns:ServicePostCertifyDSLOut\">" +
-                    "<PostCertifyDSL xsi:type=\"tns:PostCertifyDSLOut\">" +
-                    "<Output xsi:type=\"tns:PostCertifyDSLOutData\">" +
-                    "<Element xsi:type=\"tns:ElementType3\">" +
-                    "<Id xsi:type=\"xsd:string\">0</Id>" +
-                    "<Type xsi:type=\"xsd:string\">Broadband</Type>" +
-                    "<Value xsi:type=\"xsd:string\">SERVICIO BANCHA ANCHA</Value>" +
-                    "<Identification xsi:type=\"tns:IdentificationType3\">" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">Int2p</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "</Parameters>" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">JumperRoBl</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "</Parameters>" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">Spliter</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "</Parameters>" +
-                    "</Identification>" +
-                    "</Element>" +
-                    "<Element xsi:type=\"tns:ElementType3\">" +
-                    "<Id xsi:type=\"xsd:string\">1</Id>" +
-                    "<Type xsi:type=\"xsd:string\">DigitalTelevision</Type>" +
-                    "<Value xsi:type=\"xsd:string\">SERVICIO TELEVISION</Value>" +
-                    "<Identification xsi:type=\"tns:IdentificationType3\">" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">Antenna</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "</Parameters>" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">CardTV</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "</Parameters>" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">Connector</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "</Parameters>" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">LNB</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "</Parameters>" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">RG6</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "</Parameters>" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">DecosSerie</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\"/>" +
-                    "<typeInput xsi:type=\"xsd:string\">label</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "<SeriesDecos xsi:type=\"tns:SeriesDecosType\">" +
-                    "<Label xsi:type=\"xsd:string\">ECHOSTAR / DSB-626CL</Label>" +
-                    "<SerieDeco xsi:type=\"xsd:string\">1629252403</SerieDeco>" +
-                    "<SerieTarjeta xsi:type=\"xsd:string\">0324308971</SerieTarjeta>" +
-                    "</SeriesDecos>" +
-                    "<SeriesDecos xsi:type=\"tns:SeriesDecosType\">" +
-                    "<Label xsi:type=\"xsd:string\">ECHOSTAR / SD-646</Label>" +
-                    "<SerieDeco xsi:type=\"xsd:string\">1779258803</SerieDeco>" +
-                    "<SerieTarjeta xsi:type=\"xsd:string\">0324308972</SerieTarjeta>" +
-                    "</SeriesDecos>" +
-                    "</Parameters>" +
-                    "</Identification>" +
-                    "</Element>" +
-                    "<Element xsi:type=\"tns:ElementType3\">" +
-                    "<Id xsi:type=\"xsd:string\">2</Id>" +
-                    "<Type xsi:type=\"xsd:string\">Telephony</Type>" +
-                    "<Value xsi:type=\"xsd:string\">SERVICIO TELEFONIA</Value>" +
-                    "<Identification xsi:type=\"tns:IdentificationType3\">" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">Acometida</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "</Parameters>" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">Int1p</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "</Parameters>" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">Jumper</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "</Parameters>" +
-                    "</Identification>" +
-                    "</Element>" +
-                    "<Element xsi:type=\"tns:ElementType3\">" +
-                    "<Id xsi:type=\"xsd:string\">3</Id>" +
-                    "<Type xsi:type=\"xsd:string\">remove</Type>" +
-                    "<Value xsi:type=\"xsd:string\">RETIROS</Value>" +
-                    "<Identification xsi:type=\"tns:IdentificationType3\">" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">Phone</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "</Parameters>" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">Modem</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "</Parameters>" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">Decos</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "</Parameters>" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">others</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">false</Required>" +
-                    "</Parameters>" +
-                    "</Identification>" +
-                    "</Element>" +
-                    "<Element xsi:type=\"tns:ElementType3\">" +
-                    "<Id xsi:type=\"xsd:string\">4</Id>" +
-                    "<Type xsi:type=\"xsd:string\">ClosingData</Type>" +
-                    "<Value xsi:type=\"xsd:string\">DATOS DE CIERRE</Value>" +
-                    "<Identification xsi:type=\"tns:IdentificationType3\">" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">Customer</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">true</Required>" +
-                    "</Parameters>" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">Rut</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">true</Required>" +
-                    "</Parameters>" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">Email</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\">0</Value>" +
-                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">true</Required>" +
-                    "</Parameters>" +
-                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">PassportPhoto</Attribute>" +
-                    "<Value xsi:type=\"xsd:string\"/>" +
-                    "<typeInput xsi:type=\"xsd:string\">button</typeInput>" +
-                    "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
-                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
-                    "<Required xsi:type=\"xsd:string\">true</Required>" +
-                    "</Parameters>" +
-                    "</Identification>" +
-                    "</Element>" +
-                    "<Return xsi:type=\"tns:ReturnType\">" +
-                    "<Code xsi:type=\"xsd:string\">0</Code>" +
-                    "<Description xsi:type=\"xsd:string\">Informacion enviada</Description>" +
-                    "</Return>" +
-                    "</Output>" +
-                    "</PostCertifyDSL>" +
-                    "</Service>" +
-                    "</ResponsePostCertifyDSL>" +
-                    "</ns1:PostCertifyDSLResponse>" +
-                    "</SOAP-ENV:Body>" +
-                    "</SOAP-ENV:Envelope>";
-        }
+
 
         private String getResponseNew() {
             return "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:tns=\"urn:Demo\">" +
@@ -1402,6 +1317,14 @@ public class FactActivity extends Activity implements View.OnClickListener {
                     "</Parameters>" +
                     "<Parameters xsi:type=\"tns:ParametersType3\">" +
                     "<Attribute xsi:type=\"xsd:string\">RG6</Attribute>" +
+                    "<Value xsi:type=\"xsd:string\">0</Value>" +
+                    "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                    "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
+                    "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                    "<Required xsi:type=\"xsd:string\">false</Required>" +
+                    "</Parameters>" +
+                    "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                    "<Attribute xsi:type=\"xsd:string\">DECOS</Attribute>" +
                     "<Value xsi:type=\"xsd:string\">0</Value>" +
                     "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
                     "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
@@ -1572,7 +1495,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                 TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                 String IMEI = telephonyManager.getDeviceId();
                 String IMSI = telephonyManager.getSimSerialNumber();
-                String request = SoapRequestMovistar.guardarFact(Phone, IMEI, IMSI, "?", "?", formularioEnvio);
+                String request = SoapRequestMovistar.guardarFact(Phone, IMEI, IMSI, "?", "?", formularioEnvio, decosUsados);
                 //String request = getGuardarFact();
                 ArrayList<String> parse = XMLParser.getReturnCodeForm(request);
                 ArrayList<String> parseFoto;
@@ -1602,7 +1525,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                         }
                     }
 
-                }else
+                } else
                     Log.e("ENVIANDO", "FACT FAIL");
                 return parse;
             } catch (Exception e) {

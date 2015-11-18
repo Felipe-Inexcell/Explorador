@@ -6,6 +6,7 @@ import android.net.wifi.ScanResult;
 import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -53,32 +54,31 @@ public class Demonio extends Service {
                         DateFormat formatDate = new SimpleDateFormat("yyyyMMddHHmmss");
                         DateFormat formatHour = new SimpleDateFormat("HHmmss");
 
-                        String line ="\n"+formatDate.format(now)
-                                +";"+gps.getLongitude()
-                                + ";"+gps.getLatitude()
-                                + ";"+tresg.getOperatorName()
-                                + ";"+tresg.getNetworkType()
-                                + ";"+tresg.getSignal();
+                        String line = "\n" + formatDate.format(now)
+                                + ";" + gps.getLongitude()
+                                + ";" + gps.getLatitude()
+                                + ";" + tresg.getOperatorName()
+                                + ";" + tresg.getNetworkType()
+                                + ";" + tresg.getSignal();
                         //Log.d(TAG,"\nTest: "+line);
-
 
 
                         try {
                             Date floorH = formatHour.parse("234459");
                             Date topH = formatHour.parse("235959");
                             Date actual = formatHour.parse(formatHour.format(now));
-                            if(actual.before(topH) && actual.after(floorH)) {
+                            if (actual.before(topH) && actual.after(floorH)) {
 
                                 /*if(wifi.isEnable()){
                                     wasSend = Calendar.getInstance.getTime();
                                  */
-                                    sendTodayEntries();
+                                sendTodayEntries();
                                 /*}else
                                     wasSend = false;
                                     lastSend = Calendar.getInstance().getTime();
                                  */
 
-                            }else {
+                            } else {
 
                                 writeToArchive(line);
                             }
@@ -94,7 +94,7 @@ public class Demonio extends Service {
 
     }
 
-    public void sendTodayEntries(){
+    public void sendTodayEntries() {
         Thread t = new Thread(new Runnable() {
             public void run() {
                 File sdCard = Environment.getExternalStorageDirectory();
@@ -115,7 +115,7 @@ public class Demonio extends Service {
 
                     buffer.close();
                     file.delete();
-                    Log.d(TAG,"Se enviaron "+count+" registros");
+                    Log.d(TAG, "Se enviaron " + count + " registros");
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -125,7 +125,7 @@ public class Demonio extends Service {
         t.start();
     }
 
-    public void writeToArchive(final String line){
+    public void writeToArchive(final String line) {
         Thread t = new Thread(new Runnable() {
             public void run() {
                 if (Environment.getExternalStorageState().equals("mounted")) {

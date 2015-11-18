@@ -14,7 +14,6 @@ import android.util.Log;
 public class MyLocationListener extends Service implements LocationListener {
 
 
-
     private final Context mContext;
     public Location location;
     double longitude;
@@ -36,23 +35,23 @@ public class MyLocationListener extends Service implements LocationListener {
         getLocation();
     }
 
-    public double getLatitude(){
-        if(location != null){
+    public double getLatitude() {
+        if (location != null) {
             latitude = location.getLatitude();
         }
 
         return latitude;
     }
 
-    public double getLongitude(){
-        if(location != null){
+    public double getLongitude() {
+        if (location != null) {
             longitude = location.getLongitude();
         }
         // return longitude
         return longitude;
     }
 
-    public Location getLocation(){
+    public Location getLocation() {
         try {
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
 
@@ -98,7 +97,9 @@ public class MyLocationListener extends Service implements LocationListener {
                     }
                 }
             }
-        }catch(Exception e){e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return location;
     }
