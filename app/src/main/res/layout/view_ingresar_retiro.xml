@@ -40,11 +40,10 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="10"
+            android:ems="12"
             android:id="@+id/editText13"
             android:background="@drawable/fondo1"
-            android:maxLength="10" />
+            android:maxLength="12" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -55,11 +54,10 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="10"
+            android:ems="12"
             android:id="@+id/editText14"
             android:background="@drawable/fondo1"
-            android:maxLength="10" />
+            android:maxLength="12" />
     </LinearLayout>
 
     <LinearLayout
@@ -78,10 +76,10 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:ems="10"
+            android:ems="12"
             android:id="@+id/editText15"
-            android:background="@drawable/fondo1" />
+            android:background="@drawable/fondo1"
+            android:maxLength="12" />
 
     </LinearLayout>
 

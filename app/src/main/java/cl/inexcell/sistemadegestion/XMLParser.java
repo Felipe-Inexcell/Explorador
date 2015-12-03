@@ -27,7 +27,9 @@ import cl.inexcell.sistemadegestion.objetos.DCT;
 public class XMLParser {
 
 
-
+    private static String getNodeValue(Element e, String tagName){
+        return getCharacterDataFromElement((Element) e.getElementsByTagName(tagName).item(0));
+    }
 	
 	/*
      * Parser Return Code
@@ -594,38 +596,55 @@ public class XMLParser {
 
         if (formulario.getReturnCode() == 0) {
             Elementos = new ArrayList<>();
+
             for (int i = 0; i < elementNode.getLength(); i++) {
                 elemento = new ElementFormulario();
-                Node elementId = elementNode.item(i).getChildNodes().item(0);
+                Element element = (Element) elementNode.item(i);
+
+
+                /*Node elementId = elementNode.item(i).getChildNodes().item(0);
                 Node elementType = elementNode.item(i).getChildNodes().item(1);
                 Node elementValue = elementNode.item(i).getChildNodes().item(2);
                 elemento.setId(elementId.getFirstChild().getTextContent());
                 elemento.setType(elementType.getFirstChild().getTextContent());
-                elemento.setValue(elementValue.getFirstChild().getTextContent());
+                elemento.setValue(elementValue.getFirstChild().getTextContent());*/
+                elemento.setId(getValue(element, "Id"));
+                elemento.setType(getValue(element, "Type"));
+                elemento.setValue(getValue(element, "Value"));
 
-                NodeList params = elementNode.item(i).getChildNodes().item(3).getChildNodes();
+                NodeList params = element.getElementsByTagName("Parameters");
                 Parametros = new ArrayList<>();
 
                 for (int j = 0; j < params.getLength(); j++) {
                     parametro = new ParametrosFormulario();
-                    Node Atributo = ((Element) params.item(j)).getElementsByTagName("Attribute").item(0);
+                    Element parameter = (Element) params.item(j);
+                    /*Node Atributo = ((Element) params.item(j)).getElementsByTagName("Attribute").item(0);
                     Node Valor = ((Element) params.item(j)).getElementsByTagName("Value").item(0);
                     Node TipoEntrada = ((Element) params.item(j)).getElementsByTagName("typeInput").item(0);
                     Node TipoData = ((Element) params.item(j)).getElementsByTagName("typeDataInput").item(0);
                     Node Habilitado = ((Element) params.item(j)).getElementsByTagName("Enabled").item(0);
                     Node Requerido = ((Element) params.item(j)).getElementsByTagName("Required").item(0);
-
-
+                    Node Cantidad = ((Element) params.item(j)).getElementsByTagName("CantMax").item(0);
                     parametro.setAtributo(Atributo.getFirstChild().getTextContent());
                     parametro.setTypeInput(TipoEntrada.getFirstChild().getTextContent());
                     parametro.setTypeDataInput(TipoData.getFirstChild().getTextContent());
                     parametro.setEnabled(Habilitado.getFirstChild().getTextContent());
                     parametro.setRequired(Requerido.getFirstChild().getTextContent());
+                    parametro.setMax(Cantidad.getFirstChild().getTextContent());*/
 
-                    if (elementType.getFirstChild().getTextContent().compareTo("DigitalTelevision") == 0 &&
-                            Atributo.getFirstChild().getTextContent().compareTo("DecosSerie") == 0) {
+                    parametro.setAtributo(getValue(parameter, "Attribute"));
+                    parametro.setTypeInput(getValue(parameter, "typeInput"));
+                    parametro.setTypeDataInput(getValue(parameter, "typeDataInput"));
+                    parametro.setEnabled(getValue(parameter, "Enabled"));
+                    parametro.setRequired(getValue(parameter, "Required"));
+                    parametro.setMax(getValue(parameter, "CantMax"));
 
-                        NodeList SeriesDeco = ((Element) params.item(j)).getElementsByTagName("SeriesDecos");
+
+
+                    if (elemento.getType().compareTo("DigitalTelevision") == 0 &&
+                            parametro.getAtributo().compareTo("DecosSerie") == 0) {
+
+                        NodeList SeriesDeco = parameter.getElementsByTagName("SeriesDecos");
                         Decos = new ArrayList<>();
                         for (int k = 0; k < SeriesDeco.getLength(); k++) {
                             Deco d = new Deco();
@@ -641,10 +660,10 @@ public class XMLParser {
                     } else {
                         parametro.setDecos(null);
 
-                        if (Atributo.getFirstChild().getTextContent().compareTo("FotoCarnet") == 0)
+                        if (parametro.getAtributo().compareTo("FotoCarnet") == 0)
                             parametro.setValue("");
                         else
-                            parametro.setValue(Valor.getFirstChild().getTextContent());
+                            parametro.setValue(getValue(parameter, "Value"));
                         Parametros.add(parametro);
                     }
 
@@ -812,9 +831,18 @@ public class XMLParser {
 	 * Generico para todas las consultas
 	 */
 
-    public static String getCharacterDataFromElement(Element e) {
+    /*public static String getCharacterDataFromElement(Element e) {
         Node child = e.getFirstChild();
         if (e == null) return "";
+        if (child instanceof CharacterData) {
+            CharacterData cd = (CharacterData) child;
+            return cd.getData();
+        }
+        return "";
+    }*/
+
+    public static String getCharacterDataFromElement(Element e) {
+        Node child = e.getFirstChild();
         if (child instanceof CharacterData) {
             CharacterData cd = (CharacterData) child;
             return cd.getData();

@@ -97,7 +97,7 @@ public class Principal extends Activity {
         }
 
         Botones task = new Botones(this);
-        task.execute();
+        //task.execute();
     }
 
     private class Botones extends AsyncTask<String, String, String> {
@@ -444,6 +444,247 @@ public class Principal extends Activity {
             }
             p.finish();
         }
+    }
+
+    private String getResponseNew() {
+        return "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:tns=\"urn:Demo\">" +
+                "<SOAP-ENV:Body>" +
+                "<ns1:PostCertifyDSLResponse xmlns:ns1=\"urn:Demo\">" +
+                "<ResponsePostCertifyDSL xsi:type=\"tns:ResponsePostCertifyDSL\">" +
+                "<Operation xsi:type=\"tns:OperationType1\">" +
+                "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
+                "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
+                "<DateTime xsi:type=\"xsd:string\">?</DateTime>" +
+                "<IdUser xsi:type=\"xsd:string\">?</IdUser>" +
+                "<IMEI xsi:type=\"xsd:string\">?</IMEI>" +
+                "<IMSI xsi:type=\"xsd:string\">?</IMSI>" +
+                "<Telefono xsi:type=\"xsd:string\">2</Telefono>" +
+                "<Television xsi:type=\"xsd:string\">1</Television>" +
+                "<BandaAncha xsi:type=\"xsd:string\">1</BandaAncha>" +
+                "<NombreTecnico xsi:type=\"xsd:string\">CARRASCO ZURITA LUIS</NombreTecnico>" +
+                "</Operation>" +
+                "<Service xsi:type=\"tns:ServicePostCertifyDSLOut\">" +
+                "<PostCertifyDSL xsi:type=\"tns:PostCertifyDSLOut\">" +
+                "<Output xsi:type=\"tns:PostCertifyDSLOutData\">" +
+                "<Element xsi:type=\"tns:ElementType3\">" +
+                "<Id xsi:type=\"xsd:string\">0</Id>" +
+                "<Type xsi:type=\"xsd:string\">Broadband</Type>" +
+                "<Value xsi:type=\"xsd:string\">SERVICIO BANCHA ANCHA</Value>" +
+                "<Identification xsi:type=\"tns:IdentificationType3\">" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">Int2p</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">JumperROBl</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">decimal</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">SpliterADSL</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "</Identification>" +
+                "</Element>" +
+                "<Element xsi:type=\"tns:ElementType3\">" +
+                "<Id xsi:type=\"xsd:string\">1</Id>" +
+                "<Type xsi:type=\"xsd:string\">DigitalTelevision</Type>" +
+                "<Value xsi:type=\"xsd:string\">SERVICIO TELEVISION</Value>" +
+                "<Identification xsi:type=\"tns:IdentificationType3\">" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">Antena</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">TarjetaTV</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">Conectores</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">LnbOP</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">RG6</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">DECOS</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">DecosSerie</Attribute>" +
+                "<Value xsi:type=\"xsd:string\"/>" +
+                "<typeInput xsi:type=\"xsd:string\">label</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "<SeriesDecos xsi:type=\"tns:SeriesDecosType\">" +
+                "<Label xsi:type=\"xsd:string\">Easy Digital / ED-S8</Label>" +
+                "<SerieDeco xsi:type=\"xsd:string\">1859024150</SerieDeco>" +
+                "<SerieTarjeta xsi:type=\"xsd:string\">0324530640</SerieTarjeta>" +
+                "</SeriesDecos>" +
+                "</Parameters>" +
+                "</Identification>" +
+                "</Element>" +
+                "<Element xsi:type=\"tns:ElementType3\">" +
+                "<Id xsi:type=\"xsd:string\">2</Id>" +
+                "<Type xsi:type=\"xsd:string\">Telephony</Type>" +
+                "<Value xsi:type=\"xsd:string\">SERVICIO TELEFONIA</Value>" +
+                "<Identification xsi:type=\"tns:IdentificationType3\">" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">Acometida</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">Int1P</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">JumperAZAM</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "</Identification>" +
+                "</Element>" +
+                "<Element xsi:type=\"tns:ElementType3\">" +
+                "<Id xsi:type=\"xsd:string\">3</Id>" +
+                "<Type xsi:type=\"xsd:string\">remove</Type>" +
+                "<Value xsi:type=\"xsd:string\">RETIROS</Value>" +
+                "<Identification xsi:type=\"tns:IdentificationType3\">" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">Phone</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">Modem</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">Decos</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">others</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">false</Required>" +
+                "</Parameters>" +
+                "</Identification>" +
+                "</Element>" +
+                "<Element xsi:type=\"tns:ElementType3\">" +
+                "<Id xsi:type=\"xsd:string\">4</Id>" +
+                "<Type xsi:type=\"xsd:string\">ClosingData</Type>" +
+                "<Value xsi:type=\"xsd:string\">DATOS DE CIERRE</Value>" +
+                "<Identification xsi:type=\"tns:IdentificationType3\">" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">Nombre</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">true</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">Rut</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">true</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">Email</Attribute>" +
+                "<Value xsi:type=\"xsd:string\">0</Value>" +
+                "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">true</Required>" +
+                "</Parameters>" +
+                "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                "<Attribute xsi:type=\"xsd:string\">FotoCarnet</Attribute>" +
+                "<Value xsi:type=\"xsd:string\"/>" +
+                "<typeInput xsi:type=\"xsd:string\">button</typeInput>" +
+                "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                "<Required xsi:type=\"xsd:string\">true</Required>" +
+                "</Parameters>" +
+                "</Identification>" +
+                "</Element>" +
+                "<Return xsi:type=\"tns:ReturnType\">" +
+                "<Code xsi:type=\"xsd:string\">0</Code>" +
+                "<Description xsi:type=\"xsd:string\">Informacion enviada</Description>" +
+                "</Return>" +
+                "</Output>" +
+                "</PostCertifyDSL>" +
+                "</Service>" +
+                "</ResponsePostCertifyDSL>" +
+                "</ns1:PostCertifyDSLResponse>" +
+                "</SOAP-ENV:Body>" +
+                "</SOAP-ENV:Envelope>";
     }
 
 

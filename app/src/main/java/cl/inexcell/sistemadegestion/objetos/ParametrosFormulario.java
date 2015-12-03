@@ -9,9 +9,24 @@ public class ParametrosFormulario {
     String typeDataInput;
     Boolean enabled;
     Boolean required;
+    int max;
     ArrayList<Deco> decos;
 
     public ParametrosFormulario() {
+    }
+
+    public int getMax() {
+        return max;
+    }
+
+    public void setMax(String max) {
+        int x = 0;
+        if(max.length() > 0){
+            try{
+                x = Integer.parseInt(max);
+            }catch (Exception e){e.printStackTrace();}
+        }
+        this.max = x;
     }
 
     public ArrayList<Deco> getDecos() {

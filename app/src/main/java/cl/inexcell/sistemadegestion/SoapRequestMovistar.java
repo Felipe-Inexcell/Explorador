@@ -48,6 +48,7 @@ import org.apache.http.util.EntityUtils;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 
+import cl.inexcell.sistemadegestion.objetos.FACT.MATERIAL_;
 import cl.inexcell.sistemadegestion.objetos.FormularioEnvio;
 import cl.inexcell.sistemadegestion.objetos.ParametrosEnvioForm;
 
@@ -644,7 +645,7 @@ public class SoapRequestMovistar {
         return response;
     }
 
-    public static String guardarFact(String Phone, String IMEI, String IMSI, String OperationCode, String OperationId, ArrayList<FormularioEnvio> formulario, ArrayList<String> decos) throws Exception {
+    public static String guardarFact(String Phone, String IMEI, String IMSI, String OperationCode, String OperationId, ArrayList<FormularioEnvio> formulario, ArrayList<MATERIAL_> series) throws Exception {
         final String SOAP_ACTION = "urn:Demo#GuardarFact";
         String response = null;
         String xml = null;
@@ -698,21 +699,58 @@ public class SoapRequestMovistar {
             bodyOut += "</Identification>" +
                     "</Element>";
         }
-        if(decos.size() > 0 ) {
-            bodyOut += "<IngresarSerial xsi:type=\"urn:IngresarSerialData\">" +
-                    "<Serial xsi:tyoe=\"urn:SerialesData\">" +
-                    "<TypeNodo xsi:type=\"xsd:string\">FactBandaAnchaSeriales</TypeNodo>";
 
-            for (String s : decos) {
-                bodyOut += "<IdentificationSeriales xsi:type=\"urn:IdentificationSerialesData\">" +
-                        "<type xsi:type=\"xsd:string\">serieDeco;serieTarjeta</type>" +
-                        "<Serial xsi:type=\"xsd:string\">" + s + "</Serial>" +
-                        "</IdentificationSeriales>";
+        String xmlSeries="";
+        if(series != null && series.size() > 0){
+            bodyOut += "<IngresarSerial xsi:type=\"urn:IngresarSerialData\">";
+
+            //BROADBAND
+            for(MATERIAL_ m: series){
+                if(m.getType().equals("Broadband") && m.getSeries() != null && m.getSeries().size() > 0) {
+                    xmlSeries += "<Serial xsi:type=\"urn:SerialesData\">" +
+                            "<TypeNodo xsi:type=\"xsd:string\">FactBandaAnchaSeriales</TypeNodo>";
+                    for (String s : m.getSeries()) {
+                        xmlSeries += "<IdentificationSeriales xsi:type=\"urn:IdentificationSerialesData\">" +
+                                "<type xsi:type=\"xsd:string\">"+m.getName()+"</type>" +
+                                "<Serial xsi:type=\"xsd:string\">" + s.replace("¬¬",";") + "</Serial>" +
+                                "</IdentificationSeriales>";
+                    }
+                    xmlSeries+="</Serial>";
+                }
+            }
+            //Telephony
+            for(MATERIAL_ m: series){
+                if(m.getType().equals("Telephony") && m.getSeries() != null && m.getSeries().size() > 0) {
+                    xmlSeries += "<Serial xsi:type=\"urn:SerialesData\">" +
+                            "<TypeNodo xsi:type=\"xsd:string\">FactTelefoniaSeriales</TypeNodo>";
+                    for (String s : m.getSeries()) {
+                        xmlSeries += "<IdentificationSeriales xsi:type=\"urn:IdentificationSerialesData\">" +
+                                "<type xsi:type=\"xsd:string\">"+m.getName()+"</type>" +
+                                "<Serial xsi:type=\"xsd:string\">" + s.replace("¬¬",";") + "</Serial>" +
+                                "</IdentificationSeriales>";
+                    }
+                    xmlSeries+="</Serial>";
+                }
+            }
+            //DigitalTelevisio
+            for(MATERIAL_ m: series){
+                if(m.getType().equals("DigitalTelevision") && m.getSeries() != null && m.getSeries().size() > 0) {
+                    xmlSeries += "<Serial xsi:type=\"urn:SerialesData\">" +
+                            "<TypeNodo xsi:type=\"xsd:string\">FactTelevisionSeriales</TypeNodo>";
+                    for (String s : m.getSeries()) {
+                        xmlSeries += "<IdentificationSeriales xsi:type=\"urn:IdentificationSerialesData\">" +
+                                "<type xsi:type=\"xsd:string\">"+m.getName()+"</type>" +
+                                "<Serial xsi:type=\"xsd:string\">" + s.replace("¬¬",";") + "</Serial>" +
+                                "</IdentificationSeriales>";
+                    }
+                    xmlSeries+="</Serial>";
+                }
             }
 
-            bodyOut += "</Serial>" +
-                    "</IngresarSerial>";
+            xmlSeries +="</IngresarSerial>";
         }
+        bodyOut+=xmlSeries;
+
                 bodyOut +="</Input>" +
                 "</GuardarFact>" +
                 "</Service>" +

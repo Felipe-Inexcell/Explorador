@@ -15,8 +15,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.telephony.TelephonyManager;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +35,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +53,7 @@ import java.util.List;
 
 import cl.inexcell.sistemadegestion.objetos.Deco;
 import cl.inexcell.sistemadegestion.objetos.ElementFormulario;
+import cl.inexcell.sistemadegestion.objetos.FACT.MATERIAL_;
 import cl.inexcell.sistemadegestion.objetos.Formulario;
 import cl.inexcell.sistemadegestion.objetos.FormularioEnvio;
 import cl.inexcell.sistemadegestion.objetos.ParametrosEnvioForm;
@@ -79,6 +83,8 @@ public class FactActivity extends Activity implements View.OnClickListener {
     ArrayList<TextView> TextsBA, TextsTelef, TextsTelev, TextsDeco, TextsSeries, TextsCierre;
     ArrayList<String> editTextsRetiro, TextsRetiro;
 
+    ArrayList<MATERIAL_> materials;
+
     AlertDialog.Builder dialog_preview;
     View preview_view;
     ImageView IVpreview;
@@ -92,15 +98,15 @@ public class FactActivity extends Activity implements View.OnClickListener {
     View subContentCPY = null;
     View tabHeaderCPY = null;
 
-    private void addDeco(String clave){
-        if(decosUsados == null)
+    private void addDeco(String clave) {
+        if (decosUsados == null)
             decosUsados = new ArrayList<>();
 
         decosUsados.add(clave);
     }
 
-    private void addDecoView(View view){
-        if(decosUsadosViews == null)
+    private void addDecoView(View view) {
+        if (decosUsadosViews == null)
             decosUsadosViews = new ArrayList<>();
 
         decosUsadosViews.add(view);
@@ -129,12 +135,28 @@ public class FactActivity extends Activity implements View.OnClickListener {
             reg.setValue("FACTRETIRO" + i, TextsRetiro.get(i) + ";" + editTextsRetiro.get(i));
         }
 
-        if(decosUsados != null){
+
+            for (MATERIAL_ m : materials) {
+                if(m.getSeries() != null) {
+                    for (int i = 0; i < m.getSeries().size(); i++) {
+                        reg.setValue("SERIE_" + i + "_" + m.getType() + "_" + m.getName(), m.getSeries().get(i));
+                    }
+                }
+            }
+
+
+
+
+        /*if(decosUsados != null){
             reg.setValue("NDECOSUSADOS", decosUsados.size());
             for(int i = 0; i<decosUsados.size(); i++){
                 reg.setValue("DECOUSADO" + i, decosUsados.get(i));
             }
-        }
+        }*/
+
+
+
+
         /*if (b != null) {
             reg.setValue("FACTFOTO", Funciones.encodeTobase64(b));
         }
@@ -261,6 +283,8 @@ public class FactActivity extends Activity implements View.OnClickListener {
         TextsCierre = new ArrayList<>();
         editTextsRetiro = new ArrayList<>();
         TextsRetiro = new ArrayList<>();
+
+        materials = new ArrayList<>();
 
 
         Obtener_Formulario task = new Obtener_Formulario(this);
@@ -464,13 +488,19 @@ public class FactActivity extends Activity implements View.OnClickListener {
             }
 
 
-            for (ParametrosFormulario pf : ef.getParameters()) {
+            for (final ParametrosFormulario pf : ef.getParameters()) {
+                final ImageButton agregar;
+                final ImageButton revisar;
+
                 switch (ef.getType()) {
                     case "Broadband":
                         View tableRow1 = LayoutInflater.from(mContext).inflate(R.layout.tabrow, null, false);
                         TextView material1 = (TextView) tableRow1.findViewById(R.id.materialName);
-                        EditText cantidad1 = (EditText) tableRow1.findViewById(R.id.cantField);
-                        cantidad1.setInputType(getInputType(pf.getTypeDataInput()));
+                        final EditText cantidad1 = (EditText) tableRow1.findViewById(R.id.cantField);
+                        agregar = (ImageButton) tableRow1.findViewById(R.id.ADD);
+                        revisar = (ImageButton) tableRow1.findViewById(R.id.WATCH);
+
+                        cantidad1.setInputType(InputType.TYPE_NULL);
                         editTextsBA.add(cantidad1);
                         TextsBA.add(material1);
 
@@ -479,17 +509,267 @@ public class FactActivity extends Activity implements View.OnClickListener {
                         cantidad1.setHint(pf.getValue());
                         cantidad1.setEnabled(pf.getEnabled());
 
+
+                        if (!pf.getTypeInput().equals("Button1") && !pf.getTypeInput().equals("Button2")) {
+                            revisar.setImageResource(R.drawable.ic_action_removeone);
+                        }
+
+
+                        agregar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                int n = 0;
+                                if (cantidad1.getText().toString().length() > 0)
+                                    n = Integer.parseInt(cantidad1.getText().toString());
+
+                                if (pf.getTypeInput().equals("Button1")) {
+                                    final EditText serie1 = new EditText(mContext);
+                                    serie1.setBackgroundResource(R.drawable.fondo1);
+                                    serie1.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+                                    serie1.setHint("Número de Serie");
+
+                                    AlertDialog.Builder b = new AlertDialog.Builder(p);
+                                    b.setTitle(pf.getAtributo());
+                                    b.setView(serie1);
+                                    b.setPositiveButton("Agregar", null);
+                                    b.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    final AlertDialog d = b.create();
+                                    d.show();
+
+                                    d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            int cant = 0;
+                                            if (cantidad1.getText().toString().length() > 0)
+                                                cant = Integer.parseInt(cantidad1.getText().toString());
+
+                                            if (cant == pf.getMax()) {
+                                                Toast.makeText(mContext, "Ha alcanzado el máximo permitido", Toast.LENGTH_SHORT).show();
+                                            } else if (serie1.getText().toString().length() == 0) {
+                                                Toast.makeText(mContext, "Debe ingresar un numero de serie para guardar.", Toast.LENGTH_SHORT).show();
+                                            } else if (serie1.getText().toString().length() > 12) {
+                                                Toast.makeText(mContext, "El máximo de caracteres es 12", Toast.LENGTH_SHORT).show();
+                                            } else {
+
+                                                MATERIAL_ m;
+
+                                                m = findMaterial(pf.getAtributo());
+                                                if (m != null) {
+                                                    m.addSerie(serie1.getText().toString());
+                                                } else {
+                                                    m = new MATERIAL_(pf.getAtributo(), ef.getType());
+                                                    m.addSerie(serie1.getText().toString());
+                                                    materials.add(m);
+                                                }
+                                                cantidad1.setText(String.valueOf(cant + 1));
+                                                d.dismiss();
+                                            }
+                                        }
+                                    });
+
+                                } else if (pf.getTypeInput().equals("Button2")) {
+                                    LinearLayout content = new LinearLayout(mContext);
+                                    content.setOrientation(LinearLayout.VERTICAL);
+                                    final EditText serie1 = new EditText(mContext);
+                                    serie1.setBackgroundResource(R.drawable.fondo1);
+                                    serie1.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+                                    serie1.setHint("Número de Serie 1");
+
+                                    final EditText serie2 = new EditText(mContext);
+                                    serie2.setBackgroundResource(R.drawable.fondo1);
+                                    serie2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+                                    serie2.setHint("Número de Serie 2");
+
+                                    content.addView(serie1);
+                                    content.addView(serie2);
+
+                                    AlertDialog.Builder b = new AlertDialog.Builder(p);
+                                    b.setTitle(pf.getAtributo());
+                                    b.setView(content);
+                                    b.setPositiveButton("Agregar", null);
+                                    b.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    final AlertDialog d = b.create();
+                                    d.show();
+
+                                    d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            int cant = 0;
+                                            if (cantidad1.getText().toString().length() > 0)
+                                                cant = Integer.parseInt(cantidad1.getText().toString());
+
+                                            if (cant == pf.getMax()) {
+                                                Toast.makeText(mContext, "Ha alcanzado el máximo permitido", Toast.LENGTH_SHORT).show();
+                                            } else if (serie1.getText().toString().length() == 0 || serie2.getText().toString().length() == 0) {
+                                                Toast.makeText(mContext, "Debe ingresar ambos números de serie para guardar.", Toast.LENGTH_SHORT).show();
+                                            } else if (serie1.getText().toString().length() > 12 || serie2.getText().toString().length() > 12) {
+                                                Toast.makeText(mContext, "El máximo de caracteres es 12", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                MATERIAL_ m;
+
+                                                m = findMaterial(pf.getAtributo());
+                                                if (m != null) {
+                                                    m.addSerie(serie1.getText().toString() + "¬¬" + serie2.getText().toString());
+                                                } else {
+                                                    m = new MATERIAL_(pf.getAtributo(), ef.getType());
+                                                    m.addSerie(serie1.getText().toString() + "¬¬" + serie2.getText().toString());
+                                                    materials.add(m);
+                                                }
+                                                cantidad1.setText(String.valueOf(cant + 1));
+                                                d.dismiss();
+                                            }
+                                        }
+                                    });
+                                } else {
+
+                                    cantidad1.setText(String.valueOf(n + 1));
+                                }
+                            }
+                        });
+
+                        revisar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                int n = 0;
+                                if (cantidad1.getText().toString().length() > 0)
+                                    n = Integer.parseInt(cantidad1.getText().toString());
+
+                                if (n == 0) {
+                                    Toast.makeText(mContext, "No hay numeros de serie registrados", Toast.LENGTH_SHORT).show();
+                                } else if (pf.getTypeInput().equals("Button1")) {
+                                    final MATERIAL_ m = findMaterial(pf.getAtributo());
+
+
+                                    if (m == null) {
+                                        Toast.makeText(mContext, "No hay numeros de serie registrados", Toast.LENGTH_SHORT).show();
+                                        cantidad1.setText("0");
+                                    } else {
+                                        CharSequence[] cs = m.getSeries().toArray(new CharSequence[m.getSeries().size()]);
+
+                                        AlertDialog.Builder b = new AlertDialog.Builder(p);
+                                        b.setTitle("Números de Serie\n" + pf.getAtributo());
+                                        b.setItems(cs, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, final int which) {
+                                                AlertDialog.Builder e = new AlertDialog.Builder(p);
+                                                e.setMessage("¿Desea eliminarlo?");
+                                                e.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int w) {
+                                                        m.rmvSerie(which);
+                                                        cantidad1.setText(String.valueOf(Integer.parseInt(cantidad1.getText().toString()) - 1));
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                                e.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                                e.show();
+                                            }
+                                        });
+                                        b.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                        b.show();
+                                    }
+
+                                } else if (pf.getTypeInput().equals("Button2")) {
+                                    final MATERIAL_ m = findMaterial(pf.getAtributo());
+
+
+                                    if (m == null) {
+                                        Toast.makeText(mContext, "No hay numeros de serie registrados", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        ArrayList<String> tmp = new ArrayList<>();
+                                        for (String s : m.getSeries()) {
+                                            String[] datos = s.split("¬¬");
+                                            tmp.add("Serie 1: " + datos[0] + "\nSerie 2: " + datos[1]);
+                                        }
+
+                                        CharSequence[] cs = tmp.toArray(new CharSequence[tmp.size()]);
+
+                                        AlertDialog.Builder b = new AlertDialog.Builder(p);
+                                        b.setTitle("Números de Serie\n" + pf.getAtributo());
+                                        b.setItems(cs, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, final int which) {
+                                                AlertDialog.Builder e = new AlertDialog.Builder(p);
+                                                e.setMessage("¿Desea eliminarlo?");
+                                                e.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int w) {
+                                                        m.rmvSerie(which);
+                                                        cantidad1.setText(String.valueOf(Integer.parseInt(cantidad1.getText().toString()) - 1));
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                                e.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                                e.show();
+                                            }
+                                        });
+                                        b.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                        b.show();
+                                    }
+                                } else {
+
+                                    if (n > 0)
+                                        cantidad1.setText(String.valueOf(n - 1));
+                                }
+                            }
+                        });
+
                         String valor = reg.getValue(pf.getAtributo() + "" + cantidad1.getId());
                         if (!valor.equals("0"))
                             cantidad1.setText(valor);
+                        if (!valor.equals("") && (pf.getTypeInput().equals("Button1") || pf.getTypeInput().equals("Button2"))) {
+                            cantidad1.setText(valor);
+                            int x = Integer.parseInt(valor);
+                            if (materials == null) materials = new ArrayList<>();
+                            MATERIAL_ nuevo = new MATERIAL_(pf.getAtributo(), ef.getType());
+                            for (int i = 0; i < x; i++) {
+                                String serie = reg.getValue("SERIE_" + i + "_" + ef.getType() + "_" + pf.getAtributo());
+                                nuevo.addSerie(serie);
+                            }
+                            materials.add(nuevo);
+                        }
 
                         ((LinearLayout) subContenido).addView(tableRow1);
+
                         break;
                     case "Telephony":
                         View tableRow2 = LayoutInflater.from(mContext).inflate(R.layout.tabrow, null, false);
                         TextView material2 = (TextView) tableRow2.findViewById(R.id.materialName);
-                        EditText cantidad2 = (EditText) tableRow2.findViewById(R.id.cantField);
-                        cantidad2.setInputType(getInputType(pf.getTypeDataInput()));
+                        final EditText cantidad2 = (EditText) tableRow2.findViewById(R.id.cantField);
+                        agregar = (ImageButton) tableRow2.findViewById(R.id.ADD);
+                        revisar = (ImageButton) tableRow2.findViewById(R.id.WATCH);
+
+                        cantidad2.setInputType(InputType.TYPE_NULL);
                         editTextsTelef.add(cantidad2);
                         TextsTelef.add(material2);
 
@@ -497,9 +777,252 @@ public class FactActivity extends Activity implements View.OnClickListener {
                         cantidad2.setHint(pf.getValue());
                         cantidad2.setEnabled(pf.getEnabled());
 
+
+                        agregar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                int n = 0;
+                                if (cantidad2.getText().toString().length() > 0)
+                                    n = Integer.parseInt(cantidad2.getText().toString());
+
+                                if (pf.getTypeInput().equals("Button1")) {
+                                    final EditText serie1 = new EditText(mContext);
+                                    serie1.setBackgroundResource(R.drawable.fondo1);
+                                    serie1.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+                                    serie1.setHint("Número de Serie");
+
+                                    AlertDialog.Builder b = new AlertDialog.Builder(p);
+                                    b.setTitle(pf.getAtributo());
+                                    b.setView(serie1);
+                                    b.setPositiveButton("Agregar", null);
+                                    b.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    final AlertDialog d = b.create();
+                                    d.show();
+
+                                    d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            int cant = 0;
+                                            if (cantidad2.getText().toString().length() > 0)
+                                                cant = Integer.parseInt(cantidad2.getText().toString());
+
+                                            if (cant == pf.getMax()) {
+                                                Toast.makeText(mContext, "Ha alcanzado el máximo permitido", Toast.LENGTH_SHORT).show();
+                                            } else if (serie1.getText().toString().length() == 0) {
+                                                Toast.makeText(mContext, "Debe ingresar un numero de serie para guardar.", Toast.LENGTH_SHORT).show();
+                                            } else if (serie1.getText().toString().length() > 12) {
+                                                Toast.makeText(mContext, "El máximo de caracteres es 12", Toast.LENGTH_SHORT).show();
+                                            } else {
+
+                                                MATERIAL_ m;
+
+                                                m = findMaterial(pf.getAtributo());
+                                                if (m != null) {
+                                                    m.addSerie(serie1.getText().toString());
+                                                } else {
+                                                    m = new MATERIAL_(pf.getAtributo(), ef.getType());
+                                                    m.addSerie(serie1.getText().toString());
+                                                    materials.add(m);
+                                                }
+                                                cantidad2.setText(String.valueOf(cant + 1));
+                                                d.dismiss();
+                                            }
+                                        }
+                                    });
+
+                                } else if (pf.getTypeInput().equals("Button2")) {
+                                    LinearLayout content = new LinearLayout(mContext);
+                                    content.setOrientation(LinearLayout.VERTICAL);
+                                    final EditText serie1 = new EditText(mContext);
+                                    serie1.setBackgroundResource(R.drawable.fondo1);
+                                    serie1.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+                                    serie1.setHint("Número de Serie 1");
+
+                                    final EditText serie2 = new EditText(mContext);
+                                    serie2.setBackgroundResource(R.drawable.fondo1);
+                                    serie2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+                                    serie2.setHint("Número de Serie 2");
+
+                                    content.addView(serie1);
+                                    content.addView(serie2);
+
+                                    AlertDialog.Builder b = new AlertDialog.Builder(p);
+                                    b.setTitle(pf.getAtributo());
+                                    b.setView(content);
+                                    b.setPositiveButton("Agregar", null);
+                                    b.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    final AlertDialog d = b.create();
+                                    d.show();
+
+                                    d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            int cant = 0;
+                                            if (cantidad2.getText().toString().length() > 0)
+                                                cant = Integer.parseInt(cantidad2.getText().toString());
+
+                                            if (cant == pf.getMax()) {
+                                                Toast.makeText(mContext, "Ha alcanzado el máximo permitido", Toast.LENGTH_SHORT).show();
+                                            } else if (serie1.getText().toString().length() == 0 || serie2.getText().toString().length() == 0) {
+                                                Toast.makeText(mContext, "Debe ingresar ambos números de serie para guardar.", Toast.LENGTH_SHORT).show();
+                                            } else if (serie1.getText().toString().length() > 12 || serie2.getText().toString().length() > 12) {
+                                                Toast.makeText(mContext, "El máximo de caracteres es 12", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                MATERIAL_ m;
+
+                                                m = findMaterial(pf.getAtributo());
+                                                if (m != null) {
+                                                    m.addSerie(serie1.getText().toString() + "¬¬" + serie2.getText().toString());
+                                                } else {
+                                                    m = new MATERIAL_(pf.getAtributo(), ef.getType());
+                                                    m.addSerie(serie1.getText().toString() + "¬¬" + serie2.getText().toString());
+                                                    materials.add(m);
+                                                }
+                                                cantidad2.setText(String.valueOf(cant + 1));
+                                                d.dismiss();
+                                            }
+                                        }
+                                    });
+                                } else {
+
+                                    cantidad2.setText(String.valueOf(n + 1));
+                                }
+                            }
+                        });
+
+                        revisar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                int n = 0;
+                                if (cantidad2.getText().toString().length() > 0)
+                                    n = Integer.parseInt(cantidad2.getText().toString());
+
+                                if (n == 0) {
+                                    Toast.makeText(mContext, "No hay numeros de serie registrados", Toast.LENGTH_SHORT).show();
+                                } else if (pf.getTypeInput().equals("Button1")) {
+                                    final MATERIAL_ m = findMaterial(pf.getAtributo());
+
+
+                                    if (m == null) {
+                                        Toast.makeText(mContext, "No hay numeros de serie registrados", Toast.LENGTH_SHORT).show();
+                                        cantidad2.setText("0");
+                                    } else {
+                                        CharSequence[] cs = m.getSeries().toArray(new CharSequence[m.getSeries().size()]);
+
+                                        AlertDialog.Builder b = new AlertDialog.Builder(p);
+                                        b.setTitle("Números de Serie\n" + pf.getAtributo());
+                                        b.setItems(cs, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, final int which) {
+                                                AlertDialog.Builder e = new AlertDialog.Builder(p);
+                                                e.setMessage("¿Desea eliminarlo?");
+                                                e.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int w) {
+                                                        m.rmvSerie(which);
+                                                        cantidad2.setText(String.valueOf(Integer.parseInt(cantidad2.getText().toString()) - 1));
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                                e.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                                e.show();
+                                            }
+                                        });
+                                        b.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                        b.show();
+                                    }
+
+                                } else if (pf.getTypeInput().equals("Button2")) {
+                                    final MATERIAL_ m = findMaterial(pf.getAtributo());
+
+
+                                    if (m == null) {
+                                        Toast.makeText(mContext, "No hay numeros de serie registrados", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        ArrayList<String> tmp = new ArrayList<>();
+                                        for (String s : m.getSeries()) {
+                                            String[] datos = s.split("¬¬");
+                                            tmp.add("Serie 1: " + datos[0] + "\nSerie 2: " + datos[1]);
+                                        }
+
+                                        CharSequence[] cs = tmp.toArray(new CharSequence[tmp.size()]);
+
+                                        AlertDialog.Builder b = new AlertDialog.Builder(p);
+                                        b.setTitle("Números de Serie\n" + pf.getAtributo());
+                                        b.setItems(cs, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, final int which) {
+                                                AlertDialog.Builder e = new AlertDialog.Builder(p);
+                                                e.setMessage("¿Desea eliminarlo?");
+                                                e.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int w) {
+                                                        m.rmvSerie(which);
+                                                        cantidad2.setText(String.valueOf(Integer.parseInt(cantidad2.getText().toString()) - 1));
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                                e.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                                e.show();
+                                            }
+                                        });
+                                        b.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                        b.show();
+                                    }
+                                } else {
+                                    if (n > 0)
+                                        cantidad2.setText(String.valueOf(n - 1));
+                                }
+                            }
+                        });
+                        if (!pf.getTypeInput().equals("Button1") && !pf.getTypeInput().equals("Button2")) {
+                            revisar.setImageResource(R.drawable.ic_action_removeone);
+                        }
+
+
                         valor = reg.getValue(pf.getAtributo() + "" + cantidad2.getId());
                         if (!valor.equals("0"))
                             cantidad2.setText(valor);
+                        if (!valor.equals("") && (pf.getTypeInput().equals("Button1") || pf.getTypeInput().equals("Button2"))) {
+                            int x = Integer.parseInt(valor);
+                            if (materials == null) materials = new ArrayList<>();
+                            MATERIAL_ nuevo = new MATERIAL_(pf.getAtributo(), ef.getType());
+                            for (int i = 0; i < x; i++) {
+                                String serie = reg.getValue("SERIE_" + i + "_" + ef.getType() + "_" + pf.getAtributo());
+                                nuevo.addSerie(serie);
+                            }
+                            materials.add(nuevo);
+                        }
                         ((LinearLayout) subContenido).addView(tableRow2);
                         break;
                     case "DigitalTelevision":
@@ -517,135 +1040,15 @@ public class FactActivity extends Activity implements View.OnClickListener {
                                     ((LinearLayout) subContenido).addView(vista);
                                 }
                             }
-                        } else if (pf.getAtributo().equals("DECOS")) {
-                            View tableRow3 = LayoutInflater.from(mContext).inflate(R.layout.tabrowadd, null, false);
-                            TextView material3 = (TextView) tableRow3.findViewById(R.id.materialName);
-                            final EditText cantidad3 = (EditText) tableRow3.findViewById(R.id.cantField);
-                            final ImageButton add = (ImageButton) tableRow3.findViewById(R.id.btn_add);
-                            cantidad3.setEnabled(false);
-                            cantidad3.setInputType(InputType.TYPE_NULL);
-
-                            final LinearLayout decosContent = new LinearLayout(mContext);
-                            decosContent.setOrientation(LinearLayout.VERTICAL);
-                            decosContent.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-                   
-                            editTextsTelev.add(cantidad3);
-                            TextsTelev.add(material3);
-
-                            material3.setText(pf.getAtributo());
-
-
-
-                            add.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    View addDeco = LayoutInflater.from(mContext).inflate(R.layout.view_ingresar_deco, null, false);
-                                    final EditText serieDeco = (EditText) addDeco.findViewById(R.id.editText1);
-                                    final EditText serieTarj = (EditText) addDeco.findViewById(R.id.editText2);
-
-
-                                    AlertDialog.Builder b = new AlertDialog.Builder(mContext);
-                                    b.setTitle("Ingrese datos del Deco");
-                                    b.setView(addDeco);
-                                    b.setPositiveButton("Aceptar", null);
-                                    b.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                                    final AlertDialog d = b.create();
-                                    d.show();
-
-                                    d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            final View rowDeco = LayoutInflater.from(mContext).inflate(R.layout.tabrow_decos, null, false);
-                                            final EditText Deco = (EditText) rowDeco.findViewById(R.id.edit_deco);
-                                            final EditText Tarj = (EditText) rowDeco.findViewById(R.id.edit_tarjeta);
-                                            final ImageButton delete = (ImageButton) rowDeco.findViewById(R.id.button_erase);
-
-                                            final String clave = serieDeco.getText().toString()+";"+serieTarj.getText().toString();
-                                            delete.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    decosContent.removeView(rowDeco);
-                                                    decosUsados.remove(clave);
-                                                    cantidad3.setText(""+(Integer.parseInt(cantidad3.getText().toString())-1));
-                                                }
-                                            });
-                                            if(serieDeco.getText().toString().length() == 10 && serieTarj.getText().toString().length() == 10){
-
-                                                cantidad3.setText(String.valueOf(Integer.parseInt(cantidad3.getText().toString()) + 1));
-                                                Deco.setText(serieDeco.getText().toString());
-                                                Tarj.setText(serieTarj.getText().toString());
-                                                addDeco(clave);
-                                                decosContent.addView(rowDeco);
-                                                d.dismiss();
-                                            }else{
-                                                AlertDialog.Builder error = new AlertDialog.Builder(mContext);
-                                                error.setTitle("Error!");
-                                                error.setMessage("Debe ingresar ambos numeros de serie de 10 digitos");
-                                                error.setPositiveButton("CERRAR", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        dialog.dismiss();
-                                                    }
-                                                });
-                                                error.show();
-                                            }
-
-
-                                        }
-                                    });
-
-
-
-
-                                }
-                            });
-                            decosContent.addView(tableRow3);
-
-                            int v = reg.getIntValue("NDECOSUSADOS");
-                            if (v > 0) {
-                                cantidad3.setText(""+v);
-                                for(int x = 0; x < v; x++){
-                                    final String key = reg.getValue("DECOUSADO"+x);
-                                    addDeco(key);
-
-                                    String[] spleet = key.split(";");
-
-                                    final View rowDeco = LayoutInflater.from(mContext).inflate(R.layout.tabrow_decos, null, false);
-                                    final EditText Deco = (EditText) rowDeco.findViewById(R.id.edit_deco);
-                                    final EditText Tarj = (EditText) rowDeco.findViewById(R.id.edit_tarjeta);
-                                    final ImageButton delete = (ImageButton) rowDeco.findViewById(R.id.button_erase);
-
-                                    Deco.setText(spleet[0]);
-                                    Tarj.setText(spleet[1]);
-
-
-                                    delete.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            decosContent.removeView(rowDeco);
-                                            decosUsados.remove(key);
-                                            cantidad3.setText(""+(Integer.parseInt(cantidad3.getText().toString())-1));
-                                        }
-                                    });
-                                    decosContent.addView(rowDeco);
-                                }
-
-                            }else
-                                cantidad3.setText("0");
-
-                            ((LinearLayout) subContenido).addView(decosContent);
                         } else {
                             View tableRow3 = LayoutInflater.from(mContext).inflate(R.layout.tabrow, null, false);
                             TextView material3 = (TextView) tableRow3.findViewById(R.id.materialName);
-                            EditText cantidad3 = (EditText) tableRow3.findViewById(R.id.cantField);
-                            cantidad3.setInputType(getInputType(pf.getTypeDataInput()));
+                            final EditText cantidad3 = (EditText) tableRow3.findViewById(R.id.cantField);
+
+                            agregar = (ImageButton) tableRow3.findViewById(R.id.ADD);
+                            revisar = (ImageButton) tableRow3.findViewById(R.id.WATCH);
+
+                            cantidad3.setInputType(InputType.TYPE_NULL);
                             editTextsTelev.add(cantidad3);
                             TextsTelev.add(material3);
 
@@ -655,7 +1058,249 @@ public class FactActivity extends Activity implements View.OnClickListener {
                             valor = reg.getValue(pf.getAtributo() + "" + cantidad3.getId());
                             if (!valor.equals("0"))
                                 cantidad3.setText(valor);
+                            if (!valor.equals("") && (pf.getTypeInput().equals("Button1") || pf.getTypeInput().equals("Button2"))) {
+                                cantidad3.setText(valor);
+                                int x = Integer.parseInt(valor);
+                                if (materials == null) materials = new ArrayList<>();
+                                MATERIAL_ nuevo = new MATERIAL_(pf.getAtributo(), ef.getType());
+                                for (int i = 0; i < x; i++) {
+                                    String serie = reg.getValue("SERIE_" + i + "_" + ef.getType() + "_" + pf.getAtributo());
+                                    nuevo.addSerie(serie);
+                                }
+                                materials.add(nuevo);
+                            }
                             ((LinearLayout) subContenido).addView(tableRow3);
+
+                            agregar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    int n = 0;
+                                    if (cantidad3.getText().toString().length() > 0)
+                                        n = Integer.parseInt(cantidad3.getText().toString());
+
+                                    if (pf.getTypeInput().equals("Button1")) {
+                                        final EditText serie1 = new EditText(mContext);
+                                        serie1.setBackgroundResource(R.drawable.fondo1);
+                                        serie1.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+                                        serie1.setHint("Número de Serie");
+
+                                        AlertDialog.Builder b = new AlertDialog.Builder(p);
+                                        b.setTitle(pf.getAtributo());
+                                        b.setView(serie1);
+                                        b.setPositiveButton("Agregar", null);
+                                        b.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                        final AlertDialog d = b.create();
+                                        d.show();
+
+                                        d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                int cant = 0;
+                                                if (cantidad3.getText().toString().length() > 0)
+                                                    cant = Integer.parseInt(cantidad3.getText().toString());
+
+                                                if (cant == pf.getMax()) {
+                                                    Toast.makeText(mContext, "Ha alcanzado el máximo permitido", Toast.LENGTH_SHORT).show();
+                                                } else if (serie1.getText().toString().length() == 0) {
+                                                    Toast.makeText(mContext, "Debe ingresar un numero de serie para guardar.", Toast.LENGTH_SHORT).show();
+                                                } else if (serie1.getText().toString().length() > 12) {
+                                                    Toast.makeText(mContext, "El máximo de caracteres es 12", Toast.LENGTH_SHORT).show();
+                                                } else {
+
+                                                    MATERIAL_ m;
+
+                                                    m = findMaterial(pf.getAtributo());
+                                                    if (m != null) {
+                                                        m.addSerie(serie1.getText().toString());
+                                                    } else {
+                                                        m = new MATERIAL_(pf.getAtributo(), ef.getType());
+                                                        m.addSerie(serie1.getText().toString());
+                                                        materials.add(m);
+                                                    }
+                                                    cantidad3.setText(String.valueOf(cant + 1));
+                                                    d.dismiss();
+                                                }
+                                            }
+                                        });
+
+                                    } else if (pf.getTypeInput().equals("Button2")) {
+                                        LinearLayout content = new LinearLayout(mContext);
+                                        content.setOrientation(LinearLayout.VERTICAL);
+                                        final EditText serie1 = new EditText(mContext);
+                                        serie1.setBackgroundResource(R.drawable.fondo1);
+                                        serie1.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+                                        serie1.setHint("Número de Serie Deco");
+
+                                        final EditText serie2 = new EditText(mContext);
+                                        serie2.setBackgroundResource(R.drawable.fondo1);
+                                        serie2.setFilters(new InputFilter[]{new InputFilter.LengthFilter(12)});
+                                        serie2.setHint("Número de Serie Tarjeta");
+
+                                        content.addView(serie1);
+                                        content.addView(serie2);
+
+                                        AlertDialog.Builder b = new AlertDialog.Builder(p);
+                                        b.setTitle(pf.getAtributo());
+                                        b.setView(content);
+                                        b.setPositiveButton("Agregar", null);
+                                        b.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                        final AlertDialog d = b.create();
+                                        d.show();
+
+                                        d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                int cant = 0;
+                                                if (cantidad3.getText().toString().length() > 0)
+                                                    cant = Integer.parseInt(cantidad3.getText().toString());
+
+                                                if (cant == pf.getMax()) {
+                                                    Toast.makeText(mContext, "Ha alcanzado el máximo permitido", Toast.LENGTH_SHORT).show();
+                                                } else if (serie1.getText().toString().length() == 0 || serie2.getText().toString().length() == 0) {
+                                                    Toast.makeText(mContext, "Debe ingresar ambos números de serie para guardar.", Toast.LENGTH_SHORT).show();
+                                                } else if (serie1.getText().toString().length() > 12 || serie2.getText().toString().length() > 12) {
+                                                    Toast.makeText(mContext, "El máximo de caracteres es 12", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    MATERIAL_ m;
+
+                                                    m = findMaterial(pf.getAtributo());
+                                                    if (m != null) {
+                                                        m.addSerie(serie1.getText().toString() + "¬¬" + serie2.getText().toString());
+                                                    } else {
+                                                        m = new MATERIAL_(pf.getAtributo(), ef.getType());
+                                                        m.addSerie(serie1.getText().toString() + "¬¬" + serie2.getText().toString());
+                                                        materials.add(m);
+                                                    }
+                                                    cantidad3.setText(String.valueOf(cant + 1));
+                                                    d.dismiss();
+                                                }
+                                            }
+                                        });
+                                    } else {
+
+                                        cantidad3.setText(String.valueOf(n + 1));
+                                    }
+                                }
+                            });
+
+                            revisar.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    int n = 0;
+                                    if (cantidad3.getText().toString().length() > 0)
+                                        n = Integer.parseInt(cantidad3.getText().toString());
+
+                                    if (n == 0) {
+                                        Toast.makeText(mContext, "No hay numeros de serie registrados", Toast.LENGTH_SHORT).show();
+                                    } else if (pf.getTypeInput().equals("Button1")) {
+                                        final MATERIAL_ m = findMaterial(pf.getAtributo());
+
+
+                                        if (m == null) {
+                                            Toast.makeText(mContext, "No hay numeros de serie registrados", Toast.LENGTH_SHORT).show();
+                                            cantidad3.setText("0");
+                                        } else {
+                                            CharSequence[] cs = m.getSeries().toArray(new CharSequence[m.getSeries().size()]);
+
+                                            AlertDialog.Builder b = new AlertDialog.Builder(p);
+                                            b.setTitle("Números de Serie\n" + pf.getAtributo());
+                                            b.setItems(cs, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, final int which) {
+                                                    AlertDialog.Builder e = new AlertDialog.Builder(p);
+                                                    e.setMessage("¿Desea eliminarlo?");
+                                                    e.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int w) {
+                                                            m.rmvSerie(which);
+                                                            cantidad3.setText(String.valueOf(Integer.parseInt(cantidad3.getText().toString()) - 1));
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                                    e.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                                    e.show();
+                                                }
+                                            });
+                                            b.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                            b.show();
+                                        }
+
+                                    } else if (pf.getTypeInput().equals("Button2")) {
+                                        final MATERIAL_ m = findMaterial(pf.getAtributo());
+
+
+                                        if (m == null) {
+                                            Toast.makeText(mContext, "No hay numeros de serie registrados", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            ArrayList<String> tmp = new ArrayList<>();
+                                            for (String s : m.getSeries()) {
+                                                String[] datos = s.split("¬¬");
+                                                tmp.add("Deco: " + datos[0] + "\nTarjeta: " + datos[1]);
+                                            }
+
+                                            CharSequence[] cs = tmp.toArray(new CharSequence[tmp.size()]);
+
+                                            AlertDialog.Builder b = new AlertDialog.Builder(p);
+                                            b.setTitle("Números de Serie\n" + pf.getAtributo());
+                                            b.setItems(cs, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, final int which) {
+                                                    AlertDialog.Builder e = new AlertDialog.Builder(p);
+                                                    e.setMessage("¿Desea eliminarlo?");
+                                                    e.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int w) {
+                                                            m.rmvSerie(which);
+                                                            cantidad3.setText(String.valueOf(Integer.parseInt(cantidad3.getText().toString()) - 1));
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                                    e.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                                    e.show();
+                                                }
+                                            });
+                                            b.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                            b.show();
+                                        }
+                                    } else {
+                                        if (n > 0)
+                                            cantidad3.setText(String.valueOf(n - 1));
+                                    }
+                                }
+                            });
+                            if (!pf.getTypeInput().equals("Button1") && !pf.getTypeInput().equals("Button2")) {
+                                revisar.setImageResource(R.drawable.ic_action_removeone);
+                            }
                         }
                         break;
                     case "remove":
@@ -887,6 +1532,17 @@ public class FactActivity extends Activity implements View.OnClickListener {
         fatcLayout.addView(putCasaCerradaBTN());
         return true;
     }
+
+
+    private MATERIAL_ findMaterial(String atributo) {
+        for (MATERIAL_ m : materials) {
+            if (m.getName().equals(atributo))
+                return m;
+        }
+        return null;
+
+    }
+
 
     private View putCasaCerradaBTN() {
         Button v = new Button(this);
@@ -1181,7 +1837,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                 if (Phone.compareTo("2") != 0)
                     request = SoapRequestMovistar.postCertifyDSL(Phone, IMEI, IMSI, "?", "?");
                 else
-                    request = getResponseNew();
+                    request = URLs.FACTEXAMPLE;
                 Formulario parse = XMLParser.getForm(request);
                 return parse;
 
@@ -1224,7 +1880,6 @@ public class FactActivity extends Activity implements View.OnClickListener {
             }
 
         }
-
 
 
         private String getResponseNew() {
@@ -1324,7 +1979,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                     "<Required xsi:type=\"xsd:string\">false</Required>" +
                     "</Parameters>" +
                     "<Parameters xsi:type=\"tns:ParametersType3\">" +
-                    "<Attribute xsi:type=\"xsd:string\">DECOS</Attribute>" +
+                    "<Attribute xsi:type=\"xsd:string\">Decos</Attribute>" +
                     "<Value xsi:type=\"xsd:string\">0</Value>" +
                     "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
                     "<typeDataInput xsi:type=\"xsd:string\">numeric</typeDataInput>" +
@@ -1495,7 +2150,7 @@ public class FactActivity extends Activity implements View.OnClickListener {
                 TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                 String IMEI = telephonyManager.getDeviceId();
                 String IMSI = telephonyManager.getSimSerialNumber();
-                String request = SoapRequestMovistar.guardarFact(Phone, IMEI, IMSI, "?", "?", formularioEnvio, decosUsados);
+                String request = SoapRequestMovistar.guardarFact(Phone, IMEI, IMSI, "?", "?", formularioEnvio, materials);
                 //String request = getGuardarFact();
                 ArrayList<String> parse = XMLParser.getReturnCodeForm(request);
                 ArrayList<String> parseFoto;
@@ -1638,5 +2293,144 @@ public class FactActivity extends Activity implements View.OnClickListener {
                 "</SOAP-ENV:Body>" +
                 "</SOAP-ENV:Envelope>";
     }
+
+
+    /*View tableRow3 = LayoutInflater.from(mContext).inflate(R.layout.tabrowadd, null, false);
+                            TextView material3 = (TextView) tableRow3.findViewById(R.id.materialName);
+                            final EditText cantidad3 = (EditText) tableRow3.findViewById(R.id.cantField);
+                            final ImageButton add = (ImageButton) tableRow3.findViewById(R.id.btn_add);
+                            cantidad3.setEnabled(false);
+                            cantidad3.setInputType(InputType.TYPE_NULL);
+
+                            final LinearLayout decosContent = new LinearLayout(mContext);
+                            decosContent.setOrientation(LinearLayout.VERTICAL);
+                            decosContent.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                            final TextView cabecera = new TextView(mContext);
+                            cabecera.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                            cabecera.setTextColor(Color.BLUE);
+                            cabecera.setVisibility(View.GONE);
+                            cabecera.setText("DECOS USADOS");
+                            cabecera.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                            cabecera.setGravity(Gravity.CENTER_HORIZONTAL);
+                            cabecera.setPadding(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics()), 0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics()));
+
+                            editTextsTelev.add(cantidad3);
+                            TextsTelev.add(material3);
+
+                            material3.setText(pf.getAtributo());
+
+
+
+                            add.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    View addDeco = LayoutInflater.from(mContext).inflate(R.layout.view_ingresar_deco, null, false);
+                                    final EditText serieDeco = (EditText) addDeco.findViewById(R.id.editText1);
+                                    final EditText serieTarj = (EditText) addDeco.findViewById(R.id.editText2);
+
+
+                                    AlertDialog.Builder b = new AlertDialog.Builder(mContext);
+                                    b.setTitle("Ingrese datos del Deco");
+                                    b.setView(addDeco);
+                                    b.setPositiveButton("Aceptar", null);
+                                    b.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    final AlertDialog d = b.create();
+                                    d.show();
+
+                                    d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            final View rowDeco = LayoutInflater.from(mContext).inflate(R.layout.tabrow_decos, null, false);
+                                            final EditText Deco = (EditText) rowDeco.findViewById(R.id.edit_deco);
+                                            final EditText Tarj = (EditText) rowDeco.findViewById(R.id.edit_tarjeta);
+                                            final ImageButton delete = (ImageButton) rowDeco.findViewById(R.id.button_erase);
+
+                                            final String clave = serieDeco.getText().toString()+";"+serieTarj.getText().toString();
+                                            delete.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    decosContent.removeView(rowDeco);
+                                                    decosUsados.remove(clave);
+                                                    cantidad3.setText(""+(Integer.parseInt(cantidad3.getText().toString())-1));
+                                                    if(Integer.parseInt(cantidad3.getText().toString()) == 0){
+                                                        cabecera.setVisibility(View.GONE);
+                                                    }
+                                                }
+                                            });
+                                            if(serieDeco.getText().toString().length() == 10 && serieTarj.getText().toString().length() == 10){
+
+                                                cantidad3.setText(String.valueOf(Integer.parseInt(cantidad3.getText().toString()) + 1));
+                                                Deco.setText(serieDeco.getText().toString());
+                                                Tarj.setText(serieTarj.getText().toString());
+                                                addDeco(clave);
+                                                decosContent.addView(rowDeco);
+                                                cabecera.setVisibility(View.VISIBLE);
+                                                d.dismiss();
+                                            }else{
+                                                AlertDialog.Builder error = new AlertDialog.Builder(mContext);
+                                                error.setTitle("Error!");
+                                                error.setMessage("Debe ingresar ambos numeros de serie de 10 digitos");
+                                                error.setPositiveButton("CERRAR", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                                error.show();
+                                            }
+
+
+                                        }
+                                    });
+
+
+
+
+                                }
+                            });
+                            decosContent.addView(tableRow3);
+                            decosContent.addView(cabecera);
+
+                            int v = reg.getIntValue("NDECOSUSADOS");
+                            if (v > 0) {
+                                cantidad3.setText(""+v);
+                                cabecera.setVisibility(View.VISIBLE);
+                                for(int x = 0; x < v; x++){
+                                    final String key = reg.getValue("DECOUSADO"+x);
+                                    addDeco(key);
+
+                                    String[] spleet = key.split(";");
+
+                                    final View rowDeco = LayoutInflater.from(mContext).inflate(R.layout.tabrow_decos, null, false);
+                                    final EditText Deco = (EditText) rowDeco.findViewById(R.id.edit_deco);
+                                    final EditText Tarj = (EditText) rowDeco.findViewById(R.id.edit_tarjeta);
+                                    final ImageButton delete = (ImageButton) rowDeco.findViewById(R.id.button_erase);
+
+                                    Deco.setText(spleet[0]);
+                                    Tarj.setText(spleet[1]);
+
+
+                                    delete.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            decosContent.removeView(rowDeco);
+                                            decosUsados.remove(key);
+                                            cantidad3.setText(""+(Integer.parseInt(cantidad3.getText().toString())-1));
+                                        }
+                                    });
+                                    decosContent.addView(rowDeco);
+                                }
+
+                            }else
+                                cantidad3.setText("0");
+
+                            ((LinearLayout) subContenido).addView(decosContent);*/
 
 }

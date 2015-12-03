@@ -2,6 +2,912 @@ package cl.inexcell.sistemadegestion;
 
 public class URLs {
 
+    public static String FACTEXAMPLE = "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:tns=\"urn:Demo\">" +
+               "<SOAP-ENV:Body>" +
+                  "<ns1:PostCertifyDSLResponse xmlns:ns1=\"urn:Demo\">" +
+                     "<ResponsePostCertifyDSL xsi:type=\"tns:ResponsePostCertifyDSL\">" +
+                        "<Operation xsi:type=\"tns:OperationType1\">" +
+                           "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
+                           "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
+                           "<DateTime xsi:type=\"xsd:string\">?</DateTime>" +
+                           "<IdUser xsi:type=\"xsd:string\">?</IdUser>" +
+                           "<IMEI xsi:type=\"xsd:string\">?</IMEI>" +
+                           "<IMSI xsi:type=\"xsd:string\">?</IMSI>" +
+                           "<Telefono xsi:type=\"xsd:string\">1</Telefono>" +
+                           "<Television xsi:type=\"xsd:string\">1</Television>" +
+                           "<BandaAncha xsi:type=\"xsd:string\">1</BandaAncha>" +
+                           "<NombreTecnico xsi:nil=\"true\" xsi:type=\"xsd:string\">Nombre Tecnico</NombreTecnico>" +
+                        "</Operation>" +
+                        "<Service xsi:type=\"tns:ServicePostCertifyDSLOut\">" +
+                           "<PostCertifyDSL xsi:type=\"tns:PostCertifyDSLOut\">" +
+                              "<Output xsi:type=\"tns:PostCertifyDSLOutData\">" +
+                                 "<Element xsi:type=\"tns:ElementType3\">" +
+                                    "<Id xsi:type=\"xsd:string\">0</Id>" +
+                                    "<Type xsi:type=\"xsd:string\">Telephony</Type>" +
+                                    "<Value xsi:type=\"xsd:string\">SERVICIO TELEFONIA</Value>" +
+                                    "<Identification xsi:type=\"tns:IdentificationType3\">" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Telefonos</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">TelefonoBasico</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">10</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">TelefonoAvanzado</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">10</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Acometida</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Int1P</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">JumperAZAM</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                    "</Identification>" +
+                                 "</Element>" +
+                                 "<Element xsi:type=\"tns:ElementType3\">" +
+                                    "<Id xsi:type=\"xsd:string\">1</Id>" +
+                                    "<Type xsi:type=\"xsd:string\">Broadband</Type>" +
+                                    "<Value xsi:type=\"xsd:string\">SERVICIO BANCHA ANCHA</Value>" +
+                                    "<Identification xsi:type=\"tns:IdentificationType3\">" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Modem</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Repetidor</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">VDSL</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">VDSL_ALT_VEL</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">AccesPoint</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">WIFI</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">UPS_Residencial</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Kit_Antena_Mastil_Routerl</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Int2p</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">JumperROBl</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">SpliterADSL</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                    "</Identification>" +
+                                 "</Element>" +
+                                 "<Element xsi:type=\"tns:ElementType3\">" +
+                                    "<Id xsi:type=\"xsd:string\">2</Id>" +
+                                    "<Type xsi:type=\"xsd:string\">DigitalTelevision</Type>" +
+                                    "<Value xsi:type=\"xsd:string\">SERVICIO TELEVISION</Value>" +
+                                    "<Identification xsi:type=\"tns:IdentificationType3\">" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Decos</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">DecoIPTV_DD</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">DecoPVR</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">DecoHD</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">DecoHD_PVR</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">DecoIPTV</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">DecoDTH</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">IPTV_WIFFI</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">DD_IPTV</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Antena</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">TarjetaTV</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Conectores</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">LnbOP</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">RG6</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">SplitterDTH</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                            "<Attribute xsi:type=\"xsd:string\">DecosSerie</Attribute>" +
+                                            "<Value xsi:type=\"xsd:string\"></Value>" +
+                                            "<typeInput xsi:type=\"xsd:string\">label</typeInput>" +
+                                            "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                                            "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                            "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                            "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                          "<SeriesDecos xsi:type=\"tns:SeriesDecosType\">" +
+                                             "<Label xsi:type=\"xsd:string\">TECHNICOLOR / DSI810(HIBRIDO)</Label>" +
+                                             "<SerieDeco xsi:type=\"xsd:string\">1824274128</SerieDeco>" +
+                                             "<SerieTarjeta xsi:type=\"xsd:string\">2408023908</SerieTarjeta>" +
+                                          "</SeriesDecos>" +
+                                          "<SeriesDecos xsi:type=\"tns:SeriesDecosType\">" +
+                                             "<Label xsi:type=\"xsd:string\">ECHOSTAR / SD-646</Label>" +
+                                             "<SerieDeco xsi:type=\"xsd:string\">1824242825</SerieDeco>" +
+                                             "<SerieTarjeta xsi:type=\"xsd:string\">0324703195</SerieTarjeta>" +
+                                          "</SeriesDecos>" +
+                                          "<SeriesDecos xsi:type=\"tns:SeriesDecosType\">" +
+                                             "<Label xsi:type=\"xsd:string\">ECHOSTAR HD / ECHOSTAR</Label>" +
+                                             "<SerieDeco xsi:type=\"xsd:string\">1779424833</SerieDeco>" +
+                                             "<SerieTarjeta xsi:type=\"xsd:string\">0324303543</SerieTarjeta>" +
+                                          "</SeriesDecos>" +
+                                          "<SeriesDecos xsi:type=\"tns:SeriesDecosType\">" +
+                                             "<Label xsi:type=\"xsd:string\">Easy Digital / ED-S8</Label>" +
+                                             "<SerieDeco xsi:type=\"xsd:string\">1858998723</SerieDeco>" +
+                                             "<SerieTarjeta xsi:type=\"xsd:string\">2407495372</SerieTarjeta>" +
+                                          "</SeriesDecos>" +
+                                       "</Parameters>" +
+                                    "</Identification>" +
+                                 "</Element>" +
+                                 "<Element xsi:type=\"tns:ElementType3\">" +
+                                    "<Id xsi:type=\"xsd:string\">3</Id>" +
+                                    "<Type xsi:type=\"xsd:string\">remove</Type>" +
+                                    "<Value xsi:type=\"xsd:string\">RETIROS</Value>" +
+                                    "<Identification xsi:type=\"tns:IdentificationType3\">" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Telefono</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Modem</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Decos</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Otros</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                    "</Identification>" +
+                                 "</Element>" +
+                                 "<Element xsi:type=\"tns:ElementType3\">" +
+                                    "<Id xsi:type=\"xsd:string\">4</Id>" +
+                                    "<Type xsi:type=\"xsd:string\">ClosingData</Type>" +
+                                    "<Value xsi:type=\"xsd:string\">DATOS DE CIERRE</Value>" +
+                                    "<Identification xsi:type=\"tns:IdentificationType3\">" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Nombre</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">true</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Rut</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">true</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Email</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">true</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Observacion</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">MultilineBox</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">FotoCarnet</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\"/>" +
+                                          "<typeInput xsi:type=\"xsd:string\">button</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">true</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax>" +
+                                       "</Parameters>" +
+                                    "</Identification>" +
+                                 "</Element>" +
+                                 "<Return xsi:type=\"tns:ReturnType\">" +
+                                    "<Code xsi:type=\"xsd:string\">0</Code>" +
+                                    "<Description xsi:type=\"xsd:string\">Informacion enviada</Description>" +
+                                 "</Return>" +
+                              "</Output>" +
+                           "</PostCertifyDSL>" +
+                        "</Service>" +
+                     "</ResponsePostCertifyDSL>" +
+                  "</ns1:PostCertifyDSLResponse>" +
+               "</SOAP-ENV:Body>" +
+            "</SOAP-ENV:Envelope>";
+    
+    public static String FACTEXAMPLE1 = "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:tns=\"urn:Demo\">" +
+               "<SOAP-ENV:Body>" +
+                  "<ns1:PostCertifyDSLResponse xmlns:ns1=\"urn:Demo\">" +
+                     "<ResponsePostCertifyDSL xsi:type=\"tns:ResponsePostCertifyDSL\">" +
+                        "<Operation xsi:type=\"tns:OperationType1\">" +
+                           "<OperationCode xsi:type=\"xsd:string\">?</OperationCode>" +
+                           "<OperationId xsi:type=\"xsd:string\">?</OperationId>" +
+                           "<DateTime xsi:type=\"xsd:string\">?</DateTime>" +
+                           "<IdUser xsi:type=\"xsd:string\">?</IdUser>" +
+                           "<IMEI xsi:type=\"xsd:string\">?</IMEI>" +
+                           "<IMSI xsi:type=\"xsd:string\">?</IMSI>" +
+                           "<Telefono xsi:type=\"xsd:string\">1</Telefono>" +
+                           "<Television xsi:type=\"xsd:string\">1</Television>" +
+                           "<BandaAncha xsi:type=\"xsd:string\">1</BandaAncha>" +
+                           "<NombreTecnico xsi:nil=\"true\" xsi:type=\"xsd:string\">Nombre Tecnico</NombreTecnico>" +
+                        "</Operation>" +
+                        "<Service xsi:type=\"tns:ServicePostCertifyDSLOut\">" +
+                           "<PostCertifyDSL xsi:type=\"tns:PostCertifyDSLOut\">" +
+                              "<Output xsi:type=\"tns:PostCertifyDSLOutData\">" +
+                                 "<Element xsi:type=\"tns:ElementType3\">" +
+                                    "<Id xsi:type=\"xsd:string\">0</Id>" +
+                                    "<Type xsi:type=\"xsd:string\">Telephony</Type>" +
+                                    "<Value xsi:type=\"xsd:string\">SERVICIO TELEFONIA</Value>" +
+                                    "<Identification xsi:type=\"tns:IdentificationType3\">" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Telefonos</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                          "<CantMax xsi:type=\"xsd:string\">0</CantMax> " +
+                                       "</Parameters>" +
+                                 "<!-- NUEVO TELEFONO-->" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">TelefonoBasico</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button1</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">TelefonoAvanzado</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button1</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                 "<!-- NUEVO TELEFONO-->" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Acometida</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Int1P</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">JumperAZAM</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                    "</Identification>" +
+                                 "</Element>" +
+                                 "<Element xsi:type=\"tns:ElementType3\">" +
+                                    "<Id xsi:type=\"xsd:string\">1</Id>" +
+                                    "<Type xsi:type=\"xsd:string\">Broadband</Type>" +
+                                    "<Value xsi:type=\"xsd:string\">SERVICIO BANCHA ANCHA</Value>" +
+                                    "<Identification xsi:type=\"tns:IdentificationType3\">" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Modem</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                 "<!-- NUEVO BANDA ANCHA -->" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Repetidor</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button1</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">VDSL</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button1</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">VDSL_ALT_VEL</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button1</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">AccesPoint</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button1</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">WIFI</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button1</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">UPS_Residencial</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button1</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Kit_Antena_Mastil_Routerl</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button1</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button1</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                 "<!-- NUEVO BANDA ANCHA -->" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Int2p</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">JumperROBl</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">SpliterADSL</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                    "</Identification>" +
+                                 "</Element>" +
+                                 "<Element xsi:type=\"tns:ElementType3\">" +
+                                    "<Id xsi:type=\"xsd:string\">2</Id>" +
+                                    "<Type xsi:type=\"xsd:string\">DigitalTelevision</Type>" +
+                                    "<Value xsi:type=\"xsd:string\">SERVICIO TELEVISION</Value>" +
+                                    "<Identification xsi:type=\"tns:IdentificationType3\">" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Decos</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button2</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                 " <!-- NUEVO TELEVISION-->" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">DecoIPTV_DD</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button2</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">DecoPVR</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button2</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">DecoHD</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button2</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">DecoHD_PVR</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button2</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">DecoIPTV</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button2</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">DecoDTH</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button2</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">IPTV_WIFFI</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button2</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">DD_IPTV</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Button2</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">Button2</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                 " <!-- NUEVO TELEVISION-->" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Antena</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">TarjetaTV</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Conectores</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">LnbOP</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">RG6</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">SplitterDTH</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                    "</Identification>" +
+                                 "</Element>" +
+                                 "<Element xsi:type=\"tns:ElementType3\">" +
+                                    "<Id xsi:type=\"xsd:string\">3</Id>" +
+                                    "<Type xsi:type=\"xsd:string\">remove</Type>" +
+                                    "<Value xsi:type=\"xsd:string\">RETIROS</Value>" +
+                                    "<Identification xsi:type=\"tns:IdentificationType3\">" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Telefono</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Modem</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Decos</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Otros</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">int</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                    "</Identification>" +
+                                 "</Element>" +
+                                 "<Element xsi:type=\"tns:ElementType3\">" +
+                                    "<Id xsi:type=\"xsd:string\">4</Id>" +
+                                    "<Type xsi:type=\"xsd:string\">ClosingData</Type>" +
+                                    "<Value xsi:type=\"xsd:string\">DATOS DE CIERRE</Value>" +
+                                    "<Identification xsi:type=\"tns:IdentificationType3\">" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Nombre</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">true</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Rut</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">true</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Email</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">Box</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">true</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">Observacion</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\">0</Value>" +
+                                          "<typeInput xsi:type=\"xsd:string\">MultilineBox</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">false</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                       "<Parameters xsi:type=\"tns:ParametersType3\">" +
+                                          "<Attribute xsi:type=\"xsd:string\">FotoCarnet</Attribute>" +
+                                          "<Value xsi:type=\"xsd:string\"/>" +
+                                          "<typeInput xsi:type=\"xsd:string\">button</typeInput>" +
+                                          "<typeDataInput xsi:type=\"xsd:string\">text</typeDataInput>" +
+                                          "<Enabled xsi:type=\"xsd:string\">true</Enabled>" +
+                                          "<Required xsi:type=\"xsd:string\">true</Required>" +
+                                   "<CantMax xsi:type=\"xsd:string\">10</CantMax> " +
+                                       "</Parameters>" +
+                                    "</Identification>" +
+                                 "</Element>" +
+                                 "<Return xsi:type=\"tns:ReturnType\">" +
+                                    "<Code xsi:type=\"xsd:string\">0</Code>" +
+                                    "<Description xsi:type=\"xsd:string\">Informacion enviada</Description>" +
+                                 "</Return>" +
+                              "</Output>" +
+                           "</PostCertifyDSL>" +
+                        "</Service>" +
+                     "</ResponsePostCertifyDSL>" +
+                  "</ns1:PostCertifyDSLResponse>" +
+               "</SOAP-ENV:Body>" +
+            "</SOAP-ENV:Envelope>";
+
+
     public static String BLOQUEO = "<SOAP-ENV:Envelope SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:tns=\"urn:Demo\">" +
             "<SOAP-ENV:Body>" +
             "<ns1:bloqueoBotonesResponse xmlns:ns1=\"urn:Demo\">" +
